@@ -18,10 +18,14 @@ Android-ის ვერსია აგებულია Jetpack Compose-ი�
 გადავწყვიტე ამ სიტყვის ბერძნული ვერსია შემერჩია კლიენტის სახელად.
 
 # სქრინები
-![მთავარი](screenshots/home.png)
-![წერილები](screenshots/messages.png)
-![სიახლეები](screenshots/news.png)
-![შეტყობინებები](screenshots/notifications.png)
+<img width=200 alt="მთავარი" 
+src="screenshots/home.png?raw=true">
+<img width=200 alt="წერილები" 
+src="screenshots/messages.png?raw=true">
+<img width=200 alt="სიახლეები" 
+src="screenshots/news.png?raw=true">
+<img width=200 alt="შეტყობინებები" 
+src="screenshots/notifications.png?raw=true">
 
 # License
 ```
