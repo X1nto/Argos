@@ -1,0 +1,61 @@
+[versions]
+agp = "8.1.4"
+kotlin = "1.9.20"
+compose = "1.5.4"
+compose-compiler = "1.5.4"
+ktor = "2.3.6"
+coil = "2.5.0"
+paging = "3.3.0-alpha02-0.4.0"
+
+[libraries]
+androidx-core = { group = "androidx.core", name = "core-ktx", version = "1.12.0"}
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.8.1" }
+androidx-browser = { module = "androidx.browser:browser", version = "1.7.0" }
+androidx-crypto = { group = "androidx.security", name = "security-crypto", version = "1.1.0-alpha06" }
+androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version = "2.6.2" }
+
+desugaring = { module = "com.android.tools:desugar_jdk_libs", version = "2.0.4" }
+
+paging-common = { group = "app.cash.paging", name = "paging-common", version.ref = "paging" }
+paging-compose = { group = "app.cash.paging", name = "paging-compose-common", version.ref = "paging" }
+paging-uikit = { group = "app.cash.paging", name = "paging-uikit", version.ref = "paging" }
+
+compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
+compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose" }
+compose-material3 = { module = "androidx.compose.material3:material3", version = "1.2.0-alpha11" }
+
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version = "0.4.1" }
+
+ktor-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref = "ktor" }
+ktor-serialization = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor" }
+ktor-darwin = { group = "io.ktor", name = "ktor-client-darwin", version.ref = "ktor" }
+
+koin-core = { group = "io.insert-koin", name = "koin-core", version = "3.5.0" }
+koin-android = { group = "io.insert-koin", name = "koin-android", version = "3.5.0" }
+koin-android-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version = "3.5.0" }
+
+appauth = { group = "net.openid", name = "appauth", version = "0.11.1" }
+
+navigationReimagined = { group = "dev.olshevski.navigation", name = "reimagined", version = "1.5.0" }
+
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+coil-svg = { group = "io.coil-kt", name = "coil-svg", version.ref = "coil" }
+
+[bundles]
+ktor = ["ktor-core", "ktor-auth", "ktor-serialization", "ktor-serialization-json"]
+coil = ["coil-compose", "coil-svg"]
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

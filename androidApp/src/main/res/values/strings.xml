@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Argos</string>
+
+    <string name="home_title">Home</string>
+
+    <string name="messages_title">Messages</string>
+    <string name="messages_tab_inbox">Inbox</string>
+    <string name="messages_tab_outbox">Outbox</string>
+
+    <string name="news_title">News</string>
+
+    <string name="notifications_title">Notifications</string>
+</resources>
