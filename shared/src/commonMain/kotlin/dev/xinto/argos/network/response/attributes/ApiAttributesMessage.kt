@@ -12,5 +12,5 @@ data class ApiAttributesMessage(
     val messageType: Int,
     val senderProfileId: Int,
     val sentAt: Instant,
-    val readAt: Instant,
+    val readAt: Instant?,
 )
