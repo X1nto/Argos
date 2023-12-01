@@ -191,7 +191,7 @@ private fun TabPager(
         }
         LaunchedEffect(pagerState.settledPage) {
             if (pagerState.settledPage != selectedIndex) {
-                onIndexSelect(selectedIndex)
+                onIndexSelect(pagerState.settledPage)
             }
         }
         HorizontalPager(state = pagerState) {
