@@ -25,6 +25,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -39,7 +40,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.decode.SvgDecoder
@@ -82,6 +85,7 @@ fun MainScreen(
             navController.backstack.entries.last().destination
         }
     }
+    val viewModelStoreOwner = LocalViewModelStoreOwner.current
     MainScreenScaffold(
         modifier = modifier,
         state = state,
@@ -95,15 +99,17 @@ fun MainScreen(
                 .padding(padding),
             controller = navController
         ) {
-            when (it) {
-                is MainNavigation.Home -> {
-                    HomePage(modifier = Modifier.fillMaxSize())
-                }
-                is MainNavigation.Messages -> {
-                    MessagesPage(modifier = Modifier.fillMaxSize())
-                }
-                is MainNavigation.News -> {
-                    NewsPage(modifier = Modifier.fillMaxSize())
+            CompositionLocalProvider(LocalViewModelStoreOwner provides viewModelStoreOwner!!) {
+                when (it) {
+                    is MainNavigation.Home -> {
+                        HomePage(modifier = Modifier.fillMaxSize())
+                    }
+                    is MainNavigation.Messages -> {
+                        MessagesPage(modifier = Modifier.fillMaxSize())
+                    }
+                    is MainNavigation.News -> {
+                        NewsPage(modifier = Modifier.fillMaxSize())
+                    }
                 }
             }
         }

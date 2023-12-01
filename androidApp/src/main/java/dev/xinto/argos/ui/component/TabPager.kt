@@ -170,7 +170,9 @@ private fun TabPager(
 ) {
     val scope = remember { TabPagerScopeImpl().apply(content) }
     Column(modifier = modifier) {
-        val pagerState = rememberPagerState(initialPage = 0) { scope.items.size }
+        val pagerState = rememberPagerState(initialPage = selectedIndex) {
+            scope.items.size
+        }
         tabRow(pagerState) {
             scope.items.keys.forEachIndexed { index, text ->
                 Tab(
@@ -183,13 +185,13 @@ private fun TabPager(
             }
         }
         LaunchedEffect(selectedIndex) {
-            if (pagerState.currentPage != selectedIndex) {
+            if (pagerState.settledPage != selectedIndex) {
                 pagerState.animateScrollToPage(selectedIndex)
             }
         }
-        LaunchedEffect(pagerState.currentPageOffsetFraction) {
-            if (pagerState.currentPageOffsetFraction == 0f) {
-                onIndexSelect(pagerState.currentPage)
+        LaunchedEffect(pagerState.settledPage) {
+            if (pagerState.settledPage != selectedIndex) {
+                onIndexSelect(selectedIndex)
             }
         }
         HorizontalPager(state = pagerState) {
