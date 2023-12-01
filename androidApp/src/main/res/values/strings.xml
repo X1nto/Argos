@@ -2,6 +2,8 @@
 <resources>
     <string name="app_name">Argos</string>
 
+    <string name="user_action_logout">Sign out</string>
+
     <string name="home_title">Home</string>
 
     <string name="messages_title">Messages</string>
@@ -11,4 +13,6 @@
     <string name="news_title">News</string>
 
     <string name="notifications_title">Notifications</string>
+
+    <string name="settings_title">Settings</string>
 </resources>

@@ -37,6 +37,14 @@ actual class ArgosAccountManager(context: Context) {
         }
     }
 
+    actual suspend fun logout() {
+        coroutineSecurePrefs.edit {
+            putString(KEY_TOKEN, null)
+            putString(KEY_REFRESH_TOKEN, null)
+            putString(KEY_ID, null)
+        }
+    }
+
     actual suspend fun getProfileId(): String? = coroutineSecurePrefs.getString(KEY_ID, null)
     actual suspend fun getToken(): String? = coroutineSecurePrefs.getString(KEY_TOKEN, null)
     actual suspend fun getRefreshToken(): String? = coroutineSecurePrefs.getString(KEY_REFRESH_TOKEN, null)
@@ -56,24 +64,6 @@ actual class ArgosAccountManager(context: Context) {
     actual suspend fun setRefreshToken(refreshToken: String) {
         coroutineSecurePrefs.edit {
             putString(KEY_REFRESH_TOKEN, refreshToken)
-        }
-    }
-
-    actual suspend fun clearProfileId() {
-        coroutineSecurePrefs.edit {
-            putString(KEY_ID, null)
-        }
-    }
-
-    actual suspend fun clearToken() {
-        coroutineSecurePrefs.edit {
-            putString(KEY_TOKEN, null)
-        }
-    }
-
-    actual suspend fun clearRefreshToken() {
-        coroutineSecurePrefs.edit {
-            putString(KEY_REFRESH_TOKEN, null)
         }
     }
 

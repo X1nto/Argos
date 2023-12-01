@@ -6,6 +6,8 @@ expect class ArgosAccountManager {
 
     fun isLoggedIn(): Flow<Boolean>
 
+    suspend fun logout()
+
     suspend fun getProfileId(): String?
     suspend fun getToken(): String?
     suspend fun getRefreshToken(): String?
@@ -13,9 +15,5 @@ expect class ArgosAccountManager {
     suspend fun setProfileId(profileId: String)
     suspend fun setToken(token: String)
     suspend fun setRefreshToken(refreshToken: String)
-
-    suspend fun clearProfileId()
-    suspend fun clearToken()
-    suspend fun clearRefreshToken()
 
 }

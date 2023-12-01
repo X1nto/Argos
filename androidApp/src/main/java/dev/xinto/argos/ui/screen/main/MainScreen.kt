@@ -28,7 +28,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ImageBitmap
@@ -52,6 +55,8 @@ import dev.olshevski.navigation.reimagined.AnimatedNavHost
 import dev.olshevski.navigation.reimagined.rememberNavController
 import dev.olshevski.navigation.reimagined.replaceAll
 import dev.xinto.argos.R
+import dev.xinto.argos.ui.component.UserImage
+import dev.xinto.argos.ui.screen.main.dialog.user.UserDialog
 import dev.xinto.argos.ui.screen.main.page.home.HomePage
 import dev.xinto.argos.ui.screen.main.page.home.HomeState
 import dev.xinto.argos.ui.screen.main.page.messages.MessagesPage
@@ -69,13 +74,15 @@ fun MainScreen(
     MainScreen(
         modifier = modifier,
         state = state,
-        onNotificationsClick = onNotificationsClick
+        onNotificationsClick = onNotificationsClick,
+        onLogoutClick = viewModel::logout
     )
 }
 
 @Composable
 fun MainScreen(
     onNotificationsClick: () -> Unit,
+    onLogoutClick: () -> Unit,
     state: MainState,
     modifier: Modifier = Modifier,
 ) {
@@ -86,12 +93,14 @@ fun MainScreen(
         }
     }
     val viewModelStoreOwner = LocalViewModelStoreOwner.current
+    var userDialogShown by rememberSaveable { mutableStateOf(false) }
     MainScreenScaffold(
         modifier = modifier,
         state = state,
         page = page,
         onNavigate = navController::replaceAll,
         onNotificationsClick = onNotificationsClick,
+        onUserClick = { userDialogShown = true }
     ) { padding ->
         AnimatedNavHost(
             modifier = Modifier
@@ -111,6 +120,19 @@ fun MainScreen(
                         NewsPage(modifier = Modifier.fillMaxSize())
                     }
                 }
+
+                if (userDialogShown) {
+                    UserDialog(
+                        onDismiss = { userDialogShown = false },
+                        onBalanceNavigate = { /*TODO*/ },
+                        onLibraryNavigate = { /*TODO*/ },
+                        onSettingsNavigate = { /*TODO*/ },
+                        onLogoutClick = {
+                            userDialogShown = false
+                            onLogoutClick()
+                        }
+                    )
+                }
             }
         }
     }
@@ -123,6 +145,7 @@ private fun MainScreenScaffold(
     page: MainNavigation,
     onNavigate: (MainNavigation) -> Unit,
     onNotificationsClick: () -> Unit,
+    onUserClick: () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable (PaddingValues) -> Unit
 ) {
@@ -141,7 +164,7 @@ private fun MainScreenScaffold(
                         )
                     }
                     IconButton(
-                        onClick = { /*TODO*/ },
+                        onClick = onUserClick,
                         enabled = state is MainState.Success
                     ) {
                         when (state) {
@@ -153,28 +176,7 @@ private fun MainScreenScaffold(
                                 )
                             }
                             is MainState.Success -> {
-                                if (state.userInfo.photoUrl != null) {
-                                    val context = LocalContext.current
-                                    val imageRequest = remember(context) {
-                                        ImageRequest.Builder(context)
-                                            .decoderFactory(SvgDecoder.Factory())
-                                            .data(state.userInfo.photoUrl)
-                                            .diskCachePolicy(CachePolicy.ENABLED)
-                                            .build()
-                                    }
-                                    AsyncImage(
-                                        model = imageRequest,
-                                        contentDescription = null,
-                                        contentScale = ContentScale.Crop
-                                    )
-                                } else {
-                                    IconButton(onClick = { /*TODO*/ }) {
-                                        Icon(
-                                            painter = painterResource(R.drawable.ic_account),
-                                            contentDescription = null
-                                        )
-                                    }
-                                }
+                                UserImage(url = state.userInfo.photoUrl)
                             }
                             is MainState.Error -> {
                                 Box(
@@ -226,7 +228,8 @@ fun MainScreen_Loading_Preview() {
             state = MainState.Loading,
             page = MainNavigation.Home,
             onNavigate = {},
-            onNotificationsClick = {}
+            onNotificationsClick = {},
+            onUserClick = {}
         ) {
             HomePage(
                 modifier = Modifier
@@ -248,7 +251,8 @@ fun MainScreen_Error_Preview() {
             state = MainState.Error,
             page = MainNavigation.Home,
             onNavigate = {},
-            onNotificationsClick = {}
+            onNotificationsClick = {},
+            onUserClick = {}
         ) {
             HomePage(
                 modifier = Modifier

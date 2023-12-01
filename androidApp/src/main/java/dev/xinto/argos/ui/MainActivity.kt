@@ -16,7 +16,7 @@ import dev.olshevski.navigation.reimagined.navigate
 import dev.olshevski.navigation.reimagined.pop
 import dev.olshevski.navigation.reimagined.rememberNavController
 import dev.olshevski.navigation.reimagined.replaceAll
-import dev.xinto.argos.domain.auth.AuthRepository
+import dev.xinto.argos.domain.user.UserRepository
 import dev.xinto.argos.ui.screen.ArgosNavigation
 import dev.xinto.argos.ui.screen.login.LoginScreen
 import dev.xinto.argos.ui.screen.main.MainScreen
@@ -26,7 +26,7 @@ import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
 
-    private val authRepository: AuthRepository by inject()
+    private val userRepository: UserRepository by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val rootNavController = rememberNavController<ArgosNavigation>(listOf())
-                    val isLoggedIn by authRepository.observeLoggedIn().collectAsStateWithLifecycle(initialValue = false)
+                    val isLoggedIn by userRepository.observeLoggedIn().collectAsStateWithLifecycle(initialValue = false)
                     LaunchedEffect(isLoggedIn) {
                         if (isLoggedIn) {
                             rootNavController.replaceAll(ArgosNavigation.Main)

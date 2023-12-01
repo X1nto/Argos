@@ -2,14 +2,14 @@ package dev.xinto.argos.ui.screen.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.xinto.argos.domain.auth.AuthRepository
+import dev.xinto.argos.domain.user.UserRepository
 import dev.xinto.argos.ui.component.AuthResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
-    private val authRepository: AuthRepository
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<LoginState>(LoginState.Stale)
@@ -20,7 +20,7 @@ class LoginViewModel(
             _state.value = LoginState.Loading
             when (authResult) {
                 is AuthResult.Success -> {
-                    if (!authRepository.login(authResult.idToken!!)) {
+                    if (!userRepository.login(authResult.idToken!!)) {
                         _state.value = LoginState.Error
                     }
                 }

@@ -1,6 +1,5 @@
 package dev.xinto.argos.di
 
-import dev.xinto.argos.domain.auth.AuthRepository
 import dev.xinto.argos.domain.lectures.LecturesRepository
 import dev.xinto.argos.domain.messages.MessagesRepository
 import dev.xinto.argos.domain.news.NewsRepository
@@ -31,7 +30,6 @@ internal object ArgosDi {
     }
 
     val DomainModule = module {
-        singleOf(::AuthRepository)
         singleOf(::UserRepository)
         singleOf(::LecturesRepository)
         singleOf(::SemesterRepository)
