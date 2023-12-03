@@ -65,4 +65,6 @@ dependencies {
     implementation(libs.navigationReimagined)
 
     implementation(libs.bundles.coil)
+
+    implementation(libs.jsoup)
 }

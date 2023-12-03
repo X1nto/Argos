@@ -42,9 +42,6 @@ kotlin {
         iosMain.dependencies {
             implementation(libs.ktor.darwin)
         }
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-        }
     }
 }
 

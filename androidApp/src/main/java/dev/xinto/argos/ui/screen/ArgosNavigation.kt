@@ -14,4 +14,7 @@ sealed interface ArgosNavigation : Parcelable {
     @Parcelize
     data object Notifications : ArgosNavigation
 
+    @Parcelize
+    data class Message(val id: String, val semesterId: String) : ArgosNavigation
+
 }

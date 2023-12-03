@@ -1,9 +1,11 @@
 package dev.xinto.argos.network
 
+import dev.xinto.argos.domain.messages.DomainMessage
 import dev.xinto.argos.local.account.ArgosAccountManager
 import dev.xinto.argos.network.request.ApiRequestAuthRefresh
 import dev.xinto.argos.network.request.ApiRequestAuth
 import dev.xinto.argos.network.response.ApiResponseAuth
+import dev.xinto.argos.network.response.ApiResponseMessage
 import dev.xinto.argos.network.response.ApiResponseMessagesInbox
 import dev.xinto.argos.network.response.ApiResponseMessagesOutbox
 import dev.xinto.argos.network.response.ApiResponseNews
@@ -156,6 +158,14 @@ class ArgosApi(private val argosAccountManager: ArgosAccountManager) {
             ktorClient.get("messages/outbox") {
                 parameter("semId", semesterId)
                 parameter("page", page)
+            }.body()
+        }
+    }
+
+    suspend fun getMessage(id: String, semesterId: String): ApiResponseMessage {
+        return withContext(Dispatchers.IO) {
+            ktorClient.get("messages/${id}") {
+                parameter("semId", semesterId)
             }.body()
         }
     }

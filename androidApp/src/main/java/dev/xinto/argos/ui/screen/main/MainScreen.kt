@@ -67,6 +67,7 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun MainScreen(
     onNotificationsClick: () -> Unit,
+    onMessageClick: (messageId: String, semesterId: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: MainViewModel = getViewModel()
@@ -75,7 +76,8 @@ fun MainScreen(
         modifier = modifier,
         state = state,
         onNotificationsClick = onNotificationsClick,
-        onLogoutClick = viewModel::logout
+        onLogoutClick = viewModel::logout,
+        onMessageClick = onMessageClick
     )
 }
 
@@ -83,6 +85,7 @@ fun MainScreen(
 fun MainScreen(
     onNotificationsClick: () -> Unit,
     onLogoutClick: () -> Unit,
+    onMessageClick: (messageId: String, semesterId: String) -> Unit,
     state: MainState,
     modifier: Modifier = Modifier,
 ) {
@@ -114,7 +117,10 @@ fun MainScreen(
                         HomePage(modifier = Modifier.fillMaxSize())
                     }
                     is MainNavigation.Messages -> {
-                        MessagesPage(modifier = Modifier.fillMaxSize())
+                        MessagesPage(
+                            modifier = Modifier.fillMaxSize(),
+                            onMessageClick = onMessageClick
+                        )
                     }
                     is MainNavigation.News -> {
                         NewsPage(modifier = Modifier.fillMaxSize())

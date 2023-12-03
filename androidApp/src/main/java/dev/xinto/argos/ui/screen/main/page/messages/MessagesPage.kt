@@ -19,14 +19,17 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import dev.xinto.argos.R
-import dev.xinto.argos.domain.messages.DomainMessage
+import dev.xinto.argos.domain.messages.DomainMessagePreview
 import dev.xinto.argos.domain.messages.DomainMessageReceived
 import dev.xinto.argos.domain.messages.DomainMessageSent
 import dev.xinto.argos.ui.component.SecondaryTabPager
 import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun MessagesPage(modifier: Modifier = Modifier) {
+fun MessagesPage(
+    modifier: Modifier = Modifier,
+    onMessageClick: (messageId: String, semesterId: String) -> Unit
+) {
     val viewModel: MessagesViewModel = getViewModel()
     val inbox = viewModel.inboxMessages.collectAsLazyPagingItems()
     val outbox = viewModel.outboxMessages.collectAsLazyPagingItems()
@@ -37,9 +40,7 @@ fun MessagesPage(modifier: Modifier = Modifier) {
         onTabChange = viewModel::switchTab,
         inbox = inbox,
         outbox = outbox,
-        onMessageClick = {
-
-        }
+        onMessageClick = onMessageClick
     )
 }
 
@@ -49,8 +50,8 @@ fun MessagesPage(
     onTabChange: (MessagesTab) -> Unit,
     inbox: LazyPagingItems<DomainMessageReceived>,
     outbox: LazyPagingItems<DomainMessageSent>,
+    onMessageClick: (messageId: String, semesterId: String) -> Unit,
     modifier: Modifier = Modifier,
-    onMessageClick: (String) -> Unit,
 ) {
     SecondaryTabPager(
         modifier = modifier,
@@ -77,9 +78,9 @@ fun MessagesPage(
 }
 
 @Composable
-private fun <T : DomainMessage> MessagesList(
+private fun <T : DomainMessagePreview> MessagesList(
     messages: LazyPagingItems<T>,
-    onMessageClick: (String) -> Unit,
+    onMessageClick: (messageId: String, semesterId: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -109,7 +110,7 @@ private fun <T : DomainMessage> MessagesList(
                         ListItem(
                             modifier = Modifier
                                 .clickable {
-                                    onMessageClick(message.id)
+                                    onMessageClick(message.id, message.semId)
                                 },
                             overlineContent = {
                                 Text(message.date.toString())

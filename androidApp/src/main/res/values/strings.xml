@@ -10,6 +10,8 @@
     <string name="messages_tab_inbox">Inbox</string>
     <string name="messages_tab_outbox">Outbox</string>
 
+    <string name="message_title">Message</string>
+
     <string name="news_title">News</string>
 
     <string name="notifications_title">Notifications</string>
