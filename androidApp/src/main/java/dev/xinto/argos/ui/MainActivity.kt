@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
@@ -18,6 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.olshevski.navigation.reimagined.AnimatedNavHost
 import dev.olshevski.navigation.reimagined.NavAction
+import dev.olshevski.navigation.reimagined.NavTransitionScope
+import dev.olshevski.navigation.reimagined.NavTransitionSpec
 import dev.olshevski.navigation.reimagined.navigate
 import dev.olshevski.navigation.reimagined.pop
 import dev.olshevski.navigation.reimagined.rememberNavController
@@ -59,25 +63,7 @@ class MainActivity : ComponentActivity() {
                     AnimatedNavHost(
                         modifier = Modifier.fillMaxSize(),
                         controller = rootNavController,
-                        transitionSpec = { action, initial, target ->
-                            when (action) {
-                                NavAction.Navigate -> {
-                                    fadeIn() + scaleIn(
-                                        initialScale = 0.9f
-                                    ) togetherWith fadeOut() + scaleOut(
-                                        targetScale = 1.1f
-                                    )
-                                }
-                                NavAction.Pop -> {
-                                    fadeIn() + scaleIn(
-                                        initialScale = 1.1f
-                                    ) togetherWith fadeOut() + scaleOut(
-                                        targetScale = 0.9f
-                                    )
-                                }
-                                else -> fadeIn() togetherWith fadeOut()
-                            }
-                        }
+                        transitionSpec = ArgosTransitionSpec
                     ) { destination ->
                         when (destination) {
                             is ArgosNavigation.Login -> {
@@ -130,6 +116,47 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+    }
+
+    private val ArgosTransitionSpec = object : NavTransitionSpec<ArgosNavigation> {
+
+        override fun NavTransitionScope.getContentTransform(
+            action: NavAction,
+            from: ArgosNavigation,
+            to: ArgosNavigation
+        ): ContentTransform {
+            return when (action) {
+                NavAction.Navigate -> {
+                    fadeIn() + scaleIn(
+                        initialScale = 0.9f
+                    ) togetherWith fadeOut() + scaleOut(
+                        targetScale = 1.1f
+                    )
+                }
+                NavAction.Pop -> {
+                    fadeIn() + scaleIn(
+                        initialScale = 1.1f
+                    ) togetherWith fadeOut() + scaleOut(
+                        targetScale = 0.9f
+                    )
+                }
+                else -> fadeIn(tween()) togetherWith fadeOut(tween())
+            }
+        }
+
+        override fun NavTransitionScope.fromEmptyBackstack(
+            action: NavAction,
+            to: ArgosNavigation
+        ): ContentTransform {
+            return fadeIn(tween()) togetherWith fadeOut(tween())
+        }
+
+        override fun NavTransitionScope.toEmptyBackstack(
+            action: NavAction,
+            from: ArgosNavigation
+        ): ContentTransform {
+            return fadeIn(tween()) togetherWith fadeOut(tween())
         }
     }
 }
