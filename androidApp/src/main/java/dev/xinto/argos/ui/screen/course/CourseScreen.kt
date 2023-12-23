@@ -1,5 +1,6 @@
 package dev.xinto.argos.ui.screen.course
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,6 +31,8 @@ fun CourseScreen(
     courseId: String,
     onBackClick: () -> Unit
 ) {
+    BackHandler(onBack = onBackClick)
+
     //Groups selected by default
     val (selectedTab, setSelectedTab) = rememberSaveable { mutableIntStateOf(1) }
     Scaffold(
