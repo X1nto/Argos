@@ -8,7 +8,7 @@ data class ApiAttributesChoice(
     val courseName: String,
     val courseCode: String,
     val courseCredits: Int,
-    val score: Int,
+    val score: Float,
     val isLatChoice: Boolean,
     val latScore: String,
     val status: Int,
