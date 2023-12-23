@@ -81,31 +81,34 @@ fun MessageScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
-                .verticalScroll(rememberScrollState()),
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
             contentAlignment = Alignment.Center
         ) {
             when (state) {
                 is MessageState.Loading -> {
                     CircularProgressIndicator()
                 }
-
                 is MessageState.Success -> {
-                    MaterialHtmlText2(
+                    Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(16.dp),
-                        text = remember {
-                            """
-                            <div style="display:flex; flex-direction:column; gap:8px;">
-                                <h4>${state.message.subject}</h4>
-                                ${state.message.body}
-                            </div>
-                            """.trimIndent()
-                        }
-                    )
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        MaterialHtmlText2(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                            text = remember {
+                                """
+                                <div style="display:flex; flex-direction:column; gap:8px;">
+                                    <h4>${state.message.subject}</h4>
+                                    ${state.message.body}
+                                </div>
+                                """.trimIndent()
+                            }
+                        )
+                    }
                 }
-
                 is MessageState.Error -> {
                     Text("Error")
                 }
