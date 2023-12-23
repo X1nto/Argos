@@ -14,14 +14,14 @@ class HomeViewModel(
     private val lecturesRepository: LecturesRepository
 ) : ViewModel() {
 
-    private val _selectedDay = MutableStateFlow(LocalDate.now().dayOfWeek.value - 1)
+    private val _selectedDay = MutableStateFlow(LocalDate.now().dayOfWeek.ordinal)
 
     val state =
         combine(lecturesRepository.observeLectures(), _selectedDay) { lectures, selectedDay ->
             when (lectures) {
                 is DomainResponse.Loading -> HomeState.Loading
                 is DomainResponse.Success -> {
-                    val selectedIndex = if (selectedDay > lectures.value.size) 0 else selectedDay
+                    val selectedIndex = if (selectedDay >= lectures.value.size) 0 else selectedDay
                     HomeState.Success(
                         selectedDay = selectedIndex,
                         lectures = lectures.value
