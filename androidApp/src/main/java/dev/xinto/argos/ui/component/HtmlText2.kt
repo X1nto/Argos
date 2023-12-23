@@ -11,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.takeOrElse
@@ -52,7 +53,13 @@ fun HtmlText2(
     modifier: Modifier = Modifier,
     userScrollEnabled: Boolean = true,
 ) {
-    val textCss = typography.asCss(LocalDensity.current)
+    val density = LocalDensity.current
+    val textCss = remember(density) {
+        typography.asCss(density)
+    }
+    val escapedText = remember {
+        text.replace("#", "%23")
+    }
     AndroidView(
         modifier = modifier,
         factory = {
@@ -82,7 +89,7 @@ fun HtmlText2(
                     </style>
                   </head>
                   <body>
-                    $text
+                    $escapedText
                   </body>
                 </html>
             """.trimIndent()
