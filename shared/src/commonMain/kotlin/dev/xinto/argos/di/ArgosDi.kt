@@ -1,5 +1,6 @@
 package dev.xinto.argos.di
 
+import dev.xinto.argos.domain.courses.CoursesRepository
 import dev.xinto.argos.domain.lectures.LecturesRepository
 import dev.xinto.argos.domain.messages.MessagesRepository
 import dev.xinto.argos.domain.news.NewsRepository
@@ -36,6 +37,7 @@ internal object ArgosDi {
         singleOf(::MessagesRepository)
         singleOf(::NewsRepository)
         singleOf(::NotificationsRepository)
+        singleOf(::CoursesRepository)
     }
 
     operator fun invoke(): List<Module> {

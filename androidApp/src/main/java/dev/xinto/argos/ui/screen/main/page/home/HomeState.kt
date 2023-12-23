@@ -19,11 +19,15 @@ sealed interface HomeState {
             val mockData = Success(
                 selectedDay = 0,
                 lectures = buildMap {
-                    val days =
-                        listOf("ორშაბათი", "სამშაბათი", "ოთხშაბათი", "ხუთშაბათი", "პარასკევი")
+                    val days = listOf(
+                        "ორშაბათი", "სამშაბათი",
+                        "ოთხშაბათი", "ხუთშაბათი",
+                        "პარასკევი", "შაბათი"
+                    )
                     days.forEachIndexed { index, day ->
                         val lectures = List(index + 1) {
                             DomainLectureInfo(
+                                id = "",
                                 time = "09:00 - 09:50",
                                 room = "T304",
                                 name = "კალკულუს I",

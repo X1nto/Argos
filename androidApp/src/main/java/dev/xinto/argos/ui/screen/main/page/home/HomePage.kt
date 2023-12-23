@@ -32,22 +32,25 @@ import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun HomePage(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onCourseClick: (String) -> Unit,
 ) {
     val viewModel: HomeViewModel = getViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     HomePage(
         modifier = modifier,
         state = state,
-        onDaySelect = viewModel::selectDay
+        onDaySelect = viewModel::selectDay,
+        onCourseClick = onCourseClick
     )
 }
 
 @Composable
 fun HomePage(
     modifier: Modifier = Modifier,
+    onDaySelect: (Int) -> Unit,
+    onCourseClick: (String) -> Unit,
     state: HomeState,
-    onDaySelect: (Int) -> Unit
 ) {
     Box(
         modifier = modifier,
@@ -57,6 +60,7 @@ fun HomePage(
             is HomeState.Loading -> {
                 CircularProgressIndicator()
             }
+
             is HomeState.Success -> {
                 SecondaryScrollableTabPager(
                     modifier = Modifier.fillMaxSize(),
@@ -74,7 +78,9 @@ fun HomePage(
                         ) {
                             itemsSegmented(lectures) { type, lecture ->
                                 SegmentedListItem(
-//                                    modifier = Modifier.fillParentMaxWidth(),
+                                    onClick = {
+                                        onCourseClick(lecture.id)
+                                    },
                                     type = type,
                                     overlineContent = {
                                         Row(
@@ -104,6 +110,7 @@ fun HomePage(
                     }
                 }
             }
+
             is HomeState.Error -> {
                 Text("Error")
             }
@@ -125,7 +132,8 @@ private fun HomeScreen_Success_Preview() {
                 state = state,
                 onDaySelect = {
                     state = state.copy(selectedDay = it)
-                }
+                },
+                onCourseClick = {}
             )
         }
     }

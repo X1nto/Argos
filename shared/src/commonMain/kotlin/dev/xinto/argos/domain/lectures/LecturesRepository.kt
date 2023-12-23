@@ -14,6 +14,7 @@ class LecturesRepository(
         it.data!!.associate { (_, scheduleAttributes, scheduleRelationships ) ->
             scheduleAttributes.name to scheduleRelationships.schedules.data.map { (_, scheduleAttributes, scheduleRelationships) ->
                 DomainLectureInfo(
+                    id = scheduleRelationships.course.data.id!!,
                     time = scheduleRelationships.hour.data.attributes.times,
                     room = scheduleAttributes.roomName,
                     name = scheduleRelationships.course.data.attributes.name,

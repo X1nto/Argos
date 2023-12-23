@@ -5,6 +5,13 @@ import dev.xinto.argos.local.account.ArgosAccountManager
 import dev.xinto.argos.network.request.ApiRequestAuthRefresh
 import dev.xinto.argos.network.request.ApiRequestAuth
 import dev.xinto.argos.network.response.ApiResponseAuth
+import dev.xinto.argos.network.response.ApiResponseCourseChosenGroup
+import dev.xinto.argos.network.response.ApiResponseCourseClassmates
+import dev.xinto.argos.network.response.ApiResponseCourseGroupSchedule
+import dev.xinto.argos.network.response.ApiResponseCourseGroups
+import dev.xinto.argos.network.response.ApiResponseCourseMaterials
+import dev.xinto.argos.network.response.ApiResponseCourseScores
+import dev.xinto.argos.network.response.ApiResponseCourseSyllabus
 import dev.xinto.argos.network.response.ApiResponseMessage
 import dev.xinto.argos.network.response.ApiResponseMessagesInbox
 import dev.xinto.argos.network.response.ApiResponseMessagesOutbox
@@ -187,6 +194,50 @@ class ArgosApi(private val argosAccountManager: ArgosAccountManager) {
     suspend fun getNews(id: String): ApiResponseNews {
         return withContext(Dispatchers.IO) {
             ktorClient.get("news/${id}").body()
+        }
+    }
+
+    suspend fun getCourseSyllabus(courseId: String): ApiResponseCourseSyllabus {
+        return withContext(Dispatchers.IO) {
+            ktorClient.get("student/courses/${courseId}/syllabus").body()
+        }
+    }
+
+    suspend fun getCourseGroups(courseId: String): ApiResponseCourseGroups {
+        return withContext(Dispatchers.IO) {
+            ktorClient.get("student/courses/${courseId}/groups").body()
+        }
+    }
+
+    suspend fun getCourseClassmates(courseId: String): ApiResponseCourseClassmates {
+        return withContext(Dispatchers.IO) {
+            ktorClient.get("student/courses/${courseId}/classmates").body()
+        }
+    }
+
+    suspend fun getCourseScores(courseId: String): ApiResponseCourseScores {
+        return withContext(Dispatchers.IO) {
+            ktorClient.get("student/courses/${courseId}/scores").body()
+        }
+    }
+
+    suspend fun getCourseChosenGroup(courseId: String): ApiResponseCourseChosenGroup {
+        return withContext(Dispatchers.IO) {
+            ktorClient.get("student/courses/${courseId}/chosen-group").body()
+        }
+    }
+
+    suspend fun getCourseGroupSchedule(courseId: String, groupId: String): ApiResponseCourseGroupSchedule {
+        return withContext(Dispatchers.IO) {
+            ktorClient.get("student/courses/${courseId}/groups/${groupId}/schedule").body()
+        }
+    }
+
+    suspend fun getCourseMaterials(courseId: String, page: Int): ApiResponseCourseMaterials {
+        return withContext(Dispatchers.IO) {
+            ktorClient.get("student/courses/${courseId}/materials") {
+                parameter("page", page)
+            }.body()
         }
     }
 

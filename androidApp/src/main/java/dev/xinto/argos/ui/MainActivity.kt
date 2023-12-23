@@ -18,6 +18,7 @@ import dev.olshevski.navigation.reimagined.rememberNavController
 import dev.olshevski.navigation.reimagined.replaceAll
 import dev.xinto.argos.domain.user.UserRepository
 import dev.xinto.argos.ui.screen.ArgosNavigation
+import dev.xinto.argos.ui.screen.course.CourseScreen
 import dev.xinto.argos.ui.screen.login.LoginScreen
 import dev.xinto.argos.ui.screen.main.MainScreen
 import dev.xinto.argos.ui.screen.message.MessageScreen
@@ -40,7 +41,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val rootNavController = rememberNavController<ArgosNavigation>(listOf())
-                    val isLoggedIn by userRepository.observeLoggedIn().collectAsStateWithLifecycle(initialValue = false)
+                    val isLoggedIn by userRepository.observeLoggedIn()
+                        .collectAsStateWithLifecycle(initialValue = false)
                     LaunchedEffect(isLoggedIn) {
                         if (isLoggedIn) {
                             rootNavController.replaceAll(ArgosNavigation.Main)
@@ -48,11 +50,15 @@ class MainActivity : ComponentActivity() {
                             rootNavController.replaceAll(ArgosNavigation.Login)
                         }
                     }
-                    AnimatedNavHost(controller = rootNavController) {
-                        when (it) {
+                    AnimatedNavHost(
+                        modifier = Modifier.fillMaxSize(),
+                        controller = rootNavController
+                    ) { destination ->
+                        when (destination) {
                             is ArgosNavigation.Login -> {
                                 LoginScreen(modifier = Modifier.fillMaxSize())
                             }
+
                             is ArgosNavigation.Main -> {
                                 MainScreen(
                                     modifier = Modifier.fillMaxSize(),
@@ -60,23 +66,38 @@ class MainActivity : ComponentActivity() {
                                         rootNavController.navigate(ArgosNavigation.Notifications)
                                     },
                                     onMessageClick = { messageId, semesterId ->
-                                        rootNavController.navigate(ArgosNavigation.Message(
-                                            id = messageId,
-                                            semesterId = semesterId
-                                        ))
+                                        rootNavController.navigate(
+                                            ArgosNavigation.Message(
+                                                id = messageId,
+                                                semesterId = semesterId
+                                            )
+                                        )
+                                    },
+                                    onCourseClick = {
+                                        rootNavController.navigate(ArgosNavigation.Course(it))
                                     }
                                 )
                             }
+
                             is ArgosNavigation.Notifications -> {
                                 NotificationsScreen(
                                     onBackClick = rootNavController::pop
                                 )
                             }
+
                             is ArgosNavigation.Message -> {
                                 MessageScreen(
                                     modifier = Modifier.fillMaxSize(),
-                                    messageId = it.id,
-                                    semesterId = it.semesterId,
+                                    messageId = destination.id,
+                                    semesterId = destination.semesterId,
+                                    onBackClick = rootNavController::pop
+                                )
+                            }
+
+                            is ArgosNavigation.Course -> {
+                                CourseScreen(
+                                    modifier = Modifier.fillMaxSize(),
+                                    courseId = destination.id,
                                     onBackClick = rootNavController::pop
                                 )
                             }

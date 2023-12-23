@@ -6,6 +6,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.SecondaryScrollableTabRow
@@ -29,6 +30,12 @@ interface TabPagerScope {
         pageContent: @Composable (P) -> Unit
     )
 
+    fun <T> tabPages(
+        items: Collection<T>,
+        tabContent: @Composable (T) -> Unit,
+        pageContent: @Composable (T) -> Unit
+    )
+
     fun tabPage(
         tabContent: @Composable () -> Unit,
         pageContent: @Composable () -> Unit
@@ -47,6 +54,16 @@ class TabPagerScopeImpl : TabPagerScope {
     ) {
         items.forEach { (tab, page) ->
             this._items[{ tabContent(tab) }] = { pageContent(page) }
+        }
+    }
+
+    override fun <T> tabPages(
+        items: Collection<T>,
+        tabContent: @Composable (T) -> Unit,
+        pageContent: @Composable (T) -> Unit
+    ) {
+        items.forEach { tab ->
+            this._items[{ tabContent(tab) }] = { pageContent(tab) }
         }
     }
 
@@ -180,6 +197,8 @@ private fun TabPager(
                     onClick = {
                         onIndexSelect(index)
                     },
+                    selectedContentColor = MaterialTheme.colorScheme.primary,
+                    unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     text = text
                 )
             }

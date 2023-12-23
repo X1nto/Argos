@@ -6,6 +6,37 @@
 
     <string name="home_title">Home</string>
 
+    <string name="course_title">Course</string>
+    <string name="course_tab_syllabus">Syllabus</string>
+    <string name="course_tab_groups">Groups</string>
+    <string name="course_tab_scores">Scores</string>
+    <string name="course_tab_materials">Materials</string>
+    <string name="course_tab_classmates">Classmates</string>
+
+    <string name="syllabus_section_duration">Duration</string>
+    <string name="syllabus_section_hours">Hours</string>
+    <string name="syllabus_section_lecturers">Lecturers</string>
+    <string name="syllabus_section_prerequisites">Lecturers</string>
+    <string name="syllabus_section_methods">Methods</string>
+    <string name="syllabus_section_mission">Mission</string>
+    <string name="syllabus_section_topics">Topics</string>
+    <string name="syllabus_section_outcomes">Outcomes</string>
+    <string name="syllabus_section_evaluation">Evaluation</string>
+    <string name="syllabus_section_resources">Resources</string>
+    <string name="syllabus_section_resources_other">Other resources</string>
+    <string name="syllabus_section_schedule">Schedule</string>
+
+    <string name="group_table_time">Time</string>
+    <string name="group_table_room">Room</string>
+    <string name="group_table_info">Info</string>
+
+    <string name="scores_table_criterion">Criterion</string>
+    <string name="scores_table_score">Score</string>
+    <string name="scores_credits">Credits</string>
+
+    <string name="classmates_lecturer">Lecturer</string>
+    <string name="classmates_classmates">Classmates</string>
+
     <string name="messages_title">Messages</string>
     <string name="messages_tab_inbox">Inbox</string>
     <string name="messages_tab_outbox">Outbox</string>

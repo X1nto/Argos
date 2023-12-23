@@ -6,24 +6,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Badge
-import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledIconButton
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.derivedStateOf
@@ -33,24 +24,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.VectorPath
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
-import coil.ImageLoader
-import coil.compose.AsyncImage
-import coil.decode.SvgDecoder
-import coil.request.CachePolicy
-import coil.request.ImageRequest
 import dev.olshevski.navigation.reimagined.AnimatedNavHost
 import dev.olshevski.navigation.reimagined.rememberNavController
 import dev.olshevski.navigation.reimagined.replaceAll
@@ -68,6 +46,7 @@ import org.koin.androidx.compose.getViewModel
 fun MainScreen(
     onNotificationsClick: () -> Unit,
     onMessageClick: (messageId: String, semesterId: String) -> Unit,
+    onCourseClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val viewModel: MainViewModel = getViewModel()
@@ -77,7 +56,8 @@ fun MainScreen(
         state = state,
         onNotificationsClick = onNotificationsClick,
         onLogoutClick = viewModel::logout,
-        onMessageClick = onMessageClick
+        onMessageClick = onMessageClick,
+        onCourseClick = onCourseClick
     )
 }
 
@@ -86,6 +66,7 @@ fun MainScreen(
     onNotificationsClick: () -> Unit,
     onLogoutClick: () -> Unit,
     onMessageClick: (messageId: String, semesterId: String) -> Unit,
+    onCourseClick: (String) -> Unit,
     state: MainState,
     modifier: Modifier = Modifier,
 ) {
@@ -114,14 +95,19 @@ fun MainScreen(
             CompositionLocalProvider(LocalViewModelStoreOwner provides viewModelStoreOwner!!) {
                 when (it) {
                     is MainNavigation.Home -> {
-                        HomePage(modifier = Modifier.fillMaxSize())
+                        HomePage(
+                            modifier = Modifier.fillMaxSize(),
+                            onCourseClick = onCourseClick
+                        )
                     }
+
                     is MainNavigation.Messages -> {
                         MessagesPage(
                             modifier = Modifier.fillMaxSize(),
                             onMessageClick = onMessageClick
                         )
                     }
+
                     is MainNavigation.News -> {
                         NewsPage(modifier = Modifier.fillMaxSize())
                     }
@@ -181,9 +167,11 @@ private fun MainScreenScaffold(
                                         .background(MaterialTheme.colorScheme.secondaryContainer)
                                 )
                             }
+
                             is MainState.Success -> {
                                 UserImage(url = state.userInfo.photoUrl)
                             }
+
                             is MainState.Error -> {
                                 Box(
                                     modifier = Modifier
@@ -242,7 +230,8 @@ fun MainScreen_Loading_Preview() {
                     .fillMaxSize()
                     .padding(it),
                 state = HomeState.Success.mockData,
-                onDaySelect = {}
+                onDaySelect = {},
+                onCourseClick = {}
             )
         }
     }
@@ -265,7 +254,8 @@ fun MainScreen_Error_Preview() {
                     .fillMaxSize()
                     .padding(it),
                 state = HomeState.Success.mockData,
-                onDaySelect = {}
+                onDaySelect = {},
+                onCourseClick = {}
             )
         }
     }

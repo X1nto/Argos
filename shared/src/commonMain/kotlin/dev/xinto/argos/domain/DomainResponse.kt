@@ -3,10 +3,13 @@ package dev.xinto.argos.domain
 import dev.xinto.argos.local.settings.ArgosLanguage
 import dev.xinto.argos.local.settings.ArgosSettings
 import dev.xinto.argos.network.response.ApiResponseBase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOn
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import kotlin.jvm.JvmInline
@@ -75,7 +78,7 @@ class DomainResponseSource<T>(
             } else {
                 state
             }
-        }
+        }.flowOn(Dispatchers.IO)
     }
 
     fun refresh() {

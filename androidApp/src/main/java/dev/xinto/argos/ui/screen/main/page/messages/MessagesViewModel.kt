@@ -49,25 +49,35 @@ class MessagesViewModel(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private inline fun <T: Any> mapActiveSemesterToPagingData(
+    private inline fun <T : Any> mapActiveSemesterToPagingData(
         crossinline onSuccess: (DomainSemester) -> Flow<PagingData<T>>
     ): Flow<PagingData<T>> {
         return activeSemester.flatMapLatest {
             when (it) {
                 is DomainResponse.Error -> {
-                    flowOf(PagingData.empty(LoadStates(
-                        refresh = LoadState.Error(Exception(it.error)),
-                        append = LoadState.NotLoading(false),
-                        prepend = LoadState.NotLoading(false)
-                    )))
+                    flowOf(
+                        PagingData.empty(
+                            LoadStates(
+                                refresh = LoadState.Error(Exception(it.error)),
+                                append = LoadState.NotLoading(false),
+                                prepend = LoadState.NotLoading(false)
+                            )
+                        )
+                    )
                 }
+
                 is DomainResponse.Loading -> {
-                    flowOf(PagingData.empty(LoadStates(
-                        refresh = LoadState.Loading,
-                        append = LoadState.NotLoading(false),
-                        prepend = LoadState.NotLoading(false)
-                    )))
+                    flowOf(
+                        PagingData.empty(
+                            LoadStates(
+                                refresh = LoadState.Loading,
+                                append = LoadState.NotLoading(false),
+                                prepend = LoadState.NotLoading(false)
+                            )
+                        )
+                    )
                 }
+
                 is DomainResponse.Success -> onSuccess(it.value)
             }
         }

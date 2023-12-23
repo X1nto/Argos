@@ -16,23 +16,25 @@ class HomeViewModel(
 
     private val _selectedDay = MutableStateFlow(LocalDate.now().dayOfWeek.value - 1)
 
-    val state = combine(lecturesRepository.observeLectures(), _selectedDay) { lectures, selectedDay ->
-        when (lectures) {
-            is DomainResponse.Loading -> HomeState.Loading
-            is DomainResponse.Success -> {
-                val selectedIndex = if (selectedDay > lectures.value.size) 0 else selectedDay
-                HomeState.Success(
-                    selectedDay = selectedIndex,
-                    lectures = lectures.value
-                )
+    val state =
+        combine(lecturesRepository.observeLectures(), _selectedDay) { lectures, selectedDay ->
+            when (lectures) {
+                is DomainResponse.Loading -> HomeState.Loading
+                is DomainResponse.Success -> {
+                    val selectedIndex = if (selectedDay > lectures.value.size) 0 else selectedDay
+                    HomeState.Success(
+                        selectedDay = selectedIndex,
+                        lectures = lectures.value
+                    )
+                }
+
+                is DomainResponse.Error -> HomeState.Error
             }
-            is DomainResponse.Error -> HomeState.Error
-        }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = HomeState.Loading
-    )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = HomeState.Loading
+        )
 
     fun selectDay(index: Int) {
         _selectedDay.value = index

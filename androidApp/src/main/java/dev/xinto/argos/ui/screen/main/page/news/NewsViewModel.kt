@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import dev.xinto.argos.domain.news.NewsRepository
 
-class NewsViewModel(private val newsRepository: NewsRepository): ViewModel() {
+class NewsViewModel(private val newsRepository: NewsRepository) : ViewModel() {
 
     val news = newsRepository.getNews()
         .flow

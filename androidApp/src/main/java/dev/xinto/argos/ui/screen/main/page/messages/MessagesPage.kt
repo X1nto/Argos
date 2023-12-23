@@ -128,9 +128,11 @@ private fun <T : DomainMessagePreview> MessagesList(
                             is LoadState.Loading -> {
                                 CircularProgressIndicator()
                             }
+
                             is LoadState.Error -> {
                                 Text(appendState.error.stackTraceToString())
                             }
+
                             else -> {}
                         }
                     }

@@ -1,6 +1,5 @@
 package dev.xinto.argos.ui.screen.main.page.news
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -50,6 +49,7 @@ fun NewsPage(
             is LoadState.Loading -> {
                 CircularProgressIndicator()
             }
+
             is LoadState.NotLoading -> {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
@@ -85,14 +85,17 @@ fun NewsPage(
                             is LoadState.Loading -> {
                                 CircularProgressIndicator()
                             }
+
                             is LoadState.Error -> {
                                 Text(appendState.error.stackTraceToString())
                             }
+
                             else -> {}
                         }
                     }
                 }
             }
+
             is LoadState.Error -> {
                 Text(refreshState.error.stackTraceToString())
             }
