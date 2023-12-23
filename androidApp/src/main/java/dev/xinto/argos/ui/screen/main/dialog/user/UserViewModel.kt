@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import dev.xinto.argos.domain.DomainResponse
 import dev.xinto.argos.domain.combine
 import dev.xinto.argos.domain.user.UserRepository
-import dev.xinto.argos.ui.screen.main.MainState
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -24,6 +23,7 @@ class UserViewModel(
                 userInfo = it.value.first,
                 userState = it.value.second
             )
+
             is DomainResponse.Error -> UserState.Error
         }
     }.stateIn(

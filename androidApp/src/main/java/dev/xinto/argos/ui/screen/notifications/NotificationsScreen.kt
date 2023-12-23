@@ -41,7 +41,7 @@ fun NotificationsScreen(
         modifier = modifier,
         notifications = notifications,
         onNotificationClick = {
-            
+
         },
         onBackClick = onBackClick
     )
@@ -81,6 +81,7 @@ fun NotificationsScreen(
                 is LoadState.Loading -> {
                     CircularProgressIndicator()
                 }
+
                 is LoadState.NotLoading -> {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
@@ -107,14 +108,17 @@ fun NotificationsScreen(
                                 is LoadState.Loading -> {
                                     CircularProgressIndicator()
                                 }
+
                                 is LoadState.Error -> {
                                     Text(appendState.error.stackTraceToString())
                                 }
+
                                 else -> {}
                             }
                         }
                     }
                 }
+
                 is LoadState.Error -> {
                     Text(refreshState.error.stackTraceToString())
                 }

@@ -6,7 +6,7 @@ import androidx.compose.runtime.Immutable
 sealed interface LoginState {
 
     @Immutable
-    data object Stale: LoginState
+    data object Stale : LoginState
 
     @Immutable
     data object Loading : LoginState

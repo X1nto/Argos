@@ -36,14 +36,14 @@ data class AppAuthServiceConfiguration(
 sealed interface AuthResult {
 
     @Immutable
-    data class Error(val error: String): AuthResult
+    data class Error(val error: String) : AuthResult
 
     @Immutable
     data class Success(
         val idToken: String?,
         val accessToken: String?,
         val refreshToken: String?
-    ): AuthResult
+    ) : AuthResult
 }
 
 
@@ -55,7 +55,11 @@ data class AppAuthRequestHandler(
 ) {
 
     fun performRequest() {
-        activityResult.launch(authorizationService.getAuthorizationRequestIntent(authorizationRequest))
+        activityResult.launch(
+            authorizationService.getAuthorizationRequestIntent(
+                authorizationRequest
+            )
+        )
     }
 }
 
@@ -84,33 +88,34 @@ fun rememberAppAuthRequest(
             Uri.parse(request.redirectUri)
         ).setScope(request.scope).build()
     }
-    val loginResult = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        if (it.data == null) {
-            onResult(AuthResult.Error("No intent"))
-            return@rememberLauncherForActivityResult
-        }
-
-        val authResponse = AuthorizationResponse.fromIntent(it.data!!)
-        val authException = AuthorizationException.fromIntent(it.data!!)
-
-        if (authResponse != null) {
-            authorizationService.performTokenRequest(authResponse.createTokenExchangeRequest()) { response, e ->
-                if (response != null) {
-                    onResult(
-                        AuthResult.Success(
-                            idToken = response.idToken,
-                            accessToken = response.accessToken,
-                            refreshToken = response.refreshToken
-                        )
-                    )
-                } else {
-                    onResult(e!!.toAuthResult())
-                }
+    val loginResult =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.data == null) {
+                onResult(AuthResult.Error("No intent"))
+                return@rememberLauncherForActivityResult
             }
-        } else {
-            onResult(authException!!.toAuthResult())
+
+            val authResponse = AuthorizationResponse.fromIntent(it.data!!)
+            val authException = AuthorizationException.fromIntent(it.data!!)
+
+            if (authResponse != null) {
+                authorizationService.performTokenRequest(authResponse.createTokenExchangeRequest()) { response, e ->
+                    if (response != null) {
+                        onResult(
+                            AuthResult.Success(
+                                idToken = response.idToken,
+                                accessToken = response.accessToken,
+                                refreshToken = response.refreshToken
+                            )
+                        )
+                    } else {
+                        onResult(e!!.toAuthResult())
+                    }
+                }
+            } else {
+                onResult(authException!!.toAuthResult())
+            }
         }
-    }
     return remember(authorizationService, authorizationRequest, loginResult) {
         AppAuthRequestHandler(authorizationService, authorizationRequest, loginResult)
     }

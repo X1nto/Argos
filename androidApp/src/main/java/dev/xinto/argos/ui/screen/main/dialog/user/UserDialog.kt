@@ -26,11 +26,11 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.xinto.argos.R
-import dev.xinto.argos.ui.component.VerticalSegmentedButton
 import dev.xinto.argos.ui.component.HorizontalSegmentedButton
 import dev.xinto.argos.ui.component.SegmentedButtonColumn
 import dev.xinto.argos.ui.component.SegmentedButtonRow
 import dev.xinto.argos.ui.component.UserImage
+import dev.xinto.argos.ui.component.VerticalSegmentedButton
 import dev.xinto.argos.ui.theme.ArgosTheme
 import org.koin.androidx.compose.getViewModel
 
@@ -82,7 +82,7 @@ fun UserDialog(
                         contentDescription = null
                     )
                 }
-                when(state) {
+                when (state) {
                     is UserState.Loading -> {
                         Box(
                             modifier = Modifier.height(200.dp),
@@ -91,6 +91,7 @@ fun UserDialog(
                             CircularProgressIndicator()
                         }
                     }
+
                     is UserState.Success -> {
                         Column(
                             modifier = Modifier
@@ -158,6 +159,7 @@ fun UserDialog(
                             }
                         }
                     }
+
                     is UserState.Error -> {
 
                     }

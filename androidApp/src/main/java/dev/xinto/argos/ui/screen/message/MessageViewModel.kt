@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.stateIn
 class MessageViewModel(
     savedStateHandle: SavedStateHandle,
     messagesRepository: MessagesRepository
-): ViewModel() {
+) : ViewModel() {
 
     private val message = messagesRepository.getMessage(
         id = savedStateHandle[KEY_MESSAGE_ID]!!,
