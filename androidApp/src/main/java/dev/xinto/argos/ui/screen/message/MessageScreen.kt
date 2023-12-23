@@ -105,7 +105,8 @@ fun MessageScreen(
                                     ${state.message.body}
                                 </div>
                                 """.trimIndent()
-                            }
+                            },
+                            userScrollEnabled = false
                         )
                     }
                 }

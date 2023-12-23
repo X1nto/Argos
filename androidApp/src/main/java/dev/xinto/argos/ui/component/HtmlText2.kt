@@ -1,7 +1,6 @@
 package dev.xinto.argos.ui.component
 
 import android.annotation.SuppressLint
-import android.view.MotionEvent
 import android.webkit.WebView
 import android.widget.FrameLayout
 import android.widget.FrameLayout.LayoutParams
@@ -31,12 +30,14 @@ import org.intellij.lang.annotations.Language
 fun MaterialHtmlText2(
     @Language("HTML")
     text: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    userScrollEnabled: Boolean = true
 ) {
     HtmlText2(
         modifier = modifier,
         text = text,
-        typography = HtmlText2Defaults.material3Typography()
+        typography = HtmlText2Defaults.material3Typography(),
+        userScrollEnabled = userScrollEnabled
     )
 }
 
@@ -48,7 +49,8 @@ fun HtmlText2(
     @Language("HTML")
     text: String,
     typography: HtmlText2Typography,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    userScrollEnabled: Boolean = true,
 ) {
     val textCss = typography.asCss(LocalDensity.current)
     AndroidView(
@@ -61,10 +63,6 @@ fun HtmlText2(
                 isLongClickable = false
                 setOnLongClickListener { true }
                 isHapticFeedbackEnabled = false
-                setOnTouchListener { _, event ->
-                    event.action == MotionEvent.ACTION_MOVE
-                }
-                setInitialScale(250)
                 layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
             }
             FrameLayout(it).apply { //FrameLayout needed to prevent crashes
@@ -89,6 +87,15 @@ fun HtmlText2(
                 </html>
             """.trimIndent()
             webView.loadData(htmlText, "text/html; charset=utf-8", "UTF-8")
+
+            if (userScrollEnabled) {
+                webView.setOnTouchListener { v, event ->
+                    webView.requestDisallowInterceptTouchEvent(true)
+                    false
+                }
+            } else {
+                webView.setOnTouchListener(null)
+            }
         },
         onReset = {
             //enable reuse
