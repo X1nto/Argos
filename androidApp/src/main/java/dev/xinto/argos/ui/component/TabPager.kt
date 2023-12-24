@@ -8,11 +8,10 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryScrollableTabRow
-import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.SecondaryScrollableTabRow
-import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabPosition
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -76,7 +75,7 @@ class TabPagerScopeImpl : TabPagerScope {
 
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PrimaryTabPager(
     selectedIndex: Int,
@@ -88,13 +87,15 @@ fun PrimaryTabPager(
     onIndexSelect = onIndexSelect,
     modifier = modifier,
     tabRow = { pager, tabs ->
-        PrimaryTabRow(
+        TabRow(
             selectedTabIndex = selectedIndex,
             indicator = {
                 TabRowDefaults.PrimaryIndicator(
                     modifier = Modifier.pagerTabIndicatorOffset(pager, it)
                 )
             },
+            containerColor = TabRowDefaults.primaryContainerColor,
+            contentColor = TabRowDefaults.primaryContentColor,
             tabs = tabs
         )
     },
@@ -127,7 +128,7 @@ fun PrimaryScrollableTabPager(
 )
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 fun SecondaryTabPager(
     selectedIndex: Int,
     onIndexSelect: (Int) -> Unit,
@@ -138,13 +139,15 @@ fun SecondaryTabPager(
     onIndexSelect = onIndexSelect,
     modifier = modifier,
     tabRow = { pager, tabs ->
-        SecondaryTabRow(
+        TabRow(
             selectedTabIndex = selectedIndex,
             indicator = {
                 TabRowDefaults.SecondaryIndicator(
                     modifier = Modifier.pagerTabIndicatorOffset(pager, it)
                 )
             },
+            containerColor = TabRowDefaults.secondaryContainerColor,
+            contentColor = TabRowDefaults.secondaryContentColor,
             tabs = tabs
         )
     },

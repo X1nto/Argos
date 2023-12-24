@@ -1,15 +1,15 @@
 [versions]
 agp = "8.2.0"
-kotlin = "1.9.20"
+kotlin = "1.9.21"
 compose = "1.5.4"
-compose-compiler = "1.5.4"
+compose-compiler = "1.5.7"
 ktor = "2.3.6"
 coil = "2.5.0"
 paging = "3.3.0-alpha02-0.4.0"
 
 [libraries]
 androidx-core = { group = "androidx.core", name = "core-ktx", version = "1.12.0"}
-androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.8.1" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version = "1.8.2" }
 androidx-browser = { module = "androidx.browser:browser", version = "1.7.0" }
 androidx-crypto = { group = "androidx.security", name = "security-crypto", version = "1.1.0-alpha06" }
 androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version = "2.6.2" }
@@ -24,7 +24,7 @@ compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
 compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose" }
-compose-material3 = { module = "androidx.compose.material3:material3", version = "1.2.0-alpha11" }
+compose-material3 = { module = "androidx.compose.material3:material3", version = "1.2.0-beta01" }
 
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version = "0.4.1" }
