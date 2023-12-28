@@ -12,6 +12,9 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.jvm.JvmInline
 
 sealed interface DomainResponse<out T> {
@@ -22,24 +25,6 @@ sealed interface DomainResponse<out T> {
     value class Error(val error: String) : DomainResponse<Nothing>
 
     data object Loading : DomainResponse<Nothing>
-}
-
-inline fun <T : ApiResponseBase, R> DomainResponseSource(
-    crossinline fetch: suspend (ArgosLanguage) -> T,
-    crossinline transform: (T) -> R,
-): DomainResponseSource<R> {
-    return DomainResponseSource {
-        try {
-            val result = fetch(it)
-            if (result.message == "ok") {
-                DomainResponse.Success(transform(result))
-            } else {
-                DomainResponse.Error(result.errors!!.general[0])
-            }
-        } catch (e: Exception) {
-            DomainResponse.Error(e.message ?: e.stackTraceToString())
-        }
-    }
 }
 
 inline fun <T1, T2, R> combine(
@@ -61,28 +46,48 @@ inline fun <T1, T2, R> combine(
     }
 }
 
-class DomainResponseSource<T>(
-    private inline val compute: suspend (ArgosLanguage) -> DomainResponse<T>
+class DomainResponseSource<T : ApiResponseBase, R>(
+    private inline val fetch: suspend (ArgosLanguage) -> T,
+    private inline val transform: (T) -> R,
 ): KoinComponent {
 
     private val settings: ArgosSettings = get()
 
-    private val state = MutableStateFlow<DomainResponse<T>>(DomainResponse.Loading)
+    private val state = MutableStateFlow<DomainResponse<R>>(DomainResponse.Loading)
 
-    fun asFlow(): Flow<DomainResponse<T>> {
+    fun asFlow(): Flow<DomainResponse<R>> {
         return combine(state, settings.observeLanguage()) { state, language ->
-            return@combine if (state is DomainResponse.Loading) {
-                compute(language).also {
+            state.takeUnlessOr(predicate = { it is DomainResponse.Loading }) {
+                try {
+                    val result = fetch(language)
+                    if (result.message == "ok") {
+                        DomainResponse.Success(transform(result))
+                    } else {
+                        DomainResponse.Error(result.errors!!.general[0])
+                    }
+                } catch (e: Exception) {
+                    DomainResponse.Error(e.message ?: e.stackTraceToString())
+                }.also {
                     this.state.value = it
                 }
-            } else {
-                state
             }
         }.flowOn(Dispatchers.IO)
     }
 
     fun refresh() {
         state.value = DomainResponse.Loading
+    }
+
+    @OptIn(ExperimentalContracts::class)
+    private inline fun <T> T.takeUnlessOr(
+        predicate: (T) -> Boolean,
+        unless: () -> T
+    ): T {
+        contract {
+            callsInPlace(predicate, InvocationKind.EXACTLY_ONCE)
+            callsInPlace(unless, InvocationKind.EXACTLY_ONCE)
+        }
+        return if (!predicate(this)) this else unless()
     }
 
     suspend operator fun invoke() = asFlow().first()

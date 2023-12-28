@@ -57,7 +57,7 @@ class MessagesRepository(
         )
     }
 
-    fun getMessage(id: String, semId: String): DomainResponseSource<DomainMessage> {
+    fun getMessage(id: String, semId: String): DomainResponseSource<*, DomainMessage> {
         return DomainResponseSource(
             fetch = {
                 argosApi.getMessage(id, semId)

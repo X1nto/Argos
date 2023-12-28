@@ -12,7 +12,7 @@ class CoursesRepository(
     private val argosApi: ArgosApi
 ) {
 
-    fun getCourseSyllabus(courseId: String): DomainResponseSource<DomainCourseSyllabus> {
+    fun getCourseSyllabus(courseId: String): DomainResponseSource<*, DomainCourseSyllabus> {
         return DomainResponseSource(
             fetch = {
                 argosApi.getCourseSyllabus(courseId)
@@ -45,7 +45,7 @@ class CoursesRepository(
         )
     }
 
-    fun getCourseScores(courseId: String): DomainResponseSource<DomainCourseScores> {
+    fun getCourseScores(courseId: String): DomainResponseSource<*, DomainCourseScores> {
         return DomainResponseSource(
             fetch = {
                 argosApi.getCourseScores(courseId)
@@ -64,7 +64,7 @@ class CoursesRepository(
         )
     }
 
-    fun getCourseClassmates(courseId: String): DomainResponseSource<List<DomainCourseClassmate>> {
+    fun getCourseClassmates(courseId: String): DomainResponseSource<*, List<DomainCourseClassmate>> {
         return DomainResponseSource(
             fetch = {
                 argosApi.getCourseClassmates(courseId)
@@ -81,7 +81,7 @@ class CoursesRepository(
         )
     }
 
-    fun getCourseGroups(courseId: String): DomainResponseSource<List<DomainCourseGroup>> {
+    fun getCourseGroups(courseId: String): DomainResponseSource<*, List<DomainCourseGroup>> {
         return DomainResponseSource(
             fetch = {
                 argosApi.getCourseGroups(courseId)
@@ -103,7 +103,7 @@ class CoursesRepository(
         )
     }
 
-    fun getCourseChosenGroup(courseId: String): DomainResponseSource<DomainCourseChosenGroup> {
+    fun getCourseChosenGroup(courseId: String): DomainResponseSource<*, DomainCourseChosenGroup> {
         return DomainResponseSource(
             fetch = {
                 argosApi.getCourseChosenGroup(courseId)
@@ -123,7 +123,7 @@ class CoursesRepository(
     fun getCourseGroupSchedule(
         courseId: String,
         groupId: String
-    ): DomainResponseSource<List<DomainCourseGroupSchedule>> {
+    ): DomainResponseSource<*, List<DomainCourseGroupSchedule>> {
         return DomainResponseSource(
             fetch = {
                 argosApi.getCourseGroupSchedule(courseId, groupId)
