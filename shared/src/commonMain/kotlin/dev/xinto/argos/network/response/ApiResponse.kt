@@ -16,6 +16,8 @@ data class ApiResponse<D>(
     override val message: String,
 ) : ApiResponseBase
 
+typealias ApiResponseEmpty = ApiResponse<ApiResponseData<List<Nothing>>>
+
 @Serializable
 data class ApiResponseWithMeta<D, M>(
     override val id: String? = null,

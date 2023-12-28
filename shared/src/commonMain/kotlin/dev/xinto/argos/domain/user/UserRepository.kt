@@ -4,6 +4,7 @@ import dev.xinto.argos.domain.DomainResponseSource
 import dev.xinto.argos.domain.combine
 import dev.xinto.argos.local.account.ArgosAccountManager
 import dev.xinto.argos.network.ArgosApi
+import dev.xinto.argos.network.request.ApiRequestContact
 import dev.xinto.argos.util.formatCurrency
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -18,9 +19,18 @@ class UserRepository(
     private val userInfo = DomainResponseSource({ argosApi.getUserAuth() }) { state ->
         state.data!!.let { (_, attributes, relationships) ->
             DomainUserInfo(
+                firstName = attributes.firstName,
+                lastName = attributes.lastName,
                 fullName = attributes.fullName,
-                photoUrl = attributes.photoUrl,
+                birthDate = attributes.birthDate,
+                idNumber = attributes.personalNumber,
                 email = attributes.email,
+                mobileNumber1 = attributes.mobileNumber,
+                mobileNumber2 = attributes.mobileNumber2,
+                homeNumber = attributes.homeNumber,
+                juridicalAddress = attributes.juridicalAddress,
+                currentAddress = attributes.actualAddress,
+                photoUrl = attributes.photoUrl,
                 degree = relationships.profiles.data[0].attributes.degree,
             )
         }
@@ -45,6 +55,18 @@ class UserRepository(
 
     suspend fun logout() {
         argosAccountManager.logout()
+    }
+
+    suspend fun updateUserInfo(domainUserInfo: DomainUserInfo): Boolean {
+        val response = argosApi.patchUserContactInfo(
+            ApiRequestContact(
+                mobileNumber = domainUserInfo.mobileNumber1,
+                mobileNumber2 = domainUserInfo.mobileNumber2,
+                homeNumber = domainUserInfo.homeNumber,
+                actualAddress = domainUserInfo.currentAddress
+            )
+        )
+        return response.message == "ok"
     }
 
     fun observeLoggedIn(): Flow<Boolean> {

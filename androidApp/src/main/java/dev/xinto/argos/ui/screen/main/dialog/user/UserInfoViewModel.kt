@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
-class UserViewModel(
+class UserInfoViewModel(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
@@ -18,18 +18,18 @@ class UserViewModel(
         userRepository.getUserState().asFlow()
     ) { info, state -> info to state }.map {
         when (it) {
-            is DomainResponse.Loading -> UserState.Loading
-            is DomainResponse.Success -> UserState.Success(
+            is DomainResponse.Loading -> UserInfoState.Loading
+            is DomainResponse.Success -> UserInfoState.Success(
                 userInfo = it.value.first,
                 userState = it.value.second
             )
 
-            is DomainResponse.Error -> UserState.Error
+            is DomainResponse.Error -> UserInfoState.Error
         }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
-        initialValue = UserState.Loading
+        initialValue = UserInfoState.Loading
     )
 
 }

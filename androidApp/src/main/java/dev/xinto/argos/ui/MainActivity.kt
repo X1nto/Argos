@@ -33,6 +33,7 @@ import dev.xinto.argos.ui.screen.login.LoginScreen
 import dev.xinto.argos.ui.screen.main.MainScreen
 import dev.xinto.argos.ui.screen.message.MessageScreen
 import dev.xinto.argos.ui.screen.notifications.NotificationsScreen
+import dev.xinto.argos.ui.screen.user.UserScreen
 import dev.xinto.argos.ui.theme.ArgosTheme
 import org.koin.android.ext.android.inject
 
@@ -76,6 +77,9 @@ class MainActivity : ComponentActivity() {
                                     onNotificationsClick = {
                                         rootNavController.navigate(ArgosNavigation.Notifications)
                                     },
+                                    onUserClick = {
+                                        rootNavController.navigate(ArgosNavigation.User)
+                                    },
                                     onMessageClick = { messageId, semesterId ->
                                         rootNavController.navigate(
                                             ArgosNavigation.Message(
@@ -93,6 +97,13 @@ class MainActivity : ComponentActivity() {
                             is ArgosNavigation.Notifications -> {
                                 NotificationsScreen(
                                     onBackClick = rootNavController::pop
+                                )
+                            }
+
+                            is ArgosNavigation.User -> {
+                                UserScreen(
+                                    modifier = Modifier.fillMaxSize(),
+                                    onBackNavigate = rootNavController::pop
                                 )
                             }
 

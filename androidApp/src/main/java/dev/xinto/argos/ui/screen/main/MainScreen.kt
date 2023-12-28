@@ -45,6 +45,7 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun MainScreen(
     onNotificationsClick: () -> Unit,
+    onUserClick: () -> Unit,
     onMessageClick: (messageId: String, semesterId: String) -> Unit,
     onCourseClick: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -56,6 +57,7 @@ fun MainScreen(
         state = state,
         onNotificationsClick = onNotificationsClick,
         onLogoutClick = viewModel::logout,
+        onUserClick = onUserClick,
         onMessageClick = onMessageClick,
         onCourseClick = onCourseClick
     )
@@ -64,6 +66,7 @@ fun MainScreen(
 @Composable
 fun MainScreen(
     onNotificationsClick: () -> Unit,
+    onUserClick: () -> Unit,
     onLogoutClick: () -> Unit,
     onMessageClick: (messageId: String, semesterId: String) -> Unit,
     onCourseClick: (String) -> Unit,
@@ -118,6 +121,10 @@ fun MainScreen(
                         onDismiss = { userDialogShown = false },
                         onBalanceNavigate = { /*TODO*/ },
                         onLibraryNavigate = { /*TODO*/ },
+                        onUserNavigate = {
+                            userDialogShown = false
+                            onUserClick()
+                        },
                         onSettingsNavigate = { /*TODO*/ },
                         onLogoutClick = {
                             userDialogShown = false

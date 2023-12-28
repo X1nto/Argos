@@ -4,6 +4,7 @@ import dev.xinto.argos.domain.messages.DomainMessage
 import dev.xinto.argos.local.account.ArgosAccountManager
 import dev.xinto.argos.network.request.ApiRequestAuthRefresh
 import dev.xinto.argos.network.request.ApiRequestAuth
+import dev.xinto.argos.network.request.ApiRequestContact
 import dev.xinto.argos.network.response.ApiResponseAuth
 import dev.xinto.argos.network.response.ApiResponseCourseChosenGroup
 import dev.xinto.argos.network.response.ApiResponseCourseClassmates
@@ -12,6 +13,7 @@ import dev.xinto.argos.network.response.ApiResponseCourseGroups
 import dev.xinto.argos.network.response.ApiResponseCourseMaterials
 import dev.xinto.argos.network.response.ApiResponseCourseScores
 import dev.xinto.argos.network.response.ApiResponseCourseSyllabus
+import dev.xinto.argos.network.response.ApiResponseEmpty
 import dev.xinto.argos.network.response.ApiResponseMessage
 import dev.xinto.argos.network.response.ApiResponseMessagesInbox
 import dev.xinto.argos.network.response.ApiResponseMessagesOutbox
@@ -34,6 +36,7 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.client.request.patch
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
@@ -134,6 +137,15 @@ class ArgosApi(private val argosAccountManager: ArgosAccountManager) {
     suspend fun getUserState(): ApiResponseUserState {
         return withContext(Dispatchers.IO) {
             ktorClient.get("user/state").body()
+        }
+    }
+
+    suspend fun patchUserContactInfo(contact: ApiRequestContact): ApiResponseEmpty {
+        return withContext(Dispatchers.IO) {
+            ktorClient.patch("user/contact") {
+                contentType(ContentType.Application.Json)
+                setBody(contact)
+            }.body()
         }
     }
 

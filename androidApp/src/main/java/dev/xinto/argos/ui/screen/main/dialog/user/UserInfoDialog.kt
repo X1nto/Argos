@@ -39,16 +39,18 @@ fun UserDialog(
     onDismiss: () -> Unit,
     onBalanceNavigate: () -> Unit,
     onLibraryNavigate: () -> Unit,
+    onUserNavigate: () -> Unit,
     onSettingsNavigate: () -> Unit,
     onLogoutClick: () -> Unit,
 ) {
-    val viewModel: UserViewModel = getViewModel()
+    val viewModel: UserInfoViewModel = getViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     UserDialog(
         state = state,
         onDismiss = onDismiss,
         onBalanceNavigate = onBalanceNavigate,
         onLibraryNavigate = onLibraryNavigate,
+        onUserNavigate = onUserNavigate,
         onSettingsNavigate = onSettingsNavigate,
         onLogoutClick = onLogoutClick
     )
@@ -57,10 +59,11 @@ fun UserDialog(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserDialog(
-    state: UserState,
+    state: UserInfoState,
     onDismiss: () -> Unit,
     onBalanceNavigate: () -> Unit,
     onLibraryNavigate: () -> Unit,
+    onUserNavigate: () -> Unit,
     onSettingsNavigate: () -> Unit,
     onLogoutClick: () -> Unit,
 ) {
@@ -83,7 +86,7 @@ fun UserDialog(
                     )
                 }
                 when (state) {
-                    is UserState.Loading -> {
+                    is UserInfoState.Loading -> {
                         Box(
                             modifier = Modifier.height(200.dp),
                             contentAlignment = Alignment.Center
@@ -92,7 +95,7 @@ fun UserDialog(
                         }
                     }
 
-                    is UserState.Success -> {
+                    is UserInfoState.Success -> {
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -142,6 +145,13 @@ fun UserDialog(
                                         )
                                     }
                                 }
+                                HorizontalSegmentedButton(onClick = onUserNavigate) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.ic_account),
+                                        contentDescription = null
+                                    )
+                                    Text(stringResource(R.string.user_title))
+                                }
                                 HorizontalSegmentedButton(onClick = onSettingsNavigate) {
                                     Icon(
                                         painter = painterResource(R.drawable.ic_settings),
@@ -160,7 +170,7 @@ fun UserDialog(
                         }
                     }
 
-                    is UserState.Error -> {
+                    is UserInfoState.Error -> {
 
                     }
                 }
@@ -174,10 +184,11 @@ fun UserDialog(
 fun UserDialog_Success_Preview() {
     ArgosTheme {
         UserDialog(
-            state = UserState.mockSuccess,
+            state = UserInfoState.mockSuccess,
             onDismiss = {},
             onLogoutClick = {},
             onBalanceNavigate = {},
+            onUserNavigate = {},
             onLibraryNavigate = {},
             onSettingsNavigate = {}
         )
@@ -189,10 +200,11 @@ fun UserDialog_Success_Preview() {
 fun UserDialog_Loading_Preview() {
     ArgosTheme {
         UserDialog(
-            state = UserState.Loading,
+            state = UserInfoState.Loading,
             onDismiss = {},
             onLogoutClick = {},
             onBalanceNavigate = {},
+            onUserNavigate = {},
             onLibraryNavigate = {},
             onSettingsNavigate = {}
         )

@@ -4,6 +4,18 @@
 
     <string name="user_action_logout">Sign out</string>
 
+    <string name="user_title">My Profile</string>
+    <string name="user_field_firstname">First name</string>
+    <string name="user_field_lastname">Last name</string>
+    <string name="user_field_birthdate">Birth date</string>
+    <string name="user_field_idnumber">ID number</string>
+    <string name="user_field_email">Email</string>
+    <string name="user_field_mobilenum1">Mobile number 1</string>
+    <string name="user_field_mobilenum2">Mobile number 2</string>
+    <string name="user_field_homenum">Home number</string>
+    <string name="user_field_address_juridical">Juridical address</string>
+    <string name="user_field_address_current">Current address</string>
+
     <string name="home_title">Home</string>
 
     <string name="course_title">Course</string>

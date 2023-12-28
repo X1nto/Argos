@@ -7,12 +7,13 @@ import dev.xinto.argos.ui.screen.course.page.scores.ScoresViewModel
 import dev.xinto.argos.ui.screen.course.page.syllabus.SyllabusViewModel
 import dev.xinto.argos.ui.screen.login.LoginViewModel
 import dev.xinto.argos.ui.screen.main.MainViewModel
-import dev.xinto.argos.ui.screen.main.dialog.user.UserViewModel
+import dev.xinto.argos.ui.screen.main.dialog.user.UserInfoViewModel
 import dev.xinto.argos.ui.screen.main.page.home.HomeViewModel
 import dev.xinto.argos.ui.screen.main.page.messages.MessagesViewModel
 import dev.xinto.argos.ui.screen.main.page.news.NewsViewModel
 import dev.xinto.argos.ui.screen.message.MessageViewModel
 import dev.xinto.argos.ui.screen.notifications.NotificationsViewModel
+import dev.xinto.argos.ui.screen.user.UserViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -23,11 +24,12 @@ val UiModule = module {
     viewModelOf(::MessagesViewModel)
     viewModelOf(::NewsViewModel)
     viewModelOf(::NotificationsViewModel)
-    viewModelOf(::UserViewModel)
+    viewModelOf(::UserInfoViewModel)
     viewModelOf(::MessageViewModel)
     viewModelOf(::SyllabusViewModel)
     viewModelOf(::GroupsViewModel)
     viewModelOf(::ScoresViewModel)
     viewModelOf(::MaterialsViewModel)
     viewModelOf(::ClassmatesViewModel)
+    viewModelOf(::UserViewModel)
 }
