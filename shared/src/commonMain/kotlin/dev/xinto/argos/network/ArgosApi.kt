@@ -1,9 +1,8 @@
 package dev.xinto.argos.network
 
-import dev.xinto.argos.domain.messages.DomainMessage
 import dev.xinto.argos.local.account.ArgosAccountManager
-import dev.xinto.argos.network.request.ApiRequestAuthRefresh
 import dev.xinto.argos.network.request.ApiRequestAuth
+import dev.xinto.argos.network.request.ApiRequestAuthRefresh
 import dev.xinto.argos.network.request.ApiRequestContact
 import dev.xinto.argos.network.response.ApiResponseAuth
 import dev.xinto.argos.network.response.ApiResponseCourseChosenGroup
@@ -49,60 +48,6 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 
 class ArgosApi(private val argosAccountManager: ArgosAccountManager) {
-
-    private val ProfilePlugin = createClientPlugin("ArgusProfile") {
-        onRequest { request, _ ->
-            val path = request.url.encodedPath
-            if (!path.contains("auth/user") && !path.contains("auth/token")) {
-                request.headers.append("profile-id", argosAccountManager.getProfileId()!!)
-            }
-        }
-    }
-
-    @PublishedApi
-    internal val ktorClient = HttpClient(engine) {
-        install(ContentNegotiation) {
-            json(Json {
-                ignoreUnknownKeys = true
-            })
-        }
-        install(HttpCache) {
-            privateStorage(CacheStorage.Disabled)
-        }
-        defaultRequest {
-            url("https://argus.iliauni.edu.ge/api/v1/")
-            headers.append("accept-language", "en")
-        }
-        install(Auth) {
-            bearer {
-                loadTokens {
-                    val accessToken = argosAccountManager.getToken()
-                    val refreshToken = argosAccountManager.getRefreshToken()
-                    if (accessToken != null && refreshToken != null) {
-                        BearerTokens(accessToken, refreshToken)
-                    } else null
-                }
-                refreshTokens {
-                    val refreshResponse = client.post("auth/token/refresh") {
-                        markAsRefreshTokenRequest()
-                        contentType(ContentType.Application.Json)
-                        setBody(ApiRequestAuthRefresh(
-                            clientId = "2",
-                            grantType = "internal_refresh_token",
-                            refreshToken = oldTokens?.refreshToken ?: argosAccountManager.getRefreshToken()!!
-                        ))
-                    }.body<ApiResponseAuth>()
-                    if (saveTokens(refreshResponse)) {
-                        BearerTokens(
-                            accessToken = refreshResponse.data!!.attributes.accessToken,
-                            refreshToken = refreshResponse.data.attributes.refreshToken,
-                        )
-                    } else null
-                }
-            }
-        }
-        install(ProfilePlugin)
-    }
 
     suspend fun loginGoogle(googleToken: String): Boolean {
         return withContext(Dispatchers.IO) {
@@ -262,6 +207,60 @@ class ArgosApi(private val argosAccountManager: ArgosAccountManager) {
         }
 
         return false
+    }
+
+    private val ProfilePlugin = createClientPlugin("ArgusProfile") {
+        onRequest { request, _ ->
+            val path = request.url.encodedPath
+            if (!path.contains("auth/user") && !path.contains("auth/token")) {
+                request.headers.append("profile-id", argosAccountManager.getProfileId()!!)
+            }
+        }
+    }
+
+    private val ktorClient = HttpClient(engine) {
+        install(ContentNegotiation) {
+            json(Json {
+                ignoreUnknownKeys = true
+            })
+        }
+        install(HttpCache) {
+            privateStorage(CacheStorage.Disabled)
+        }
+        defaultRequest {
+            url("https://argus.iliauni.edu.ge/api/v1/")
+
+            headers.append("accept-language", "en")
+        }
+        install(Auth) {
+            bearer {
+                loadTokens {
+                    val accessToken = argosAccountManager.getToken()
+                    val refreshToken = argosAccountManager.getRefreshToken()
+                    if (accessToken != null && refreshToken != null) {
+                        BearerTokens(accessToken, refreshToken)
+                    } else null
+                }
+                refreshTokens {
+                    val refreshResponse = client.post("auth/token/refresh") {
+                        markAsRefreshTokenRequest()
+                        contentType(ContentType.Application.Json)
+                        setBody(ApiRequestAuthRefresh(
+                            clientId = "2",
+                            grantType = "internal_refresh_token",
+                            refreshToken = oldTokens?.refreshToken ?: argosAccountManager.getRefreshToken()!!
+                        ))
+                    }.body<ApiResponseAuth>()
+                    if (saveTokens(refreshResponse)) {
+                        BearerTokens(
+                            accessToken = refreshResponse.data!!.attributes.accessToken,
+                            refreshToken = refreshResponse.data.attributes.refreshToken,
+                        )
+                    } else null
+                }
+            }
+        }
+        install(ProfilePlugin)
     }
 
     companion object
