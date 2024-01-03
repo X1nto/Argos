@@ -1,9 +1,9 @@
-package dev.xinto.argos.ui.screen.user
+package dev.xinto.argos.ui.screen.meuserprofile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.xinto.argos.domain.DomainResponse
-import dev.xinto.argos.domain.user.DomainUserInfo
+import dev.xinto.argos.domain.user.DomainMeUserInfo
 import dev.xinto.argos.domain.user.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -13,25 +13,27 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
+class MeUserProfileViewModel(
+    private val userRepository: UserRepository
+) : ViewModel() {
 
-    private val tempInfo = MutableStateFlow<DomainUserInfo?>(null)
+    private val tempInfo = MutableStateFlow<DomainMeUserInfo?>(null)
 
-    private val userInfo = userRepository.getUserInfo()
+    private val userInfo = userRepository.getMeUserInfo()
 
     val state = combine(userInfo.asFlow(), tempInfo) { userInfo, tempUserInfo ->
         when (userInfo) {
-            is DomainResponse.Loading -> UserState.Loading
+            is DomainResponse.Loading -> MeUserProfileState.Loading
             is DomainResponse.Success -> {
                 val info = tempUserInfo ?: userInfo.value
-                UserState.Success(info)
+                MeUserProfileState.Success(info)
             }
-            is DomainResponse.Error -> UserState.Error
+            is DomainResponse.Error -> MeUserProfileState.Error
         }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
-        initialValue = UserState.Loading
+        initialValue = MeUserProfileState.Loading
     )
 
     private val _saving = MutableStateFlow(false)
@@ -83,10 +85,10 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
         }
     }
 
-    private inline fun updateInfo(update: (DomainUserInfo) -> DomainUserInfo) {
+    private inline fun updateInfo(update: (DomainMeUserInfo) -> DomainMeUserInfo) {
         tempInfo.update {
             if (it == null) {
-                val user = (state.value as? UserState.Success)?.user
+                val user = (state.value as? MeUserProfileState.Success)?.user
                 user?.let(update)
             } else {
                 it.let(update)

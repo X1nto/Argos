@@ -1,8 +1,8 @@
 package dev.xinto.argos.ui.screen.main
 
 import androidx.compose.runtime.Immutable
-import dev.xinto.argos.domain.user.DomainUserInfo
-import dev.xinto.argos.domain.user.DomainUserState
+import dev.xinto.argos.domain.user.DomainMeUserInfo
+import dev.xinto.argos.domain.user.DomainMeUserState
 
 @Immutable
 sealed interface MainState {
@@ -11,8 +11,8 @@ sealed interface MainState {
     data object Loading : MainState
 
     data class Success(
-        val userInfo: DomainUserInfo,
-        val userState: DomainUserState
+        val userInfo: DomainMeUserInfo,
+        val userState: DomainMeUserState
     ) : MainState
 
     data object Error : MainState

@@ -20,6 +20,7 @@ import dev.xinto.argos.network.response.ApiResponseNews
 import dev.xinto.argos.network.response.ApiResponseNotifications
 import dev.xinto.argos.network.response.ApiResponseSchedules
 import dev.xinto.argos.network.response.ApiResponseSemesters
+import dev.xinto.argos.network.response.ApiResponseUserProfile
 import dev.xinto.argos.network.response.ApiResponseUserAuth
 import dev.xinto.argos.network.response.ApiResponseUserState
 import io.ktor.client.HttpClient
@@ -195,6 +196,12 @@ class ArgosApi(private val argosAccountManager: ArgosAccountManager) {
             ktorClient.get("student/courses/${courseId}/materials") {
                 parameter("page", page)
             }.body()
+        }
+    }
+
+    suspend fun getUserProfile(userId: String): ApiResponseUserProfile {
+        return withContext(Dispatchers.IO) {
+            ktorClient.get("users/$userId").body()
         }
     }
 

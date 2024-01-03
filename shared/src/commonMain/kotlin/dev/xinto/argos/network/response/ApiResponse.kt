@@ -37,14 +37,16 @@ data class ApiErrors(
 @Serializable
 data class ApiResponseData<A>(
     val id: String? = null,
-    val attributes: A
+    val attributes: A,
+    val type: String
 )
 
 @Serializable
 data class ApiResponseDataWithRelationships<A, R>(
     val id: String? = null,
     val attributes: A,
-    val relationships: R
+    val relationships: R,
+    val type: String,
 )
 
 @Serializable

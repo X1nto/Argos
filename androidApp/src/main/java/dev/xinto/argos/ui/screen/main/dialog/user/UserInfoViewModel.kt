@@ -14,8 +14,8 @@ class UserInfoViewModel(
 ) : ViewModel() {
 
     val state = combine(
-        userRepository.getUserInfo().asFlow(),
-        userRepository.getUserState().asFlow()
+        userRepository.getMeUserInfo().asFlow(),
+        userRepository.getMeUserState().asFlow()
     ) { info, state -> info to state }.map {
         when (it) {
             is DomainResponse.Loading -> UserInfoState.Loading

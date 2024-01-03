@@ -1,14 +1,10 @@
 package dev.xinto.argos.domain.user
 
 import dev.xinto.argos.domain.DomainResponseSource
-import dev.xinto.argos.domain.combine
 import dev.xinto.argos.local.account.ArgosAccountManager
 import dev.xinto.argos.network.ArgosApi
 import dev.xinto.argos.network.request.ApiRequestContact
 import dev.xinto.argos.util.formatCurrency
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 
 class UserRepository(
@@ -16,9 +12,9 @@ class UserRepository(
     private val argosAccountManager: ArgosAccountManager
 ) {
 
-    private val userInfo = DomainResponseSource({ argosApi.getUserAuth() }) { state ->
+    private val meUserInfo = DomainResponseSource({ argosApi.getUserAuth() }) { state ->
         state.data!!.let { (_, attributes, relationships) ->
-            DomainUserInfo(
+            DomainMeUserInfo(
                 firstName = attributes.firstName,
                 lastName = attributes.lastName,
                 fullName = attributes.fullName,
@@ -36,9 +32,9 @@ class UserRepository(
         }
     }
 
-    private val userState = DomainResponseSource({ argosApi.getUserState() }) { state ->
+    private val meUserState = DomainResponseSource({ argosApi.getUserState() }) { state ->
         state.data!!.attributes.let { attributes ->
-            DomainUserState(
+            DomainMeUserState(
                 billingBalance = attributes.billingBalance.formatCurrency("GEL"),
                 libraryBalance = attributes.libraryBalance.toString(),
                 newsUnread = attributes.newsUnread,
@@ -57,13 +53,13 @@ class UserRepository(
         argosAccountManager.logout()
     }
 
-    suspend fun updateUserInfo(domainUserInfo: DomainUserInfo): Boolean {
+    suspend fun updateUserInfo(info: DomainMeUserInfo): Boolean {
         val response = argosApi.patchUserContactInfo(
             ApiRequestContact(
-                mobileNumber = domainUserInfo.mobileNumber1,
-                mobileNumber2 = domainUserInfo.mobileNumber2,
-                homeNumber = domainUserInfo.homeNumber,
-                actualAddress = domainUserInfo.currentAddress
+                mobileNumber = info.mobileNumber1,
+                mobileNumber2 = info.mobileNumber2,
+                homeNumber = info.homeNumber,
+                actualAddress = info.currentAddress
             )
         )
         return response.message == "ok"
@@ -73,8 +69,47 @@ class UserRepository(
         return argosAccountManager.isLoggedIn()
     }
 
-    fun getUserInfo() = userInfo
+    fun getMeUserInfo() = meUserInfo
 
-    fun getUserState() = userState
+    fun getMeUserState() = meUserState
+
+    fun getUserProfile(userId: String): DomainResponseSource<*, DomainUserProfile> {
+        return DomainResponseSource(
+            fetch = {
+                argosApi.getUserProfile(userId)
+            },
+            transform = {
+                it.data!!.let { (_, attributes, relationships) ->
+                    val profile = relationships.profiles.data[0]
+                    when (profile.type) {
+                        "UserProfileStudent" -> {
+                            DomainStudentProfile(
+                                id = attributes.uid,
+                                fullName = attributes.fullName,
+                                photoUrl = attributes.photoUrl,
+                                email = attributes.email,
+                                degree = DomainStudentDegree.entries.first {
+                                    it.value == profile.attributes.degree
+                                }
+                            )
+                        }
+                        "UserProfileLecturer" -> {
+                            DomainLecturerProfile(
+                                id = attributes.uid,
+                                fullName = attributes.fullName,
+                                photoUrl = attributes.photoUrl,
+                                email = attributes.email,
+                                degree = DomainLecturerDegree.entries.first {
+                                    it.value == profile.attributes.degree
+                                }
+                            )
+                        }
+                        else -> error("Unsupported type")
+                    }
+                }
+
+            }
+        )
+    }
 
 }

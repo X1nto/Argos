@@ -2,19 +2,19 @@
 <resources>
     <string name="app_name">Argos</string>
 
-    <string name="user_action_logout">Sign out</string>
+    <string name="meuserprofile_action_logout">Sign out</string>
 
-    <string name="user_title">My Profile</string>
-    <string name="user_field_firstname">First name</string>
-    <string name="user_field_lastname">Last name</string>
-    <string name="user_field_birthdate">Birth date</string>
-    <string name="user_field_idnumber">ID number</string>
-    <string name="user_field_email">Email</string>
-    <string name="user_field_mobilenum1">Mobile number 1</string>
-    <string name="user_field_mobilenum2">Mobile number 2</string>
-    <string name="user_field_homenum">Home number</string>
-    <string name="user_field_address_juridical">Juridical address</string>
-    <string name="user_field_address_current">Current address</string>
+    <string name="meuserprofile_title">My Profile</string>
+    <string name="meuserprofile_field_firstname">First name</string>
+    <string name="meuserprofile_field_lastname">Last name</string>
+    <string name="meuserprofile_field_birthdate">Birth date</string>
+    <string name="meuserprofile_field_idnumber">ID number</string>
+    <string name="meuserprofile_field_email">Email</string>
+    <string name="meuserprofile_field_mobilenum1">Mobile number 1</string>
+    <string name="meuserprofile_field_mobilenum2">Mobile number 2</string>
+    <string name="meuserprofile_field_homenum">Home number</string>
+    <string name="meuserprofile_field_address_juridical">Juridical address</string>
+    <string name="meuserprofile_field_address_current">Current address</string>
 
     <string name="home_title">Home</string>
 
@@ -48,6 +48,18 @@
 
     <string name="classmates_lecturer">Lecturer</string>
     <string name="classmates_classmates">Classmates</string>
+
+    <string name="userprofile_title">User Profile</string>
+    <string name="userprofile_action_message">Message</string>
+    <string name="userprofile_label_student_bachelor">Bachelor</string>
+    <string name="userprofile_label_student_master">Master</string>
+    <string name="userprofile_label_student_doctor">Doctor</string>
+    <string name="userprofile_label_lecturer_professor">Professor</string>
+    <string name="userprofile_label_lecturer_associatedprofessor">Professor</string>
+    <string name="userprofile_label_lecturer_assistantprofessor">Professor</string>
+    <string name="userprofile_label_lecturer_invitedlecturer">Professor</string>
+    <string name="userprofile_label_lecturer_emeritusprofessor">Professor</string>
+    <string name="userprofile_label_lecturer_respprofessor">Professor</string>
 
     <string name="messages_title">Messages</string>
     <string name="messages_tab_inbox">Inbox</string>

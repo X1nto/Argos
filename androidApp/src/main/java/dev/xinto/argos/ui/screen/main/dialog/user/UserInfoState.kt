@@ -1,8 +1,8 @@
 package dev.xinto.argos.ui.screen.main.dialog.user
 
 import androidx.compose.runtime.Immutable
-import dev.xinto.argos.domain.user.DomainUserInfo
-import dev.xinto.argos.domain.user.DomainUserState
+import dev.xinto.argos.domain.user.DomainMeUserInfo
+import dev.xinto.argos.domain.user.DomainMeUserState
 
 @Immutable
 sealed interface UserInfoState {
@@ -12,8 +12,8 @@ sealed interface UserInfoState {
 
     @Immutable
     data class Success(
-        val userInfo: DomainUserInfo,
-        val userState: DomainUserState
+        val userInfo: DomainMeUserInfo,
+        val userState: DomainMeUserState
     ) : UserInfoState
 
     @Immutable
@@ -22,7 +22,7 @@ sealed interface UserInfoState {
     companion object {
 
         val mockSuccess = Success(
-            userInfo = DomainUserInfo(
+            userInfo = DomainMeUserInfo(
                 fullName = "Giorgi Giorgadze",
                 firstName = "Giorgi",
                 lastName = "Giorgadze",
@@ -37,7 +37,7 @@ sealed interface UserInfoState {
                 photoUrl = null,
                 degree = 1
             ),
-            userState = DomainUserState(
+            userState = DomainMeUserState(
                 billingBalance = "562.50₾",
                 libraryBalance = "0",
                 newsUnread = 0,

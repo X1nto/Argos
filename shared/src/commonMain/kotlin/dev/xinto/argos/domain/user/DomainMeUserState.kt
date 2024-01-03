@@ -1,6 +1,6 @@
 package dev.xinto.argos.domain.user
 
-data class DomainUserState(
+data class DomainMeUserState(
     val billingBalance: String,
     val libraryBalance: String,
     val newsUnread: Int,

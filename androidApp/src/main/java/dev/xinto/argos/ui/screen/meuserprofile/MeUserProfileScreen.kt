@@ -1,4 +1,4 @@
-package dev.xinto.argos.ui.screen.user
+package dev.xinto.argos.ui.screen.meuserprofile
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.scaleIn
@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -34,15 +33,15 @@ import dev.xinto.argos.R
 import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun UserScreen(
+fun MeUserProfileScreen(
     onBackNavigate: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val viewModel: UserViewModel = getViewModel()
+    val viewModel: MeUserProfileViewModel = getViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     val canSave by viewModel.canSave.collectAsStateWithLifecycle()
     val saving by viewModel.saving.collectAsStateWithLifecycle()
-    UserScreen(
+    MeUserProfileScreen(
         modifier = modifier,
         onBackNavigate = onBackNavigate,
         state = state,
@@ -58,8 +57,8 @@ fun UserScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserScreen(
-    state: UserState,
+fun MeUserProfileScreen(
+    state: MeUserProfileState,
     onBackNavigate: () -> Unit,
     canSave: Boolean,
     saving: Boolean,
@@ -74,7 +73,7 @@ fun UserScreen(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.user_title)) },
+                title = { Text(stringResource(R.string.meuserprofile_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBackNavigate) {
                         Icon(
@@ -111,10 +110,10 @@ fun UserScreen(
             contentAlignment = Alignment.Center
         ) {
             when (state) {
-                is UserState.Loading -> {
+                is MeUserProfileState.Loading -> {
                     CircularProgressIndicator()
                 }
-                is UserState.Success -> {
+                is MeUserProfileState.Success -> {
                     LazyVerticalGrid(
                         modifier = Modifier.fillMaxSize(),
                         columns = GridCells.Fixed(2),
@@ -125,25 +124,25 @@ fun UserScreen(
                         item(key = "firstname") {
                             ReadOnlyTextField(
                                 value = state.user.firstName,
-                                label = { Text(stringResource(R.string.user_field_firstname)) },
+                                label = { Text(stringResource(R.string.meuserprofile_field_firstname)) },
                             )
                         }
                         item(key = "lastname") {
                             ReadOnlyTextField(
                                 value = state.user.lastName,
-                                label = { Text(stringResource(R.string.user_field_lastname)) },
+                                label = { Text(stringResource(R.string.meuserprofile_field_lastname)) },
                             )
                         }
                         item(key = "idnumber") {
                             ReadOnlyTextField(
                                 value = state.user.idNumber,
-                                label = { Text(stringResource(R.string.user_field_idnumber)) },
+                                label = { Text(stringResource(R.string.meuserprofile_field_idnumber)) },
                             )
                         }
                         item(key = "birthdate") {
                             ReadOnlyTextField(
                                 value = state.user.birthDate,
-                                label = { Text(stringResource(R.string.user_field_birthdate)) },
+                                label = { Text(stringResource(R.string.meuserprofile_field_birthdate)) },
                             )
                         }
                         item(
@@ -152,21 +151,21 @@ fun UserScreen(
                         ) {
                             ReadOnlyTextField(
                                 value = state.user.email,
-                                label = { Text(stringResource(R.string.user_field_email)) },
+                                label = { Text(stringResource(R.string.meuserprofile_field_email)) },
                             )
                         }
                         item(key = "mobile1") {
                             TextField(
                                 value = state.user.mobileNumber1,
                                 onValueChange = onMobile1Change,
-                                label = { Text(stringResource(R.string.user_field_mobilenum1)) },
+                                label = { Text(stringResource(R.string.meuserprofile_field_mobilenum1)) },
                             )
                         }
                         item(key = "mobile2") {
                             TextField(
                                 value = state.user.mobileNumber2,
                                 onValueChange = onMobile2Change,
-                                label = { Text(stringResource(R.string.user_field_mobilenum2)) },
+                                label = { Text(stringResource(R.string.meuserprofile_field_mobilenum2)) },
                             )
                         }
                         item(
@@ -176,7 +175,7 @@ fun UserScreen(
                             TextField(
                                 value = state.user.homeNumber,
                                 onValueChange = onHomeNumberChange,
-                                label = { Text(stringResource(R.string.user_field_homenum)) },
+                                label = { Text(stringResource(R.string.meuserprofile_field_homenum)) },
                             )
                         }
                         item(
@@ -185,7 +184,7 @@ fun UserScreen(
                         ) {
                             ReadOnlyTextField(
                                 value = state.user.juridicalAddress,
-                                label = { Text(stringResource(R.string.user_field_address_juridical)) },
+                                label = { Text(stringResource(R.string.meuserprofile_field_address_juridical)) },
                                 singleLine = false
                             )
                         }
@@ -196,13 +195,13 @@ fun UserScreen(
                             TextField(
                                 value = state.user.currentAddress,
                                 onValueChange = onCurrentAddressChange,
-                                label = { Text(stringResource(R.string.user_field_address_current)) },
+                                label = { Text(stringResource(R.string.meuserprofile_field_address_current)) },
                                 singleLine = false
                             )
                         }
                     }
                 }
-                is UserState.Error -> {
+                is MeUserProfileState.Error -> {
                     Text("Error")
                 }
             }

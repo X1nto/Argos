@@ -150,7 +150,7 @@ fun UserDialog(
                                         painter = painterResource(R.drawable.ic_account),
                                         contentDescription = null
                                     )
-                                    Text(stringResource(R.string.user_title))
+                                    Text(stringResource(R.string.meuserprofile_title))
                                 }
                                 HorizontalSegmentedButton(onClick = onSettingsNavigate) {
                                     Icon(
@@ -164,7 +164,7 @@ fun UserDialog(
                                         painter = painterResource(R.drawable.ic_logout),
                                         contentDescription = null
                                     )
-                                    Text(stringResource(R.string.user_action_logout))
+                                    Text(stringResource(R.string.meuserprofile_action_logout))
                                 }
                             }
                         }

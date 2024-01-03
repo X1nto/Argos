@@ -28,8 +28,9 @@ import dev.xinto.argos.ui.screen.course.page.syllabus.SyllabusPage
 @Composable
 fun CourseScreen(
     modifier: Modifier = Modifier,
+    onUserClick: (String) -> Unit,
+    onBackClick: () -> Unit,
     courseId: String,
-    onBackClick: () -> Unit
 ) {
     BackHandler(onBack = onBackClick)
 
@@ -105,7 +106,8 @@ fun CourseScreen(
                     is CourseNavigation.Classmates -> {
                         ClassmatesPage(
                             courseId = courseId,
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier.fillMaxSize(),
+                            onClassmateClick = onUserClick
                         )
                     }
                 }

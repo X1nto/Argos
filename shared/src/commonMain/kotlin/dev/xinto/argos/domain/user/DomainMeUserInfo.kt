@@ -1,6 +1,6 @@
 package dev.xinto.argos.domain.user
 
-data class DomainUserInfo(
+data class DomainMeUserInfo(
     val firstName: String,
     val lastName: String,
     val fullName: String,

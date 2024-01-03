@@ -27,6 +27,7 @@ import org.koin.androidx.compose.getStateViewModel
 @Composable
 fun ClassmatesPage(
     modifier: Modifier = Modifier,
+    onClassmateClick: (String) -> Unit,
     courseId: String
 ) {
     val viewModel: ClassmatesViewModel = getStateViewModel(state = {
@@ -35,13 +36,15 @@ fun ClassmatesPage(
     val state by viewModel.state.collectAsStateWithLifecycle()
     ClassmatesPage(
         state = state,
-        modifier = modifier
+        modifier = modifier,
+        onClassmateClick = onClassmateClick
     )
 }
 
 @Composable
 fun ClassmatesPage(
     modifier: Modifier = Modifier,
+    onClassmateClick: (String) -> Unit,
     state: ClassmatesState
 ) {
     Box(
@@ -62,16 +65,16 @@ fun ClassmatesPage(
                     itemsSegmented(
                         items = state.classmates,
                         key = { it.uuid }
-                    ) { type, item ->
+                    ) { type, classmate ->
                         SegmentedListItem(
                             type = type,
                             headlineContent = {
-                                Text(item.fullName)
+                                Text(classmate.fullName)
                             },
                             leadingContent = {
                                 UserImage(
                                     modifier = Modifier.size(40.dp),
-                                    url = item.photoUrl
+                                    url = classmate.photoUrl
                                 )
                             },
                             trailingContent = {
@@ -81,6 +84,9 @@ fun ClassmatesPage(
                                         contentDescription = null
                                     )
                                 }
+                            },
+                            onClick = {
+                                onClassmateClick(classmate.uuid)
                             }
                         )
                     }

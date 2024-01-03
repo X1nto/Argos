@@ -33,7 +33,8 @@ import dev.xinto.argos.ui.screen.login.LoginScreen
 import dev.xinto.argos.ui.screen.main.MainScreen
 import dev.xinto.argos.ui.screen.message.MessageScreen
 import dev.xinto.argos.ui.screen.notifications.NotificationsScreen
-import dev.xinto.argos.ui.screen.user.UserScreen
+import dev.xinto.argos.ui.screen.meuserprofile.MeUserProfileScreen
+import dev.xinto.argos.ui.screen.userprofile.UserProfileScreen
 import dev.xinto.argos.ui.theme.ArgosTheme
 import org.koin.android.ext.android.inject
 
@@ -78,7 +79,7 @@ class MainActivity : ComponentActivity() {
                                         rootNavController.navigate(ArgosNavigation.Notifications)
                                     },
                                     onUserClick = {
-                                        rootNavController.navigate(ArgosNavigation.User)
+                                        rootNavController.navigate(ArgosNavigation.MeUserProfile)
                                     },
                                     onMessageClick = { messageId, semesterId ->
                                         rootNavController.navigate(
@@ -100,8 +101,8 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            is ArgosNavigation.User -> {
-                                UserScreen(
+                            is ArgosNavigation.MeUserProfile -> {
+                                MeUserProfileScreen(
                                     modifier = Modifier.fillMaxSize(),
                                     onBackNavigate = rootNavController::pop
                                 )
@@ -120,6 +121,17 @@ class MainActivity : ComponentActivity() {
                                 CourseScreen(
                                     modifier = Modifier.fillMaxSize(),
                                     courseId = destination.id,
+                                    onBackClick = rootNavController::pop,
+                                    onUserClick = {
+                                        rootNavController.navigate(ArgosNavigation.UserProfile(it))
+                                    }
+                                )
+                            }
+
+                            is ArgosNavigation.UserProfile -> {
+                                UserProfileScreen(
+                                    userId = destination.id,
+                                    modifier = Modifier.fillMaxSize(),
                                     onBackClick = rootNavController::pop
                                 )
                             }
