@@ -132,7 +132,7 @@ class MainActivity : ComponentActivity() {
                                 UserProfileScreen(
                                     userId = destination.id,
                                     modifier = Modifier.fillMaxSize(),
-                                    onBackClick = rootNavController::pop
+                                    onBackNavigate = rootNavController::pop
                                 )
                             }
                         }

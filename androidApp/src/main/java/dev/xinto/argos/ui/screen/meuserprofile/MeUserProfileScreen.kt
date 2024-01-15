@@ -1,5 +1,6 @@
 package dev.xinto.argos.ui.screen.meuserprofile
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
@@ -41,6 +42,7 @@ fun MeUserProfileScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val canSave by viewModel.canSave.collectAsStateWithLifecycle()
     val saving by viewModel.saving.collectAsStateWithLifecycle()
+    BackHandler(onBack = onBackNavigate)
     MeUserProfileScreen(
         modifier = modifier,
         onBackNavigate = onBackNavigate,

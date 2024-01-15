@@ -1,5 +1,6 @@
 package dev.xinto.argos.ui.screen.userprofile
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,17 +40,18 @@ import org.koin.androidx.compose.getStateViewModel
 @Composable
 fun UserProfileScreen(
     userId: String,
-    onBackClick: () -> Unit,
+    onBackNavigate: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val viewModel: UserProfileViewModel = getStateViewModel(state = {
         bundleOf(UserProfileViewModel.KEY_USER_ID to userId)
     })
     val state by viewModel.state.collectAsStateWithLifecycle()
+    BackHandler(onBack = onBackNavigate)
     UserProfileScreen(
         modifier = modifier,
         state = state,
-        onBackClick = onBackClick
+        onBackNavigate = onBackNavigate
     )
 }
 
@@ -57,7 +59,7 @@ fun UserProfileScreen(
 @Composable
 fun UserProfileScreen(
     state: UserProfileState,
-    onBackClick: () -> Unit,
+    onBackNavigate: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -66,7 +68,7 @@ fun UserProfileScreen(
             TopAppBar(
                 title = { Text(stringResource(R.string.userprofile_title)) },
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
+                    IconButton(onClick = onBackNavigate) {
                         Icon(
                             painter = painterResource(R.drawable.ic_arrow_back),
                             contentDescription = null
