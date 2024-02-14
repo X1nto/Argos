@@ -50,6 +50,14 @@ data class ApiResponseDataWithRelationships<A, R>(
 )
 
 @Serializable
+data class ApiResponseDataWithPossibleRelationships<A, R>(
+    val id: String? = null,
+    val attributes: A,
+    val relationships: R? = null,
+    val type: String,
+)
+
+@Serializable
 data class ApiResponseRelationship<D>(
     val data: D
 )

@@ -132,7 +132,7 @@ class CoursesRepository(
                     DomainCourseGroupSchedule(
                         day = attributes.day,
                         time = "${attributes.startTime} - ${attributes.endTime}",
-                        room = attributes.roomName,
+                        room = attributes.locationName,
                         info = attributes.info.ifBlank { null }
                     )
                 }

@@ -16,10 +16,10 @@ class LecturesRepository(
                 DomainLectureInfo(
                     id = scheduleRelationships.course.data.id!!,
                     time = scheduleRelationships.hour.data.attributes.times,
-                    room = scheduleAttributes.roomName,
+                    room = scheduleAttributes.locationName,
                     name = scheduleRelationships.course.data.attributes.name,
                     lecturer = scheduleAttributes.info.ifEmpty {
-                        scheduleRelationships.group.data.relationships.lecturers.data[0].attributes.fullName
+                        scheduleRelationships.group.data.relationships?.lecturers?.data?.get(0)?.attributes?.fullName ?: ""
                     }
                 )
             }

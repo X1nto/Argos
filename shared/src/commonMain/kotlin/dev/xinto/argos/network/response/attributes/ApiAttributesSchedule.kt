@@ -4,7 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ApiAttributesSchedule(
-    val roomName: String,
+    val locationName: String,
     val info: String,
-    val lectureType: String,
+    val lectureTypeName: String,
+    val lectureFormatName: String,
 )
