@@ -26,6 +26,14 @@ src="screenshots/messages.png?raw=true">
 src="screenshots/news.png?raw=true">
 <img width=200 alt="შეტყობინებები" 
 src="screenshots/notifications.png?raw=true">
+<img width=200 alt="სილაბუსი" 
+src="screenshots/syllabus.png?raw=true">
+<img width=200 alt="ჯგუფები" 
+src="screenshots/groups.png?raw=true">
+<img width=200 alt="შეფასებები" 
+src="screenshots/scores.png?raw=true">
+<img width=200 alt="სასწავლო მასალები" 
+src="screenshots/materials.png?raw=true">
 
 # License
 ```
