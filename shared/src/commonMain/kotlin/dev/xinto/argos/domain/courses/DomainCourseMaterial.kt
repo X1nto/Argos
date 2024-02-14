@@ -1,11 +1,11 @@
 package dev.xinto.argos.domain.courses
 
-import kotlinx.datetime.LocalDateTime
+import dev.xinto.argos.util.FormattedLocalDateTime
 
 data class DomainCourseMaterial(
     val id: String,
     val name: String,
-    val date: LocalDateTime,
+    val date: FormattedLocalDateTime,
     val lecturer: DomainCourseLecturer,
     val size: Long,
     val downloadUrl: String,

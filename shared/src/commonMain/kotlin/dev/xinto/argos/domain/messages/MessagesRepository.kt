@@ -4,9 +4,7 @@ import dev.xinto.argos.domain.DomainPagedResponsePager
 import dev.xinto.argos.domain.DomainResponse
 import dev.xinto.argos.domain.DomainResponseSource
 import dev.xinto.argos.network.ArgosApi
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import dev.xinto.argos.util.asFormattedLocalDateTime
 
 class MessagesRepository(
     private val argosApi: ArgosApi
@@ -26,7 +24,7 @@ class MessagesRepository(
                             fullName = relationships.sender.data.attributes.fullName,
                         ),
                         subject = attributes.subject,
-                        date = attributes.sentAt.toLocalDateTime(TimeZone.currentSystemDefault()),
+                        date = attributes.sentAt.asFormattedLocalDateTime(),
                         seen = attributes.seen,
                         semId = attributes.semId.toString()
                     )
@@ -49,7 +47,7 @@ class MessagesRepository(
                             fullName = relationships.receiver.data.attributes.fullName,
                         ),
                         subject = attributes.subject,
-                        date = attributes.sentAt.toLocalDateTime(TimeZone.currentSystemDefault()),
+                        date = attributes.sentAt.asFormattedLocalDateTime(),
                         semId = attributes.semId.toString()
                     )
                 }
@@ -76,7 +74,7 @@ class MessagesRepository(
                         ),
                         subject = attributes.subject,
                         body = attributes.body,
-                        date = attributes.sentAt.toLocalDateTime(TimeZone.currentSystemDefault()),
+                        date = attributes.sentAt.asFormattedLocalDateTime(),
                         semId = attributes.semId.toString()
                     )
                 }

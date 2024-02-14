@@ -1,7 +1,5 @@
 package dev.xinto.argos.util
 
-import kotlinx.cinterop.ExperimentalForeignApi
-import kotlinx.cinterop.convert
 import platform.Foundation.NSNumber
 import platform.Foundation.NSNumberFormatter
 import platform.Foundation.NSNumberFormatterCurrencyStyle

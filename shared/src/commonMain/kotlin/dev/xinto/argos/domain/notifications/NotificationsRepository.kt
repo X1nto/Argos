@@ -2,8 +2,7 @@ package dev.xinto.argos.domain.notifications
 
 import dev.xinto.argos.domain.DomainPagedResponsePager
 import dev.xinto.argos.network.ArgosApi
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import dev.xinto.argos.util.asFormattedLocalDateTime
 
 class NotificationsRepository(private val argosApi: ArgosApi) {
 
@@ -17,7 +16,7 @@ class NotificationsRepository(private val argosApi: ArgosApi) {
                     DomainNotification(
                         id = id!!,
                         text = attributes.title,
-                        alertDate = attributes.createdAt.toLocalDateTime(TimeZone.currentSystemDefault()),
+                        alertDate = attributes.createdAt.asFormattedLocalDateTime(),
                         seen = attributes.readAt != null
                     )
                 }

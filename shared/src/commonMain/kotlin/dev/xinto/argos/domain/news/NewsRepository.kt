@@ -2,8 +2,7 @@ package dev.xinto.argos.domain.news
 
 import dev.xinto.argos.domain.DomainPagedResponsePager
 import dev.xinto.argos.network.ArgosApi
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import dev.xinto.argos.util.asFormattedLocalDateTime
 
 class NewsRepository(private val argosApi: ArgosApi) {
 
@@ -17,7 +16,7 @@ class NewsRepository(private val argosApi: ArgosApi) {
                     DomainNewsPreview(
                         id = id!!,
                         title = attributes.title,
-                        publishDate = attributes.createdAt.toLocalDateTime(TimeZone.currentSystemDefault()),
+                        publishDate = attributes.createdAt.asFormattedLocalDateTime(),
                         seen = relationships.userViewStatus.data.attributes.isViewed
                     )
                 }

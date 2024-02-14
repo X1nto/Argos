@@ -1,10 +1,10 @@
 package dev.xinto.argos.domain.news
 
-import kotlinx.datetime.LocalDateTime
+import dev.xinto.argos.util.FormattedLocalDateTime
 
 data class DomainNewsPreview(
     val id: String,
     val title: String,
-    val publishDate: LocalDateTime,
+    val publishDate: FormattedLocalDateTime,
     val seen: Boolean
 )

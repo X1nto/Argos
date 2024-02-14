@@ -5,8 +5,7 @@ import dev.xinto.argos.domain.DomainResponseSource
 import dev.xinto.argos.network.ArgosApi
 import dev.xinto.argos.network.response.ApiResponseData
 import dev.xinto.argos.network.response.attributes.ApiAttributesUser
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import dev.xinto.argos.util.asFormattedLocalDateTime
 
 class CoursesRepository(
     private val argosApi: ArgosApi
@@ -151,7 +150,7 @@ class CoursesRepository(
                     DomainCourseMaterial(
                         id = relationships.mediaFile.data.id!!,
                         name = relationships.mediaFile.data.attributes.title,
-                        date = relationships.mediaFile.data.attributes.createdAt.toLocalDateTime(TimeZone.currentSystemDefault()),
+                        date = relationships.mediaFile.data.attributes.createdAt.asFormattedLocalDateTime(),
                         lecturer = relationships.user.data.toDomainLecturer(),
                         size = relationships.mediaFile.data.attributes.size,
                         downloadUrl = relationships.mediaFile.data.attributes.downloadEndpoint,
