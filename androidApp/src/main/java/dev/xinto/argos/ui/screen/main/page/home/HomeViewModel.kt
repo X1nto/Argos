@@ -28,10 +28,7 @@ class HomeViewModel(
                     )
                 }
 
-                is DomainResponse.Error -> {
-                    println(lectures.error)
-                    HomeState.Error
-                }
+                is DomainResponse.Error -> HomeState.Error
             }
         }.stateIn(
             scope = viewModelScope,
