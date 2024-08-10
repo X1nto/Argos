@@ -18,7 +18,7 @@ class ClassmatesViewModel(
         coursesRepository.getCourseClassmates(savedStateHandle[KEY_COURSE_ID]!!)
 
     val state = classmates
-        .asFlow()
+        .flow
         .map {
             when (it) {
                 is DomainResponse.Loading -> ClassmatesState.Loading

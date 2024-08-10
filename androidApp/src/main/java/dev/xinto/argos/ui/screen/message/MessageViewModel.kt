@@ -20,7 +20,7 @@ class MessageViewModel(
     )
 
     val state = message
-        .asFlow()
+        .flow
         .map {
             when (it) {
                 is DomainResponse.Loading -> MessageState.Loading

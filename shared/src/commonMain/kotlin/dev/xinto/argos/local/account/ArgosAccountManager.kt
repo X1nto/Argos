@@ -6,14 +6,14 @@ expect class ArgosAccountManager {
 
     fun isLoggedIn(): Flow<Boolean>
 
-    suspend fun logout()
+    fun logout()
 
-    suspend fun getProfileId(): String?
-    suspend fun getToken(): String?
-    suspend fun getRefreshToken(): String?
+    fun getProfileId(): String?
+    fun getToken(): String?
+    fun getRefreshToken(): String?
 
-    suspend fun setProfileId(profileId: String)
-    suspend fun setToken(token: String)
-    suspend fun setRefreshToken(refreshToken: String)
+    fun setProfileId(profileId: String)
+    fun setToken(token: String)
+    fun setRefreshToken(refreshToken: String)
 
 }

@@ -17,7 +17,7 @@ class UserProfileViewModel(
     private val profile = userRepository.getUserProfile(savedStateHandle[KEY_USER_ID]!!)
 
     val state = profile
-        .asFlow()
+        .flow
         .map {
             when (it) {
                 is DomainResponse.Loading -> UserProfileState.Loading

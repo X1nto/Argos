@@ -17,7 +17,7 @@ class SyllabusViewModel(
     private val syllabus = coursesRepository.getCourseSyllabus(savedStateHandle[KEY_COURSE_ID]!!)
 
     val state = syllabus
-        .asFlow()
+        .flow
         .map {
             when (it) {
                 is DomainResponse.Loading -> SyllabusState.Loading

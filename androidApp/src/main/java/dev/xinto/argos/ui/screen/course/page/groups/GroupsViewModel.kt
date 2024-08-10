@@ -23,7 +23,7 @@ class GroupsViewModel(
     private val courses = coursesRepository.getCourseGroups(courseId)
 
     val state = courses
-        .asFlow()
+        .flow
         .map {
             when (it) {
                 is DomainResponse.Loading -> GroupsState.Loading

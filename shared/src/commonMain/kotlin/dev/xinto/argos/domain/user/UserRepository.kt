@@ -12,7 +12,7 @@ class UserRepository(
     private val argosAccountManager: ArgosAccountManager
 ) {
 
-    private val meUserInfo = DomainResponseSource({ argosApi.getUserAuth() }) { state ->
+    val meUserInfo = DomainResponseSource({ argosApi.getUserAuth() }) { state ->
         state.data!!.let { (_, attributes, relationships) ->
             DomainMeUserInfo(
                 firstName = attributes.firstName,
@@ -32,7 +32,7 @@ class UserRepository(
         }
     }
 
-    private val meUserState = DomainResponseSource({ argosApi.getUserState() }) { state ->
+    val meUserState = DomainResponseSource({ argosApi.getUserState() }) { state ->
         state.data!!.attributes.let { attributes ->
             DomainMeUserState(
                 billingBalance = attributes.billingBalance.formatCurrency("GEL"),
@@ -44,12 +44,16 @@ class UserRepository(
         }
     }
 
-
     suspend fun login(googleIdToken: String): Boolean {
-        return argosApi.loginGoogle(googleIdToken)
+        try {
+            return argosApi.loginGoogle(googleIdToken)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return false
+        }
     }
 
-    suspend fun logout() {
+    fun logout() {
         argosAccountManager.logout()
     }
 
@@ -68,10 +72,6 @@ class UserRepository(
     fun observeLoggedIn(): Flow<Boolean> {
         return argosAccountManager.isLoggedIn()
     }
-
-    fun getMeUserInfo() = meUserInfo
-
-    fun getMeUserState() = meUserState
 
     fun getUserProfile(userId: String): DomainResponseSource<*, DomainUserProfile> {
         return DomainResponseSource(

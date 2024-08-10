@@ -17,14 +17,12 @@ import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 import kotlin.jvm.JvmInline
 
-sealed interface DomainResponse<out T> {
-    @JvmInline
-    value class Success<T>(val value: T) : DomainResponse<T>
+sealed class DomainResponse<out T> {
+    data class Success<T>(val value: T) : DomainResponse<T>()
 
-    @JvmInline
-    value class Error(val error: String) : DomainResponse<Nothing>
+    data class Error(val error: String) : DomainResponse<Nothing>()
 
-    data object Loading : DomainResponse<Nothing>
+    data object Loading : DomainResponse<Nothing>()
 }
 
 inline fun <T1, T2, R> combine(
@@ -55,24 +53,22 @@ class DomainResponseSource<T : ApiResponseBase, R>(
 
     private val state = MutableStateFlow<DomainResponse<R>>(DomainResponse.Loading)
 
-    fun asFlow(): Flow<DomainResponse<R>> {
-        return combine(state, settings.observeLanguage()) { state, language ->
-            state.takeUnlessOr(predicate = { it is DomainResponse.Loading }) {
-                try {
-                    val result = fetch(language)
-                    if (result.message == "ok") {
-                        DomainResponse.Success(transform(result))
-                    } else {
-                        DomainResponse.Error(result.errors!!.general[0])
-                    }
-                } catch (e: Exception) {
-                    DomainResponse.Error(e.message ?: e.stackTraceToString())
-                }.also {
-                    this.state.value = it
+    val flow = combine(state, settings.observeLanguage()) { state, language ->
+        state.takeUnlessOr(predicate = { it is DomainResponse.Loading }) {
+            try {
+                val result = fetch(language)
+                if (result.message == "ok") {
+                    DomainResponse.Success(transform(result))
+                } else {
+                    DomainResponse.Error(result.errors!!.general[0])
                 }
+            } catch (e: Exception) {
+                DomainResponse.Error(e.message ?: e.stackTraceToString())
+            }.also {
+                this.state.value = it
             }
-        }.flowOn(Dispatchers.IO)
-    }
+        }
+    }.flowOn(Dispatchers.IO)
 
     fun refresh() {
         state.value = DomainResponse.Loading
@@ -90,5 +86,5 @@ class DomainResponseSource<T : ApiResponseBase, R>(
         return if (!predicate(this)) this else unless()
     }
 
-    suspend operator fun invoke() = asFlow().first()
+    suspend operator fun invoke() = flow.first()
 }

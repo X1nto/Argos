@@ -1,15 +1,17 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.skie)
 }
 
 kotlin {
     androidTarget {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "1.8"
-            }
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_1_8)
         }
     }
 
@@ -21,9 +23,13 @@ kotlin {
         iosSimulatorArm64()
     ).forEach {
         it.binaries.framework {
-            baseName = "shared"
+            baseName = "ArgosCore"
             isStatic = true
         }
+    }
+
+    sourceSets.all {
+        languageSettings.optIn("kotlin.experimental.ExperimentalObjCName")
     }
 
     sourceSets {
@@ -31,13 +37,13 @@ kotlin {
             implementation(libs.bundles.ktor)
             implementation(libs.koin.core)
             implementation(libs.paging.common)
+            implementation(libs.skie.annotations)
             api(libs.kotlinx.datetime)
         }
         androidMain.dependencies {
             implementation(libs.androidx.crypto)
             implementation(libs.androidx.core)
             implementation(libs.ktor.android)
-            implementation(libs.koin.android)
         }
         iosMain.dependencies {
             implementation(libs.ktor.darwin)

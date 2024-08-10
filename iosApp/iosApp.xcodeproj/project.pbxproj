@@ -10,9 +10,24 @@
 		058557BB273AAA24004C7B11 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557BA273AAA24004C7B11 /* Assets.xcassets */; };
 		058557D9273AAEEB004C7B11 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */; };
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
+		4B0777362C62371300ECEEBC /* MessageScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0777352C62371300ECEEBC /* MessageScreen.swift */; };
+		4B0777382C624BEB00ECEEBC /* HtmlText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0777372C624BEB00ECEEBC /* HtmlText.swift */; };
+		4B07773A2C67504E00ECEEBC /* NewsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0777392C67504E00ECEEBC /* NewsScreen.swift */; };
+		4B07773C2C675BDE00ECEEBC /* NotificationsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B07773B2C675BDE00ECEEBC /* NotificationsScreen.swift */; };
+		4B07773E2C6805C500ECEEBC /* SearchField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B07773D2C6805C400ECEEBC /* SearchField.swift */; };
+		4B3601FF2C4D2D9400A585DD /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3601FE2C4D2D9400A585DD /* LoginScreen.swift */; };
+		4B3602012C4D2EEE00A585DD /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3602002C4D2EEE00A585DD /* HomeScreen.swift */; };
+		4B3602032C4D305500A585DD /* TabPager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3602022C4D305500A585DD /* TabPager.swift */; };
+		4B3602062C4D59A200A585DD /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 4B3602052C4D59A200A585DD /* OrderedCollections */; };
+		4B3602082C4DA9A700A585DD /* MainScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3602072C4DA9A700A585DD /* MainScreen.swift */; };
 		4B8233492B0007E20012800B /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 4B8233482B0007E20012800B /* GoogleSignIn */; };
-		4B82334B2B0007E20012800B /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4B82334A2B0007E20012800B /* GoogleSignInSwift */; };
-		7555FF83242A565900829871 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF82242A565900829871 /* ContentView.swift */; };
+		4B94D8E22C58E5B3006FB536 /* PagingItemsObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B94D8E12C58E5B3006FB536 /* PagingItemsObservable.swift */; };
+		4BCC45E02C4FF2CA006FDB5D /* MessagesScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCC45DF2C4FF2CA006FDB5D /* MessagesScreen.swift */; };
+		4BCC45E22C4FF71E006FDB5D /* ArgosCoreBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCC45E12C4FF71E006FDB5D /* ArgosCoreBridge.swift */; };
+		4BCC45E42C5049FE006FDB5D /* TabPager2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCC45E32C5049FE006FDB5D /* TabPager2.swift */; };
+		4BCC45EB2C52BAD6006FDB5D /* RootScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCC45EA2C52BAD6006FDB5D /* RootScreen.swift */; };
+		4BCC45EF2C556780006FDB5D /* UserSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCC45EE2C556780006FDB5D /* UserSheet.swift */; };
+		4BCC45F12C5593FC006FDB5D /* StudentInfoScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCC45F02C5593FC006FDB5D /* StudentInfoScreen.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -32,8 +47,23 @@
 		058557BA273AAA24004C7B11 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2152FB032600AC8F00CF470E /* iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp.swift; sourceTree = "<group>"; };
+		4B0777352C62371300ECEEBC /* MessageScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageScreen.swift; sourceTree = "<group>"; };
+		4B0777372C624BEB00ECEEBC /* HtmlText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HtmlText.swift; sourceTree = "<group>"; };
+		4B0777392C67504E00ECEEBC /* NewsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsScreen.swift; sourceTree = "<group>"; };
+		4B07773B2C675BDE00ECEEBC /* NotificationsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsScreen.swift; sourceTree = "<group>"; };
+		4B07773D2C6805C400ECEEBC /* SearchField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchField.swift; sourceTree = "<group>"; };
+		4B3601FE2C4D2D9400A585DD /* LoginScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
+		4B3602002C4D2EEE00A585DD /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
+		4B3602022C4D305500A585DD /* TabPager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabPager.swift; sourceTree = "<group>"; };
+		4B3602072C4DA9A700A585DD /* MainScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreen.swift; sourceTree = "<group>"; };
+		4B94D8E12C58E5B3006FB536 /* PagingItemsObservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingItemsObservable.swift; sourceTree = "<group>"; };
+		4BCC45DF2C4FF2CA006FDB5D /* MessagesScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesScreen.swift; sourceTree = "<group>"; };
+		4BCC45E12C4FF71E006FDB5D /* ArgosCoreBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgosCoreBridge.swift; sourceTree = "<group>"; };
+		4BCC45E32C5049FE006FDB5D /* TabPager2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabPager2.swift; sourceTree = "<group>"; };
+		4BCC45EA2C52BAD6006FDB5D /* RootScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootScreen.swift; sourceTree = "<group>"; };
+		4BCC45EE2C556780006FDB5D /* UserSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSheet.swift; sourceTree = "<group>"; };
+		4BCC45F02C5593FC006FDB5D /* StudentInfoScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentInfoScreen.swift; sourceTree = "<group>"; };
 		7555FF7B242A565900829871 /* iosApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		7555FF82242A565900829871 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7555FF8C242A565B00829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -43,7 +73,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B8233492B0007E20012800B /* GoogleSignIn in Frameworks */,
-				4B82334B2B0007E20012800B /* GoogleSignInSwift in Frameworks */,
+				4B3602062C4D59A200A585DD /* OrderedCollections in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,10 +109,25 @@
 			isa = PBXGroup;
 			children = (
 				058557BA273AAA24004C7B11 /* Assets.xcassets */,
-				7555FF82242A565900829871 /* ContentView.swift */,
 				7555FF8C242A565B00829871 /* Info.plist */,
 				2152FB032600AC8F00CF470E /* iOSApp.swift */,
 				058557D7273AAEEB004C7B11 /* Preview Content */,
+				4BCC45EA2C52BAD6006FDB5D /* RootScreen.swift */,
+				4B3601FE2C4D2D9400A585DD /* LoginScreen.swift */,
+				4B3602072C4DA9A700A585DD /* MainScreen.swift */,
+				4BCC45EE2C556780006FDB5D /* UserSheet.swift */,
+				4B3602002C4D2EEE00A585DD /* HomeScreen.swift */,
+				4BCC45DF2C4FF2CA006FDB5D /* MessagesScreen.swift */,
+				4B0777352C62371300ECEEBC /* MessageScreen.swift */,
+				4B3602022C4D305500A585DD /* TabPager.swift */,
+				4BCC45F02C5593FC006FDB5D /* StudentInfoScreen.swift */,
+				4BCC45E12C4FF71E006FDB5D /* ArgosCoreBridge.swift */,
+				4BCC45E32C5049FE006FDB5D /* TabPager2.swift */,
+				4B94D8E12C58E5B3006FB536 /* PagingItemsObservable.swift */,
+				4B0777372C624BEB00ECEEBC /* HtmlText.swift */,
+				4B0777392C67504E00ECEEBC /* NewsScreen.swift */,
+				4B07773B2C675BDE00ECEEBC /* NotificationsScreen.swift */,
+				4B07773D2C6805C400ECEEBC /* SearchField.swift */,
 			);
 			path = iosApp;
 			sourceTree = "<group>";
@@ -114,7 +159,7 @@
 			name = iosApp;
 			packageProductDependencies = (
 				4B8233482B0007E20012800B /* GoogleSignIn */,
-				4B82334A2B0007E20012800B /* GoogleSignInSwift */,
+				4B3602052C4D59A200A585DD /* OrderedCollections */,
 			);
 			productName = iosApp;
 			productReference = 7555FF7B242A565900829871 /* iosApp.app */;
@@ -126,8 +171,9 @@
 		7555FF73242A565900829871 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1130;
-				LastUpgradeCheck = 1130;
+				LastUpgradeCheck = 1540;
 				ORGANIZATIONNAME = orgName;
 				TargetAttributes = {
 					7555FF7A242A565900829871 = {
@@ -146,6 +192,7 @@
 			mainGroup = 7555FF72242A565900829871;
 			packageReferences = (
 				4B8233472B0007E20012800B /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				4B3602042C4D59A200A585DD /* XCRemoteSwiftPackageReference "swift-collections" */,
 			);
 			productRefGroup = 7555FF7C242A565900829871 /* Products */;
 			projectDirPath = "";
@@ -194,8 +241,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4B3602082C4DA9A700A585DD /* MainScreen.swift in Sources */,
+				4B0777362C62371300ECEEBC /* MessageScreen.swift in Sources */,
+				4B94D8E22C58E5B3006FB536 /* PagingItemsObservable.swift in Sources */,
+				4B07773A2C67504E00ECEEBC /* NewsScreen.swift in Sources */,
+				4B0777382C624BEB00ECEEBC /* HtmlText.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
-				7555FF83242A565900829871 /* ContentView.swift in Sources */,
+				4B07773C2C675BDE00ECEEBC /* NotificationsScreen.swift in Sources */,
+				4B07773E2C6805C500ECEEBC /* SearchField.swift in Sources */,
+				4BCC45F12C5593FC006FDB5D /* StudentInfoScreen.swift in Sources */,
+				4BCC45E22C4FF71E006FDB5D /* ArgosCoreBridge.swift in Sources */,
+				4BCC45EB2C52BAD6006FDB5D /* RootScreen.swift in Sources */,
+				4B3602032C4D305500A585DD /* TabPager.swift in Sources */,
+				4B3602012C4D2EEE00A585DD /* HomeScreen.swift in Sources */,
+				4BCC45E42C5049FE006FDB5D /* TabPager2.swift in Sources */,
+				4BCC45E02C4FF2CA006FDB5D /* MessagesScreen.swift in Sources */,
+				4B3601FF2C4D2D9400A585DD /* LoginScreen.swift in Sources */,
+				4BCC45EF2C556780006FDB5D /* UserSheet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -206,6 +268,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -239,6 +302,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -253,7 +317,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -267,6 +331,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -300,6 +365,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -308,7 +374,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -324,13 +390,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"iosApp/Preview Content\"";
+				DEVELOPMENT_TEAM = 85342F9WTR;
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
 				);
 				INFOPLIST_FILE = iosApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -338,9 +405,9 @@
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
-					shared,
+					ArgosCore,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = orgIdentifier.iosApp;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.xinto.argos;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -353,13 +420,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"iosApp/Preview Content\"";
+				DEVELOPMENT_TEAM = 85342F9WTR;
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)",
 				);
 				INFOPLIST_FILE = iosApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -367,9 +435,9 @@
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
-					shared,
+					ArgosCore,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = orgIdentifier.iosApp;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.xinto.argos;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -400,6 +468,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		4B3602042C4D59A200A585DD /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.2;
+			};
+		};
 		4B8233472B0007E20012800B /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
@@ -411,15 +487,15 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4B3602052C4D59A200A585DD /* OrderedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4B3602042C4D59A200A585DD /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = OrderedCollections;
+		};
 		4B8233482B0007E20012800B /* GoogleSignIn */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4B8233472B0007E20012800B /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignIn;
-		};
-		4B82334A2B0007E20012800B /* GoogleSignInSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4B8233472B0007E20012800B /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
-			productName = GoogleSignInSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

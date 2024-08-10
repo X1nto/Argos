@@ -5,6 +5,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import co.touchlab.skie.configuration.annotations.FlowInterop
 import dev.xinto.argos.local.settings.ArgosLanguage
 import dev.xinto.argos.local.settings.ArgosSettings
 import dev.xinto.argos.network.response.ApiResponsePaged
@@ -37,6 +38,7 @@ class DomainPagedResponsePager<T, R : Any>(
         pagingSourceFactory = invalidatingFactory
     )
 
+    @FlowInterop.Disabled
     @OptIn(ExperimentalCoroutinesApi::class)
     val flow = settings.observeLanguage()
         .onEach {

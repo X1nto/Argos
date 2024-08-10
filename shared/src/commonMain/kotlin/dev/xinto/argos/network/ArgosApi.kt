@@ -205,7 +205,7 @@ class ArgosApi(private val argosAccountManager: ArgosAccountManager) {
         }
     }
 
-    private suspend inline fun saveTokens(response: ApiResponseAuth): Boolean {
+    private inline fun saveTokens(response: ApiResponseAuth): Boolean {
         if (response.message == "ok") {
             val data = response.data!!
             argosAccountManager.setRefreshToken(data.attributes.refreshToken)

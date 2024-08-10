@@ -19,9 +19,7 @@ class MeUserProfileViewModel(
 
     private val tempInfo = MutableStateFlow<DomainMeUserInfo?>(null)
 
-    private val userInfo = userRepository.getMeUserInfo()
-
-    val state = combine(userInfo.asFlow(), tempInfo) { userInfo, tempUserInfo ->
+    val state = combine(userRepository.meUserInfo.flow, tempInfo) { userInfo, tempUserInfo ->
         when (userInfo) {
             is DomainResponse.Loading -> MeUserProfileState.Loading
             is DomainResponse.Success -> {
@@ -39,7 +37,7 @@ class MeUserProfileViewModel(
     private val _saving = MutableStateFlow(false)
     val saving = _saving.asStateFlow()
 
-    val canSave = combine(userInfo.asFlow(), tempInfo) { userInfo, tempInfo ->
+    val canSave = combine(userRepository.meUserInfo.flow, tempInfo) { userInfo, tempInfo ->
         userInfo is DomainResponse.Success && tempInfo != null && userInfo.value != tempInfo
     }.stateIn(
         scope = viewModelScope,
@@ -78,7 +76,7 @@ class MeUserProfileViewModel(
         viewModelScope.launch {
             _saving.value = true
             if (userRepository.updateUserInfo(tempInfo.value!!)) {
-                userInfo.refresh()
+                userRepository.meUserInfo.refresh()
                 tempInfo.value = null
             }
             _saving.value = false

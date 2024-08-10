@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.flowOf
 
 actual class ArgosSettings {
 
-    actual fun observeLanguage(): Flow<ArgosLanguage> = flowOf()
+    actual fun observeLanguage(): Flow<ArgosLanguage> = flowOf(ArgosLanguage.Ka)
 
     actual suspend fun getLanguage(): ArgosLanguage = ArgosLanguage.Ka
 

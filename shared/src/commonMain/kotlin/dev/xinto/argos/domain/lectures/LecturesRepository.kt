@@ -29,6 +29,6 @@ class LecturesRepository(
     /**
      * @return A [Flow] of map of day to a list of [DomainLectureInfo]
      */
-    fun observeLectures() = lectures.asFlow()
+    fun observeLectures() = lectures.flow
 
 }

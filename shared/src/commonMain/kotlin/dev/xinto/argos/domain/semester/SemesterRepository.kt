@@ -9,7 +9,7 @@ class SemesterRepository(
     private val argosApi: ArgosApi
 ) {
 
-    private val semesters = DomainResponseSource(
+    val semesters = DomainResponseSource(
         fetch = {
             argosApi.getSemesters()
         },
@@ -24,8 +24,7 @@ class SemesterRepository(
         }
     )
 
-    fun getSemesters() = semesters.asFlow()
-    fun getActiveSemester() = getSemesters().mapNotNull {
+    fun getActiveSemester() = semesters.flow.mapNotNull {
         when (it) {
             is DomainResponse.Loading -> it
             is DomainResponse.Error -> it

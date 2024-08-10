@@ -17,7 +17,7 @@ class ScoresViewModel(
     private val course = coursesRepository.getCourseScores(savedStateHandle[KEY_COURSE_ID]!!)
 
     val state = course
-        .asFlow()
+        .flow
         .map {
             when (it) {
                 is DomainResponse.Loading -> ScoresState.Loading

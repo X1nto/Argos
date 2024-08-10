@@ -14,10 +14,11 @@ class MainViewModel(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    private val meUserInfo = userRepository.getMeUserInfo()
-    private val meUserState = userRepository.getMeUserState()
 
-    val state = combine(meUserInfo.asFlow(), meUserState.asFlow()) { info, state ->
+    val state = combine(
+        userRepository.meUserInfo.flow,
+        userRepository.meUserState.flow
+    ) { info, state ->
         info to state
     }.map {
         when (it) {
