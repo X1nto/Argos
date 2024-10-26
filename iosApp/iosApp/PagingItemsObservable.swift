@@ -17,8 +17,10 @@ class PagingItemsObservable<T: AnyObject> {
     @ObservationIgnored private var statesTask: Task<Void, Error>?
 
     @ObservationIgnored private let pagingDataPresenter: IosPagingItems<T>
+    
+    @ObservationIgnored private let pagingSource: DomainPagedResponsePager<AnyObject, T>
 
-    private(set) var items: [T] = []
+    private var items: [T] = []
     private(set) var loadingStates = Paging_commonCombinedLoadStates(
         refresh: Paging_commonLoadState.Loading(),
         prepend: Paging_commonLoadState.NotLoading(endOfPaginationReached: false),
@@ -31,12 +33,9 @@ class PagingItemsObservable<T: AnyObject> {
         mediator: nil
     )
     
-    var count: Int {
-        items.count
-    }
-    
-    init(_ pagingData: Kotlinx_coroutines_coreFlow) {
-        pagingDataPresenter = try! CreateIosPagingItems(flow: pagingData) as! IosPagingItems<T>
+    init(_ pagingSource: DomainPagedResponsePager<AnyObject, T>) {
+        self.pagingSource = pagingSource
+        pagingDataPresenter = try! CreateIosPagingItems(flow: pagingSource.flow) as! IosPagingItems<T>
         pagingTask = Task {
             for try await items in pagingDataPresenter.snapshotList {
                 self.items = items
@@ -49,9 +48,14 @@ class PagingItemsObservable<T: AnyObject> {
         }
     }
     
-    convenience init(_ pagingSource: DomainPagedResponsePager<AnyObject, T>) {
-        self.init(pagingSource.flow)
+    var count: Int {
+        items.count
     }
+    
+    func refresh() {
+        pagingSource.invalidate()
+    }
+    
     
     subscript(index: Int) -> T {
         return pagingDataPresenter.get(index: Int32(index))
@@ -61,6 +65,33 @@ class PagingItemsObservable<T: AnyObject> {
         pagingTask?.cancel()
         statesTask?.cancel()
         pagingDataPresenter.dispose()
+    }
+    
+}
+
+
+extension List where SelectionValue == Never {
+    
+    nonisolated init<Data, RowContent: View>(_ pagingData: PagingItemsObservable<Data>, @ViewBuilder rowContent: @escaping (Data) -> RowContent) where Content == ForEach<Range<Int>, Int, RowContent> {
+        self.init {
+            ForEach(0..<pagingData.count, id: \.self) { index in
+                let item = pagingData[index]
+                rowContent(item)
+            }
+        }
+    }
+}
+
+extension ForEach where Content : View, Data == Range<Int>, ID == Int {
+    
+    init<PagingData>(
+        _ pagingData: PagingItemsObservable<PagingData>,
+        @ViewBuilder content: @escaping (PagingData) -> Content
+    ) {
+        self.init(0..<pagingData.count, id: \.self) { index in
+            let item = pagingData[index]
+            content(item)
+        }
     }
     
 }

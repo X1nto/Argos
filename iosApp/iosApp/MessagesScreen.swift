@@ -50,6 +50,11 @@ class MessagesViewModel {
         }
     }
     
+    func refresh() {
+        receivedMessages?.refresh()
+        sentMessages?.refresh()
+    }
+    
     deinit {
         semesterTask?.cancel()
     }
@@ -66,6 +71,9 @@ struct MessagesScreen: View {
             receivedMessages: viewModel.receivedMessages,
             sentMessages: viewModel.sentMessages
         )
+        .refreshable {
+            viewModel.refresh()
+        }
     }
 }
 
@@ -146,17 +154,55 @@ private struct _MessagesScreen: View {
     }
     
     var body: some View {
-        VStack {
-            VStack {
-                if case let .success(semesters) = state {
-                    HStack {
-                        SearchField(
-                            text: .constant(""),
-                            placeholder: "Search messages"
-                        )
-                        .padding(.horizontal, -8)
-                        .padding(.vertical, -10)
-                         
+        List {
+            switch selectedPage {
+            case .received:
+                if let messages = receivedMessages {
+                    ForEach(messages) { message in
+                        NavigationLink(
+                            destination: {
+                                MessageScreen(
+                                    messageId: message.id,
+                                    semesterId: message.semId
+                                )
+                            }
+                        ) {
+                            Message(message)
+                        }
+                    }
+                }
+            case .sent:
+                if let messages = sentMessages {
+                    ForEach(messages) { message in
+                        NavigationLink(
+                            destination: {
+                                MessageScreen(
+                                    messageId: message.id,
+                                    semesterId: message.semId
+                                )
+                            }
+                        ) {
+                            Message(message)
+                        }
+                    }
+                }
+            }
+        }
+        .listStyle(.inset)
+        .navigationTitle("Messages")
+        .toolbarTitleDisplayMode(.inlineLarge)
+        .environment(\.defaultMinListHeaderHeight, 0)
+        .searchable(text: .constant(""))
+        .toolbar {
+            ToolbarItem(placement: .bottomBar) {
+                HStack {
+                    Picker("Page", selection: $selectedPage) {
+                        Text("Inbox").tag(MessagesPage.received)
+                        Text("Outbox").tag(MessagesPage.sent)
+                    }
+                    .pickerStyle(.segmented)
+                    
+                    if case let .success(semesters) = state {
                         Menu {
                             Picker(selection: $activeSemester, label: EmptyView()) {
                                 ForEach(semesters, id: \.self) { semester in
@@ -170,55 +216,9 @@ private struct _MessagesScreen: View {
                         }
                     }
                 }
-                
-                HStack {
-                    Picker("Page", selection: $selectedPage) {
-                        Text("Inbox").tag(MessagesPage.received)
-                        Text("Outbox").tag(MessagesPage.sent)
-                    }
-                    .pickerStyle(.segmented)
-                }
-            }
-            .padding(.horizontal, 16)
-            
-            Spacer()
-            
-            switch selectedPage {
-            case .received:
-                if let messages = receivedMessages {
-                    List {
-                        ForEach(0..<messages.items.count, id: \.self) { index in
-                            let message = messages[index]
-                            NavigationLink(
-                                destination: MessageScreen(
-                                    messageId: message.id,
-                                    semesterId: message.semId
-                                )
-                            ) {
-                                Message(message)
-                            }
-                        }
-                    }
-                }
-            case .sent:
-                if let messages = sentMessages {
-                    List {
-                        ForEach(0..<messages.items.count, id: \.self) { index in
-                            let message = messages[index]
-                            NavigationLink(
-                                destination: MessageScreen(
-                                    messageId: message.id,
-                                    semesterId: message.semId
-                                )
-                            ) {
-                                Message(message)
-                            }
-                        }
-                    }
-                }
+                .padding(.bottom, 8)
             }
         }
-        .listStyle(.inset)
     }
 }
 
@@ -239,8 +239,6 @@ private struct Message : View {
         }
     }
 }
-
-
 
 #Preview {
     MessagesScreenPreview()

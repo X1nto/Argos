@@ -46,24 +46,27 @@ struct _NotificationsScreen: View {
     let notifications: PagingItemsObservable<DomainNotification>?
     
     var body: some View {
-        if let notifications = notifications {
-            switch onEnum(of: notifications.loadingStates.refresh) {
-            case .loading:
-                ProgressView()
-            case .notLoading:
-                List {
-                    ForEach(0..<notifications.count, id: \.self) { index in
-                        let notification = notifications[index]
-                        VStack {
-                            Text(notification.text)
+        Group {
+            if let notifications = notifications {
+                switch onEnum(of: notifications.loadingStates.refresh) {
+                case .loading:
+                    ProgressView()
+                case .notLoading:
+                    List {
+                        ForEach(0..<notifications.count, id: \.self) { index in
+                            let notification = notifications[index]
+                            VStack {
+                                Text(notification.text)
+                            }
                         }
                     }
+                case .error:
+                    Text("Error")
                 }
-            case .error:
-                Text("Error")
+                
             }
-            
         }
+        .navigationTitle("Notifications")
     }
 }
 

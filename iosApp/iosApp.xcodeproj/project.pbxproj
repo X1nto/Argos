@@ -15,12 +15,18 @@
 		4B07773A2C67504E00ECEEBC /* NewsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0777392C67504E00ECEEBC /* NewsScreen.swift */; };
 		4B07773C2C675BDE00ECEEBC /* NotificationsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B07773B2C675BDE00ECEEBC /* NotificationsScreen.swift */; };
 		4B07773E2C6805C500ECEEBC /* SearchField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B07773D2C6805C400ECEEBC /* SearchField.swift */; };
+		4B18B8242CCA816E0071A4A1 /* ArgosTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B18B8232CCA81660071A4A1 /* ArgosTab.swift */; };
 		4B3601FF2C4D2D9400A585DD /* LoginScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3601FE2C4D2D9400A585DD /* LoginScreen.swift */; };
 		4B3602012C4D2EEE00A585DD /* HomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3602002C4D2EEE00A585DD /* HomeScreen.swift */; };
 		4B3602032C4D305500A585DD /* TabPager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3602022C4D305500A585DD /* TabPager.swift */; };
 		4B3602062C4D59A200A585DD /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 4B3602052C4D59A200A585DD /* OrderedCollections */; };
 		4B3602082C4DA9A700A585DD /* MainScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B3602072C4DA9A700A585DD /* MainScreen.swift */; };
 		4B8233492B0007E20012800B /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 4B8233482B0007E20012800B /* GoogleSignIn */; };
+		4B9237132CA40F22007D38F2 /* CourseScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9237122CA40F06007D38F2 /* CourseScreen.swift */; };
+		4B9237162CA424AF007D38F2 /* SyllabusPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9237152CA424A2007D38F2 /* SyllabusPage.swift */; };
+		4B9237182CA57D73007D38F2 /* GroupsPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9237172CA57D6D007D38F2 /* GroupsPage.swift */; };
+		4B92371A2CA6E541007D38F2 /* MaterialsPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9237192CA6E53F007D38F2 /* MaterialsPage.swift */; };
+		4B92371C2CAABFDB007D38F2 /* HtmlText2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B92371B2CAABFCF007D38F2 /* HtmlText2.swift */; };
 		4B94D8E22C58E5B3006FB536 /* PagingItemsObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B94D8E12C58E5B3006FB536 /* PagingItemsObservable.swift */; };
 		4BCC45E02C4FF2CA006FDB5D /* MessagesScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCC45DF2C4FF2CA006FDB5D /* MessagesScreen.swift */; };
 		4BCC45E22C4FF71E006FDB5D /* ArgosCoreBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCC45E12C4FF71E006FDB5D /* ArgosCoreBridge.swift */; };
@@ -28,6 +34,7 @@
 		4BCC45EB2C52BAD6006FDB5D /* RootScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCC45EA2C52BAD6006FDB5D /* RootScreen.swift */; };
 		4BCC45EF2C556780006FDB5D /* UserSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCC45EE2C556780006FDB5D /* UserSheet.swift */; };
 		4BCC45F12C5593FC006FDB5D /* StudentInfoScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCC45F02C5593FC006FDB5D /* StudentInfoScreen.swift */; };
+		4BD8D6402CAC595800B67B4E /* GroupPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BD8D63F2CAC595500B67B4E /* GroupPage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -52,10 +59,16 @@
 		4B0777392C67504E00ECEEBC /* NewsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsScreen.swift; sourceTree = "<group>"; };
 		4B07773B2C675BDE00ECEEBC /* NotificationsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsScreen.swift; sourceTree = "<group>"; };
 		4B07773D2C6805C400ECEEBC /* SearchField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchField.swift; sourceTree = "<group>"; };
+		4B18B8232CCA81660071A4A1 /* ArgosTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgosTab.swift; sourceTree = "<group>"; };
 		4B3601FE2C4D2D9400A585DD /* LoginScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginScreen.swift; sourceTree = "<group>"; };
 		4B3602002C4D2EEE00A585DD /* HomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreen.swift; sourceTree = "<group>"; };
 		4B3602022C4D305500A585DD /* TabPager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabPager.swift; sourceTree = "<group>"; };
 		4B3602072C4DA9A700A585DD /* MainScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreen.swift; sourceTree = "<group>"; };
+		4B9237122CA40F06007D38F2 /* CourseScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourseScreen.swift; sourceTree = "<group>"; };
+		4B9237152CA424A2007D38F2 /* SyllabusPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyllabusPage.swift; sourceTree = "<group>"; };
+		4B9237172CA57D6D007D38F2 /* GroupsPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupsPage.swift; sourceTree = "<group>"; };
+		4B9237192CA6E53F007D38F2 /* MaterialsPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaterialsPage.swift; sourceTree = "<group>"; };
+		4B92371B2CAABFCF007D38F2 /* HtmlText2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HtmlText2.swift; sourceTree = "<group>"; };
 		4B94D8E12C58E5B3006FB536 /* PagingItemsObservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingItemsObservable.swift; sourceTree = "<group>"; };
 		4BCC45DF2C4FF2CA006FDB5D /* MessagesScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesScreen.swift; sourceTree = "<group>"; };
 		4BCC45E12C4FF71E006FDB5D /* ArgosCoreBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgosCoreBridge.swift; sourceTree = "<group>"; };
@@ -63,6 +76,7 @@
 		4BCC45EA2C52BAD6006FDB5D /* RootScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootScreen.swift; sourceTree = "<group>"; };
 		4BCC45EE2C556780006FDB5D /* UserSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSheet.swift; sourceTree = "<group>"; };
 		4BCC45F02C5593FC006FDB5D /* StudentInfoScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentInfoScreen.swift; sourceTree = "<group>"; };
+		4BD8D63F2CAC595500B67B4E /* GroupPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupPage.swift; sourceTree = "<group>"; };
 		7555FF7B242A565900829871 /* iosApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF8C242A565B00829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -88,6 +102,18 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		4B9237142CA41930007D38F2 /* Course Screen */ = {
+			isa = PBXGroup;
+			children = (
+				4BD8D63F2CAC595500B67B4E /* GroupPage.swift */,
+				4B9237192CA6E53F007D38F2 /* MaterialsPage.swift */,
+				4B9237172CA57D6D007D38F2 /* GroupsPage.swift */,
+				4B9237152CA424A2007D38F2 /* SyllabusPage.swift */,
+				4B9237122CA40F06007D38F2 /* CourseScreen.swift */,
+			);
+			path = "Course Screen";
+			sourceTree = "<group>";
+		};
 		7555FF72242A565900829871 = {
 			isa = PBXGroup;
 			children = (
@@ -108,10 +134,12 @@
 		7555FF7D242A565900829871 /* iosApp */ = {
 			isa = PBXGroup;
 			children = (
+				4B9237142CA41930007D38F2 /* Course Screen */,
 				058557BA273AAA24004C7B11 /* Assets.xcassets */,
 				7555FF8C242A565B00829871 /* Info.plist */,
 				2152FB032600AC8F00CF470E /* iOSApp.swift */,
 				058557D7273AAEEB004C7B11 /* Preview Content */,
+				4B18B8232CCA81660071A4A1 /* ArgosTab.swift */,
 				4BCC45EA2C52BAD6006FDB5D /* RootScreen.swift */,
 				4B3601FE2C4D2D9400A585DD /* LoginScreen.swift */,
 				4B3602072C4DA9A700A585DD /* MainScreen.swift */,
@@ -125,6 +153,7 @@
 				4BCC45E32C5049FE006FDB5D /* TabPager2.swift */,
 				4B94D8E12C58E5B3006FB536 /* PagingItemsObservable.swift */,
 				4B0777372C624BEB00ECEEBC /* HtmlText.swift */,
+				4B92371B2CAABFCF007D38F2 /* HtmlText2.swift */,
 				4B0777392C67504E00ECEEBC /* NewsScreen.swift */,
 				4B07773B2C675BDE00ECEEBC /* NotificationsScreen.swift */,
 				4B07773D2C6805C400ECEEBC /* SearchField.swift */,
@@ -245,6 +274,8 @@
 				4B0777362C62371300ECEEBC /* MessageScreen.swift in Sources */,
 				4B94D8E22C58E5B3006FB536 /* PagingItemsObservable.swift in Sources */,
 				4B07773A2C67504E00ECEEBC /* NewsScreen.swift in Sources */,
+				4B18B8242CCA816E0071A4A1 /* ArgosTab.swift in Sources */,
+				4B9237182CA57D73007D38F2 /* GroupsPage.swift in Sources */,
 				4B0777382C624BEB00ECEEBC /* HtmlText.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
 				4B07773C2C675BDE00ECEEBC /* NotificationsScreen.swift in Sources */,
@@ -255,8 +286,13 @@
 				4B3602032C4D305500A585DD /* TabPager.swift in Sources */,
 				4B3602012C4D2EEE00A585DD /* HomeScreen.swift in Sources */,
 				4BCC45E42C5049FE006FDB5D /* TabPager2.swift in Sources */,
+				4B9237162CA424AF007D38F2 /* SyllabusPage.swift in Sources */,
+				4B92371A2CA6E541007D38F2 /* MaterialsPage.swift in Sources */,
 				4BCC45E02C4FF2CA006FDB5D /* MessagesScreen.swift in Sources */,
+				4BD8D6402CAC595800B67B4E /* GroupPage.swift in Sources */,
+				4B92371C2CAABFDB007D38F2 /* HtmlText2.swift in Sources */,
 				4B3601FF2C4D2D9400A585DD /* LoginScreen.swift in Sources */,
+				4B9237132CA40F22007D38F2 /* CourseScreen.swift in Sources */,
 				4BCC45EF2C556780006FDB5D /* UserSheet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -324,6 +360,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -380,6 +417,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

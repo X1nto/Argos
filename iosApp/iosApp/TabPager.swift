@@ -9,6 +9,22 @@
 import SwiftUI
 import OrderedCollections
 
+extension TabPager where Tab == Page {
+    
+    init(
+        selectedIndex: Binding<Int>,
+        items: [Tab],
+        @ViewBuilder tabContent: @escaping (Tab) -> TabContent,
+        @ViewBuilder content: @escaping (Tab) -> PageContent
+    ) {
+        self._selected = selectedIndex
+        self.items = OrderedDictionary(uniqueKeys: items, values: items)
+        self.tabContent = tabContent
+        self.pageContent = content
+    }
+    
+}
+
 struct TabPager<Tab: Hashable, Page, TabContent: View, PageContent: View>: View {
     
     @Binding var selected: Int
@@ -44,7 +60,7 @@ struct TabPager<Tab: Hashable, Page, TabContent: View, PageContent: View>: View 
                         }
                         .buttonStyle(.plain)
                     }
-                    .padding(.all, CGFloat(16.0))
+                    .padding(.horizontal, CGFloat(16.0))
                     .scrollTargetLayout()
                 }
                 .scrollIndicators(.hidden)
@@ -70,7 +86,7 @@ struct TabPager<Tab: Hashable, Page, TabContent: View, PageContent: View>: View 
 
 
 #Preview {
-    @State var test: Int = 0
+    @Previewable @State var test: Int = 0
     
     return TabPager(
         selectedIndex: $test,

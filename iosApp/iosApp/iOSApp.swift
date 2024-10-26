@@ -36,9 +36,9 @@ struct iOSApp: App {
             RootScreen()
                 .onAppear {
                     if #available(iOS 15.0, *) {
-                        let appearance = UITabBarAppearance()
-                        appearance.configureWithDefaultBackground()
-                        UITabBar.appearance().scrollEdgeAppearance = appearance
+//                        let tabBarAppearance = UITabBarAppearance()
+//                        tabBarAppearance.configureWithDefaultBackground()
+//                        UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
                     }
                 }
 		}

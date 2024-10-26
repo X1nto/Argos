@@ -51,23 +51,24 @@ struct _NewsScreen: View {
     let news: PagingItemsObservable<DomainNewsPreview>?
     
     var body: some View {
-        if let news = news {
-            switch onEnum(of: news.loadingStates.refresh) {
-            case .loading:
-                ProgressView()
-            case .notLoading:
-                List {
-                    ForEach(0..<news.items.count, id: \.self) { index in
-                        let newsPreview = news[index]
+        Group {
+            if let news = news {
+                switch onEnum(of: news.loadingStates.refresh) {
+                case .loading:
+                    ProgressView()
+                case .notLoading:
+                    List(news) { news in
                         VStack {
-                            Text(newsPreview.title)
+                            Text(news.title)
                         }
                     }
+                case .error:
+                    Text("Errpr")
                 }
-            case .error:
-                Text("Errpr")
             }
         }
+        .navigationTitle("News")
+        .toolbarTitleDisplayMode(.inlineLarge)
     }
     
 }

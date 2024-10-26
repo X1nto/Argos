@@ -46,11 +46,21 @@ struct MainScreen: View {
     
     var body: some View {
         _MainScreen(
-            homeScreen: HomeScreen(),
-            messaagesScreen: MessagesScreen(),
-            newsScreen: NewsScreen(),
-            notificationsScreen: NotificationsScreen(),
-            userSheet: UserSheet(),
+            homeScreen: {
+                ArgosTab {
+                    HomeScreen()
+                }
+            },
+            messaagesScreen: {
+                ArgosTab {
+                    MessagesScreen()
+                }
+            },
+            newsScreen: {
+                ArgosTab {
+                    NewsScreen()
+                }
+            },
             state: viewModel.state
         )
     }
@@ -91,23 +101,19 @@ enum MainState {
 struct MainScreenPreview: View {
     var body: some View {
         _MainScreen(
-            homeScreen: HomeScreen(),
-            messaagesScreen: MessagesScreenPreview(),
-            newsScreen: HomeScreen(),
-            notificationsScreen: EmptyView(),
-            userSheet: UserSheetPreview(),
+            homeScreen: { HomeScreen() },
+            messaagesScreen: { MessagesScreenPreview() },
+            newsScreen: { HomeScreen() },
             state: .mockSuccess
         )
     }
 }
 
-private struct _MainScreen<HomeScreen: View, MessagesScreen: View, NewsScreen: View, NotificationScreen: View, UserSheet: View> : View {
+private struct _MainScreen<HomeScreen: View, MessagesScreen: View, NewsScreen: View> : View {
     
-    let homeScreen: HomeScreen
-    let messaagesScreen: MessagesScreen
-    let newsScreen: NewsScreen
-    let notificationsScreen: NotificationScreen
-    let userSheet: UserSheet
+    let homeScreen: () -> HomeScreen
+    let messaagesScreen: () -> MessagesScreen
+    let newsScreen: () -> NewsScreen
     
     let state: MainState
     
@@ -128,73 +134,28 @@ private struct _MainScreen<HomeScreen: View, MessagesScreen: View, NewsScreen: V
         return 0
     }
     
-    private var notificationsUnreadCount: Int {
-        if case let .success(_, state) = state {
-            return Int(state.newsUnread)
-        }
-        return 0
-    }
-    
     var body: some View {
-        NavigationStack {
-            TabView(selection: $selectedTab) {
-                homeScreen
-                    .tabItem {
-                        Label("Home", systemImage: "house")
-                    }
-                    .tag("Home")
-                
-                messaagesScreen
-                    .tabItem {
-                        Label("Messages", systemImage: "mail")
-                    }
-                    .tag("Messages")
-                    .badge(messagesUnreadCount)
-                
-                newsScreen
-                    .tabItem {
-                        Label("News", systemImage: "newspaper")
-                    }
-                    .tag("News")
-                    .badge(newsUnreadCount)
-            }
-            .navigationTitle("Argos")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItemGroup {
-                    NavigationLink(destination: notificationsScreen) {
-                        Image(systemName: "bell")
-                            .badge(notificationsUnreadCount)
-                    }
-                    
-                    Button(action: {
-                        userSheetVisible = true
-                    }) {
-                        switch state {
-                        case .loading:
-                            ProgressView()
-                        case let .success(userInfo, _):
-                            if let photoUrl = userInfo.photoUrl {
-                                AsyncImage(url: URL(string: photoUrl)) { image in
-                                    image
-                                        .resizable()
-                                        .scaledToFill()
-                                        .clipShape(Circle())
-                                } placeholder: {
-                                    ProgressView()
-                                }.frame(maxWidth: 28, maxHeight: 28)
-                            } else {
-                                Image(systemName: "person.crop.circle")
-                            }
-                        case .error:
-                            Image(systemName: "person.crop.circle.badge.exclamationmark")
-                        }
-                    }.buttonStyle(.borderless)
+        TabView(selection: $selectedTab) {
+            homeScreen()
+                .tabItem {
+                    Label("Home", systemImage: "house")
                 }
-            }
-        }
-        .sheet(isPresented: $userSheetVisible) {
-            userSheet
+                .tag("Home")
+            
+            messaagesScreen()
+                .tabItem {
+                    Label("Messages", systemImage: "mail")
+                }
+                .tag("Messages")
+                .badge(messagesUnreadCount)
+            
+            newsScreen()
+                .tabItem {
+                    Label("News", systemImage: "newspaper")
+                }
+                .tag("News")
+                .badge(newsUnreadCount)
+
         }
     }
 }

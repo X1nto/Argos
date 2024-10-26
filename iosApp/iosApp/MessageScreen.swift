@@ -96,14 +96,14 @@ struct _MessageScreen : View {
                     ProgressView()
                 case .success(let message):
                     ScrollView {
-                        Text(message.body).padding(16)
+                        HtmlText(message.body).padding(16)
                     }
                 case .error:
                     Text("Error")
                 }
             }
             .toolbar {
-                ToolbarItemGroup(placement: .bottomBar) {
+                ToolbarItemGroup {
                     Spacer()
                     Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
                         Label("Reply", systemImage: "arrowshape.turn.up.left")
