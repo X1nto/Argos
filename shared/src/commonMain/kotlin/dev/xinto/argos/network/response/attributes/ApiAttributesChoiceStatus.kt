@@ -4,13 +4,13 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ApiAttributesChoiceStatus(
-    val canChoose: Boolean,
     val isChosen: Boolean,
-    val canRemoveChoice: Boolean,
-    val canRechoose: Boolean,
-    val chooseError: String?,
-    val removeChoiceError: String?,
-    val rechooseError: String?,
-    val isScheduleInConflict: Boolean,
-    val scheduleConflictMessage: String?
+    val canChoose: Boolean = false,
+    val canRemoveChoice: Boolean = false,
+    val canRechoose: Boolean = false,
+    val chooseError: String? = null,
+    val removeChoiceError: String? = null,
+    val rechooseError: String? = null,
+    val isScheduleInConflict: Boolean = false,
+    val scheduleConflictMessage: String? = null
 )

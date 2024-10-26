@@ -18,8 +18,22 @@ class LecturesRepository(
                     time = scheduleRelationships.hour.data.attributes.times,
                     room = scheduleAttributes.locationName,
                     name = scheduleRelationships.course.data.attributes.name,
-                    lecturer = scheduleAttributes.info.ifEmpty {
-                        scheduleRelationships.group.data.relationships?.lecturers?.data?.get(0)?.attributes?.fullName ?: ""
+                    lecturer = scheduleAttributes.info.let { lecturer ->
+                        if (!lecturer.isNullOrBlank()) {
+                            return@let lecturer
+                        }
+
+                        val mainLecturer = scheduleRelationships.lecturers.data?.get(0)?.attributes?.fullName
+                        if (mainLecturer != null) {
+                            return@let mainLecturer
+                        }
+
+                        val groupLecturer = scheduleRelationships.group.data.relationships?.lecturers?.data?.get(0)?.attributes?.fullName
+                        if (groupLecturer != null) {
+                            return@let groupLecturer
+                        }
+
+                        return@let ""
                     }
                 )
             }

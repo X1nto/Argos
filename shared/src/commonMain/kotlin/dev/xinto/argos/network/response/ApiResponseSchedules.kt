@@ -19,7 +19,8 @@ data class ApiResponseSchedulesRelationships(
 data class ApiResponseScheduleRelationships(
     val hour: ApiResponseRelationship<ApiResponseData<ApiAttributesHour>>,
     val course: ApiResponseRelationship<ApiResponseData<ApiAttributesCourse>>,
-    val group: ApiResponseRelationship<ApiResponseDataWithPossibleRelationships<ApiAttributesGroup, ApiResponseScheduleGroupRelationships>>
+    val group: ApiResponseRelationship<ApiResponseDataWithPossibleRelationships<ApiAttributesGroup, ApiResponseScheduleGroupRelationships>>,
+    val lecturers: ApiResponseRelationship<List<ApiResponseData<ApiAttributesUser>>>,
 )
 
 @Serializable
