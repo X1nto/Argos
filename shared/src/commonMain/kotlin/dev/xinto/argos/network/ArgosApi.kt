@@ -4,25 +4,7 @@ import dev.xinto.argos.local.account.ArgosAccountManager
 import dev.xinto.argos.network.request.ApiRequestAuth
 import dev.xinto.argos.network.request.ApiRequestAuthRefresh
 import dev.xinto.argos.network.request.ApiRequestContact
-import dev.xinto.argos.network.response.ApiResponseAuth
-import dev.xinto.argos.network.response.ApiResponseCourseChosenGroup
-import dev.xinto.argos.network.response.ApiResponseCourseClassmates
-import dev.xinto.argos.network.response.ApiResponseCourseGroupSchedule
-import dev.xinto.argos.network.response.ApiResponseCourseGroups
-import dev.xinto.argos.network.response.ApiResponseCourseMaterials
-import dev.xinto.argos.network.response.ApiResponseCourseScores
-import dev.xinto.argos.network.response.ApiResponseCourseSyllabus
-import dev.xinto.argos.network.response.ApiResponseEmpty
-import dev.xinto.argos.network.response.ApiResponseMessage
-import dev.xinto.argos.network.response.ApiResponseMessagesInbox
-import dev.xinto.argos.network.response.ApiResponseMessagesOutbox
-import dev.xinto.argos.network.response.ApiResponseNews
-import dev.xinto.argos.network.response.ApiResponseNotifications
-import dev.xinto.argos.network.response.ApiResponseSchedules
-import dev.xinto.argos.network.response.ApiResponseSemesters
-import dev.xinto.argos.network.response.ApiResponseUserProfile
-import dev.xinto.argos.network.response.ApiResponseUserAuth
-import dev.xinto.argos.network.response.ApiResponseUserState
+import dev.xinto.argos.network.response.*
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngineFactory
@@ -152,6 +134,12 @@ class ArgosApi(private val argosAccountManager: ArgosAccountManager) {
     suspend fun getNews(id: String): ApiResponseNews {
         return withContext(Dispatchers.IO) {
             ktorClient.get("news/${id}").body()
+        }
+    }
+
+    suspend fun getCourse(courseId: String): ApiResponseCourse {
+        return withContext(Dispatchers.IO) {
+            ktorClient.get("student/courses/$courseId").body()
         }
     }
 

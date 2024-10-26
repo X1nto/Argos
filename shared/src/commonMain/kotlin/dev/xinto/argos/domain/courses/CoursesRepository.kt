@@ -11,6 +11,27 @@ class CoursesRepository(
     private val argosApi: ArgosApi
 ) {
 
+    fun getCourse(courseId: String): DomainResponseSource<*, DomainCourse> {
+        return DomainResponseSource(
+            fetch = {
+                argosApi.getCourse(courseId)
+            },
+            transform = {
+                it.data!!.let { (_, attributes, _) ->
+                    DomainCourse(
+                        name = attributes.name,
+                        code = attributes.code,
+                        programCode = attributes.programCode,
+                        credits = attributes.credits,
+                        degree = attributes.degree,
+                        isEnabledForChoose = attributes.isEnabledForChoose,
+                        isGeneral = attributes.isGeneral
+                    )
+                }
+            }
+        )
+    }
+
     fun getCourseSyllabus(courseId: String): DomainResponseSource<*, DomainCourseSyllabus> {
         return DomainResponseSource(
             fetch = {
