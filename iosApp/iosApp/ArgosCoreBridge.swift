@@ -9,17 +9,39 @@
 import Foundation
 import ArgosCore
 
-extension DomainMessage : Identifiable {
+extension DomainMessage : @retroactive Identifiable {
     
 }
 
-extension DomainMessageSent : Identifiable {
+extension DomainMessageSent : @retroactive Identifiable {
     
 }
 
-extension DomainMessageReceived : Identifiable {
+extension DomainMessageReceived : @retroactive Identifiable {
     
 }
 
 typealias PagingData<T: AnyObject> = Paging_commonPagingData<T>
 let PagingDataCompanion = Paging_commonPagingDataCompanion.shared
+
+extension Observation.Observable {
+    var userRepository: UserRepository {
+        DiProvider.shared.userRepository
+    }
+    
+    var messagesRepository: MessagesRepository {
+        DiProvider.shared.messagesRepository
+    }
+    
+    var coursesRepository: CoursesRepository {
+        DiProvider.shared.coursesRepository
+    }
+    
+    var notificationsRepository: NotificationsRepository {
+        DiProvider.shared.notificationsRepository
+    }
+    
+    var newsRepository: NewsRepository {
+        DiProvider.shared.newsRepository
+    }
+}
