@@ -76,22 +76,26 @@ struct _HomeScreen: View {
             switch state {
             case .loading:
                 ProgressView()
-            case .success(selectedDay: _, lectures: let lectures):
-                TabPager(
-                    selectedIndex: $selectedDay,
-                    items: lectures,
-                    tabContent: { Text($0) }
-                ) { lectures in
-                    List(lectures, id: \.hashValue) { lecture in
-                        NavigationLink(
-                            destination: {
+            case let .success(_, lecturesByDay):
+                List {
+                    ForEach(Array(lecturesByDay.keys), id: \.self) { day in
+                        Section {
+                            ForEach(lecturesByDay[day]!, id: \.hashValue) { lecture in
+                                NavigationLink(
+                                    destination: {
+                                        
+                                    }
+                                ) {
+                                    VStack(alignment: .leading) {
+                                        Text(lecture.name)
+                                        Text(lecture.lecturer)
+                                        Text(lecture.time)
+                                    }
+                                }
                             }
-                        ) {
-                            VStack(alignment: .leading) {
-                                Text(lecture.name)
-                                Text(lecture.lecturer)
-                                Text(lecture.time)
-                            }
+                        } header: {
+                            Text(day)
+                                .padding(.leading, -12)
                         }
                     }
                 }
@@ -101,5 +105,6 @@ struct _HomeScreen: View {
         }
         .navigationTitle("Home")
         .toolbarTitleDisplayMode(.inlineLarge)
+        .headerProminence(.increased)
     }
 }
