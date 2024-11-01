@@ -45,7 +45,10 @@ struct HomeScreen: View {
     
     var body: some View {
         _HomeScreen(
-            state: viewModel.state
+            state: viewModel.state,
+            courseScreen: { courseId in
+                CourseScreen(courseId: courseId)
+            }
         )
     }
 }
@@ -56,13 +59,15 @@ enum HomeScreenState {
     case error
 }
 
-struct _HomeScreen: View {
+struct _HomeScreen<CourseScreen: View>: View {
     let state: HomeScreenState
+    let courseScreen: (String) -> CourseScreen
     
     @State private var selectedDay: Int
     
-    init(state: HomeScreenState) {
+    init(state: HomeScreenState, courseScreen: @escaping (String) -> CourseScreen) {
         self.state = state
+        self.courseScreen = courseScreen
         
         if case let .success(selectedDay, _) = state {
             self.selectedDay = selectedDay
@@ -83,7 +88,7 @@ struct _HomeScreen: View {
                             ForEach(lecturesByDay[day]!, id: \.hashValue) { lecture in
                                 NavigationLink(
                                     destination: {
-                                        
+                                        courseScreen(lecture.id)
                                     }
                                 ) {
                                     VStack(alignment: .leading) {
