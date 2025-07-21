@@ -53,7 +53,7 @@ kotlin {
 
 android {
     namespace = "dev.xinto.argos"
-    compileSdk = 34
+    compileSdk = 35
     defaultConfig {
         minSdk = 21
     }

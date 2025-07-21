@@ -16,5 +16,5 @@ data class ApiResponseUserStateRegimeAttributes(
     val name: String,
     val functionalIsLimited: Boolean,
     val chooseAllowed: Boolean,
-    val message: JsonObject? = null //TODO figure this out
+    val message: String? = null
 )

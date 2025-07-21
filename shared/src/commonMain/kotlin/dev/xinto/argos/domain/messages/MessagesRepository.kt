@@ -1,7 +1,6 @@
 package dev.xinto.argos.domain.messages
 
 import dev.xinto.argos.domain.DomainPagedResponsePager
-import dev.xinto.argos.domain.DomainResponse
 import dev.xinto.argos.domain.DomainResponseSource
 import dev.xinto.argos.network.ArgosApi
 import dev.xinto.argos.util.asFormattedLocalDateTime
@@ -10,45 +9,52 @@ class MessagesRepository(
     private val argosApi: ArgosApi
 ) {
 
-    fun getInboxMessages(semesterId: String): DomainPagedResponsePager<*, DomainMessageReceived> {
+    fun getInboxMessages(semesterId: String): DomainPagedResponsePager<*, DomainMessage> {
         return DomainPagedResponsePager(
             fetch = { page, language ->
                 argosApi.getInboxMessages(semesterId, page)
             },
             transform = {
                 it.data!!.map { (id, attributes, relationships) ->
-                    DomainMessageReceived(
+                    DomainMessage(
                         id = id!!,
-                        sender = DomainMessageUser(
-                            uid = relationships.sender.data.attributes.uid,
-                            fullName = relationships.sender.data.attributes.fullName,
+                        semId = attributes.semId.toString(),
+                        source = DomainMessageSource.Inbox(
+                            sender = DomainMessageUser(
+                                uid = relationships.sender.data.attributes.uid,
+                                fullName = relationships.sender.data.attributes.fullName,
+                            )
                         ),
                         subject = attributes.subject,
-                        date = attributes.sentAt.asFormattedLocalDateTime(),
-                        seen = attributes.seen,
-                        semId = attributes.semId.toString()
+                        body = attributes.body,
+                        sentAt = attributes.sentAt.asFormattedLocalDateTime(),
+                        seenAt = attributes.readAt?.asFormattedLocalDateTime()
                     )
                 }
             }
         )
     }
 
-    fun getOutboxMessages(semesterId: String): DomainPagedResponsePager<*, DomainMessageSent> {
+    fun getOutboxMessages(semesterId: String): DomainPagedResponsePager<*, DomainMessage> {
         return DomainPagedResponsePager(
             fetch = { page, language ->
                 argosApi.getOutboxMessages(semesterId, page)
             },
             transform = {
                 it.data!!.map { (id, attributes, relationships) ->
-                    DomainMessageSent(
+                    DomainMessage(
                         id = id!!,
-                        receiver = DomainMessageUser(
-                            uid = relationships.receiver.data.attributes.uid,
-                            fullName = relationships.receiver.data.attributes.fullName,
+                        semId = attributes.semId.toString(),
+                        source = DomainMessageSource.Outbox(
+                            receiver = DomainMessageUser(
+                                uid = relationships.receiver.data.attributes.uid,
+                                fullName = relationships.receiver.data.attributes.fullName,
+                            )
                         ),
                         subject = attributes.subject,
-                        date = attributes.sentAt.asFormattedLocalDateTime(),
-                        semId = attributes.semId.toString()
+                        body = attributes.body,
+                        sentAt = attributes.sentAt.asFormattedLocalDateTime(),
+                        seenAt = attributes.readAt?.asFormattedLocalDateTime()
                     )
                 }
             }
@@ -64,18 +70,21 @@ class MessagesRepository(
                 it.data!!.let { (id, attributes, relationships) ->
                     DomainMessage(
                         id = id!!,
-                        sender = DomainMessageUser(
-                            uid = relationships.sender.data.attributes.uid,
-                            fullName = relationships.sender.data.attributes.fullName,
-                        ),
-                        receiver = DomainMessageUser(
-                            uid = relationships.receiver.data.attributes.uid,
-                            fullName = relationships.receiver.data.attributes.fullName,
+                        semId = attributes.semId.toString(),
+                        source = DomainMessageSource.General(
+                            sender = DomainMessageUser(
+                                uid = relationships.sender.data.attributes.uid,
+                                fullName = relationships.sender.data.attributes.fullName,
+                            ),
+                            receiver = DomainMessageUser(
+                                uid = relationships.receiver.data.attributes.uid,
+                                fullName = relationships.receiver.data.attributes.fullName,
+                            )
                         ),
                         subject = attributes.subject,
                         body = attributes.body,
-                        date = attributes.sentAt.asFormattedLocalDateTime(),
-                        semId = attributes.semId.toString()
+                        sentAt = attributes.sentAt.asFormattedLocalDateTime(),
+                        seenAt = attributes.readAt?.asFormattedLocalDateTime()
                     )
                 }
             }

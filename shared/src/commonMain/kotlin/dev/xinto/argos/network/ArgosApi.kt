@@ -28,6 +28,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 class ArgosApi(private val argosAccountManager: ArgosAccountManager) {
@@ -73,6 +74,14 @@ class ArgosApi(private val argosAccountManager: ArgosAccountManager) {
             ktorClient.patch("user/contact") {
                 contentType(ContentType.Application.Json)
                 setBody(contact)
+            }.body()
+        }
+    }
+
+    suspend fun getAuthLogs(page: Int): ApiResponseAuthLogs {
+        return withContext(Dispatchers.IO) {
+            ktorClient.get("user/auth-log") {
+                parameter("page", page)
             }.body()
         }
     }
@@ -123,7 +132,7 @@ class ArgosApi(private val argosAccountManager: ArgosAccountManager) {
         }
     }
 
-    suspend fun getNews(page: Int): ApiResponseNews {
+    suspend fun getNews(page: Int): ApiResponseAllNews {
         return withContext(Dispatchers.IO) {
             ktorClient.get("news") {
                 parameter("page", page)
@@ -134,6 +143,27 @@ class ArgosApi(private val argosAccountManager: ArgosAccountManager) {
     suspend fun getNews(id: String): ApiResponseNews {
         return withContext(Dispatchers.IO) {
             ktorClient.get("news/${id}").body()
+        }
+    }
+
+    suspend fun getCurrentCourseChoices(): ApiResponseChoices {
+        return withContext(Dispatchers.IO) {
+            ktorClient.get("student/choices").body()
+        }
+    }
+
+    suspend fun getCourseChoices(): ApiResponseAvailableChoices {
+        return withContext(Dispatchers.IO) {
+            ktorClient.get("student/available/choices").body()
+        }
+    }
+
+    suspend fun getCourseCatalog(search: String, page: Int): ApiResponseCourseCatalog {
+        return withContext(Dispatchers.IO) {
+            ktorClient.get("student/courses/catalog") {
+                parameter("filters[search]", search)
+                parameter("page", page)
+            }.body()
         }
     }
 
@@ -173,9 +203,35 @@ class ArgosApi(private val argosAccountManager: ArgosAccountManager) {
         }
     }
 
-    suspend fun getCourseGroupSchedule(courseId: String, groupId: String): ApiResponseCourseGroupSchedule {
+    suspend fun getGroupWeekSchedule(courseId: String, groupId: String): ApiResponseGroupWeekSchedule {
         return withContext(Dispatchers.IO) {
-            ktorClient.get("student/courses/${courseId}/groups/${groupId}/schedule").body()
+            ktorClient.get("student/courses/${courseId}/groups/${groupId}/week-schedule").body()
+        }
+    }
+
+    suspend fun getGroupSchedule(courseId: String, groupId: String, page: Int): ApiResponseGroupSchedule {
+        return withContext(Dispatchers.IO) {
+            ktorClient.get("student/courses/${courseId}/groups/${groupId}/schedule") {
+                // TODO
+                parameter("filters[startDate]", "")
+                parameter("filters[endDate]", "")
+                parameter("filters[day]", "")
+                parameter("page", page)
+            }.body()
+        }
+    }
+
+    @Serializable
+    data class ChoiceData(
+        val courseId: String,
+        val groupId: String
+    )
+
+    suspend fun chooseCourseGroup(courseId: String, groupId: String) {
+        withContext(Dispatchers.IO) {
+            ktorClient.post("/student/choices") {
+                setBody(ChoiceData(courseId, groupId))
+            }
         }
     }
 

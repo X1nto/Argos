@@ -23,7 +23,7 @@ class LecturesRepository(
                             return@let lecturer
                         }
 
-                        val mainLecturer = scheduleRelationships.lecturers.data?.get(0)?.attributes?.fullName
+                        val mainLecturer = scheduleRelationships.lecturers.data.getOrNull(0)?.attributes?.fullName
                         if (mainLecturer != null) {
                             return@let mainLecturer
                         }

@@ -9,7 +9,7 @@ data class ApiAttributesGroupSchedule(
     val startTime: String,
     val endTime: String,
     val locationName: String,
-    val info: String,
+    val info: String?,
     val lectureType: String,
     val scheduleConflictMessage: String?
 )

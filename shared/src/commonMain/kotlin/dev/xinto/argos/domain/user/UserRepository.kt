@@ -1,9 +1,11 @@
 package dev.xinto.argos.domain.user
 
+import dev.xinto.argos.domain.DomainPagedResponsePager
 import dev.xinto.argos.domain.DomainResponseSource
 import dev.xinto.argos.local.account.ArgosAccountManager
 import dev.xinto.argos.network.ArgosApi
 import dev.xinto.argos.network.request.ApiRequestContact
+import dev.xinto.argos.util.FormattedLocalDateTime
 import dev.xinto.argos.util.formatCurrency
 import kotlinx.coroutines.flow.Flow
 
@@ -34,12 +36,13 @@ class UserRepository(
 
     val meUserState = DomainResponseSource({ argosApi.getUserState() }) { state ->
         state.data!!.attributes.let { attributes ->
+            //FIXME don't use 0 for nulls
             DomainMeUserState(
-                billingBalance = attributes.billingBalance.formatCurrency("GEL"),
+                billingBalance = (attributes.billingBalance ?: 0).formatCurrency("GEL"),
                 libraryBalance = attributes.libraryBalance.toString(),
-                newsUnread = attributes.newsUnread,
-                messagesUnread = attributes.messagesUnread,
-                notificationsUnread = attributes.notificationsUnread
+                newsUnread = attributes.newsUnread ?: 0,
+                messagesUnread = attributes.messagesUnread ?: 0,
+                notificationsUnread = attributes.notificationsUnread ?: 0
             )
         }
     }
@@ -108,6 +111,24 @@ class UserRepository(
                     }
                 }
 
+            }
+        )
+    }
+
+    fun getUserAuthorizations(): DomainPagedResponsePager<*, DomainUserAuthorization> {
+        return DomainPagedResponsePager(
+            fetch = { page, language ->
+                argosApi.getAuthLogs(page)
+            },
+            transform = {
+                it.data!!.map { (id, attributes) ->
+                    DomainUserAuthorization(
+                        id = id!!,
+                        ip = attributes.ip,
+                        client = attributes.userAgent,
+                        date = FormattedLocalDateTime(attributes.createdAt)
+                    )
+                }
             }
         )
     }

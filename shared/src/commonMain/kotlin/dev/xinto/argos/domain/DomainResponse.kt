@@ -15,7 +15,6 @@ import org.koin.core.component.get
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
-import kotlin.jvm.JvmInline
 
 sealed class DomainResponse<out T> {
     data class Success<T>(val value: T) : DomainResponse<T>()
@@ -45,8 +44,8 @@ inline fun <T1, T2, R> combine(
 }
 
 class DomainResponseSource<T : ApiResponseBase, R>(
-    private inline val fetch: suspend (ArgosLanguage) -> T,
-    private inline val transform: (T) -> R,
+    private val fetch: suspend (ArgosLanguage) -> T,
+    private val transform: (T) -> R,
 ): KoinComponent {
 
     private val settings: ArgosSettings = get()
@@ -81,7 +80,7 @@ class DomainResponseSource<T : ApiResponseBase, R>(
     ): T {
         contract {
             callsInPlace(predicate, InvocationKind.EXACTLY_ONCE)
-            callsInPlace(unless, InvocationKind.EXACTLY_ONCE)
+            callsInPlace(unless, InvocationKind.AT_MOST_ONCE)
         }
         return if (!predicate(this)) this else unless()
     }

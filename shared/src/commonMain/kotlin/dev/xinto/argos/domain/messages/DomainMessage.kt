@@ -2,12 +2,17 @@ package dev.xinto.argos.domain.messages
 
 import dev.xinto.argos.util.FormattedLocalDateTime
 
-sealed interface DomainMessagePreview {
-    val id: String
-    val subject: String
-    val semId: String
-    val date: FormattedLocalDateTime
-    val user: DomainMessageUser
+sealed interface DomainMessageSource {
+
+    data class Inbox(val sender: DomainMessageUser): DomainMessageSource
+
+    data class Outbox(val receiver: DomainMessageUser): DomainMessageSource
+
+    data class General(
+        val sender: DomainMessageUser,
+        val receiver: DomainMessageUser
+    ): DomainMessageSource
+
 }
 
 data class DomainMessage(
@@ -15,28 +20,7 @@ data class DomainMessage(
     val subject: String,
     val body: String,
     val semId: String,
-    val date: FormattedLocalDateTime,
-    val sender: DomainMessageUser,
-    val receiver: DomainMessageUser,
+    val source: DomainMessageSource,
+    val sentAt: FormattedLocalDateTime,
+    val seenAt: FormattedLocalDateTime?
 )
-
-data class DomainMessageSent(
-    override val id: String,
-    override val subject: String,
-    override val semId: String,
-    override val date: FormattedLocalDateTime,
-    val receiver: DomainMessageUser,
-) : DomainMessagePreview {
-    override val user: DomainMessageUser = receiver
-}
-
-data class DomainMessageReceived(
-    override val id: String,
-    override val subject: String,
-    override val semId: String,
-    override val date: FormattedLocalDateTime,
-    val sender: DomainMessageUser,
-    val seen: Boolean,
-): DomainMessagePreview {
-    override val user: DomainMessageUser = sender
-}

@@ -1,6 +1,7 @@
 package dev.xinto.argos.domain.courses
 
 data class DomainCourse(
+    val id: String,
     val name: String,
     val code: String,
     val programCode: String,

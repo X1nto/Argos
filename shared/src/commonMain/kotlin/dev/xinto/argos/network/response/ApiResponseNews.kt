@@ -5,8 +5,8 @@ import dev.xinto.argos.network.response.attributes.ApiAttributesNews
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
 
-typealias ApiResponseNews = ApiResponsePaged<List<ApiResponseDataWithRelationships<ApiAttributesNews, ApiResponseNewsRelationships>>>
-typealias ApiResponseNewsSpecific = ApiResponsePaged<ApiResponseDataWithRelationships<ApiAttributesNews, ApiResponseNewsSpecificRelationships>>
+typealias ApiResponseAllNews = ApiResponsePaged<List<ApiResponseDataWithRelationships<ApiAttributesNews, ApiResponseNewsRelationships>>>
+typealias ApiResponseNews = ApiResponse<ApiResponseDataWithRelationships<ApiAttributesNews, ApiResponseNewsSpecificRelationships>>
 
 @Serializable
 data class ApiResponseNewsRelationships(
@@ -16,12 +16,12 @@ data class ApiResponseNewsRelationships(
 @Serializable
 data class ApiResponseNewsSpecificRelationships(
     val userViewStatus: ApiResponseRelationship<ApiResponseData<ApiResponseNewsUserViewStatusAttributes>>,
-    val files: ApiResponseRelationship<ApiResponseData<ApiResponseDataWithRelationships<List<JsonObject>, ApiResponseNewsFileRelationships>>>
+    val files: ApiResponseRelationship<List<ApiResponseDataWithRelationships<List<JsonObject>, ApiResponseNewsFileRelationships>>>
 )
 
 @Serializable
 data class ApiResponseNewsFileRelationships(
-    val mediaFile: ApiResponseData<ApiAttributesMediaFile>
+    val mediaFile: ApiResponseRelationship<ApiResponseData<ApiAttributesMediaFile>>
 )
 
 @Serializable

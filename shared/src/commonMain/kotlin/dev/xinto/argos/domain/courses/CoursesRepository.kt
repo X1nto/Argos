@@ -17,8 +17,9 @@ class CoursesRepository(
                 argosApi.getCourse(courseId)
             },
             transform = {
-                it.data!!.let { (_, attributes, _) ->
+                it.data!!.let { (id, attributes, _) ->
                     DomainCourse(
+                        id = id!!,
                         name = attributes.name,
                         code = attributes.code,
                         programCode = attributes.programCode,
@@ -26,6 +27,87 @@ class CoursesRepository(
                         degree = attributes.degree,
                         isEnabledForChoose = attributes.isEnabledForChoose,
                         isGeneral = attributes.isGeneral
+                    )
+                }
+            }
+        )
+    }
+
+    fun getMyCourseChoices(): DomainResponseSource<*, DomainCourseChoices> {
+        return DomainResponseSource(
+            fetch = {
+                argosApi.getCourseChoices()
+            },
+            transform = {
+                DomainCourseChoices(
+                    allCredits = it.data!!.attributes.creditsAll,
+                    currentCredits = it.data.attributes.creditsCurrent,
+                    generalCredits = it.data.attributes.creditsGeneral,
+                    course = it.data.relationships.choices.data.map { (_, attributes, relationships) ->
+                        DomainMyCourse(
+                            id = relationships.course.data.id!!,
+                            name = attributes.courseName,
+                            code = attributes.courseCode,
+                            courseCredits = attributes.courseCredits,
+                            receivedCredits = attributes.credits,
+                            score = attributes.score,
+                            type = if (attributes.isGeneral) DomainMyCourse.Type.General else DomainMyCourse.Type.Program,
+                            status = when (attributes.status) {
+                                0 -> DomainMyCourse.Status.Failed
+                                1 -> DomainMyCourse.Status.Completed
+                                else -> DomainMyCourse.Status.Ongoing
+                            },
+                            creditType = attributes.creditType
+                        )
+                    }
+                )
+            }
+        )
+    }
+
+    fun getMyCurrentCourseChoices(): DomainResponseSource<*, List<DomainMyCourse>> {
+        return DomainResponseSource(
+            fetch = {
+                argosApi.getCurrentCourseChoices()
+            },
+            transform = {
+                it.data!!.map { (_, attributes, relationships) ->
+                    DomainMyCourse(
+                        id = relationships.course.data.id!!,
+                        name = attributes.courseName,
+                        code = attributes.courseCode,
+                        courseCredits = attributes.courseCredits,
+                        receivedCredits = attributes.credits,
+                        score = attributes.score,
+                        type = if (attributes.isGeneral) DomainMyCourse.Type.General else DomainMyCourse.Type.Program,
+                        status = when (attributes.status) {
+                            0 -> DomainMyCourse.Status.Failed
+                            1 -> DomainMyCourse.Status.Completed
+                            else -> DomainMyCourse.Status.Ongoing
+                        },
+                        creditType = attributes.creditType
+                    )
+                }
+            }
+        )
+    }
+
+    fun getCourseCatalog(search: String): DomainPagedResponsePager<*, DomainCourse> {
+        return DomainPagedResponsePager(
+            fetch = { page, language ->
+                argosApi.getCourseCatalog(search, page)
+            },
+            transform = {
+                it.data!!.map {
+                    DomainCourse(
+                        id = it.id!!,
+                        name = it.attributes.name,
+                        code = it.attributes.code,
+                        programCode = it.attributes.programCode,
+                        credits = it.attributes.credits,
+                        degree = it.attributes.degree,
+                        isEnabledForChoose = it.attributes.isEnabledForChoose,
+                        isGeneral = it.attributes.isGeneral,
                     )
                 }
             }
@@ -75,8 +157,11 @@ class CoursesRepository(
                     DomainCourseScores(
                         requiredCredits = attributes.courseCredits,
                         acquiredCredits = attributes.credits,
-                        scores = relationships.scores.data.map {
-                            it.attributes.criteria to it.attributes.score
+                        criteria = relationships.scores.data.map {
+                            DomainCourseCriterion(
+                                name = it.attributes.criteria,
+                                score = it.attributes.score ?: 0f
+                            )
                         }
                     )
                 }
@@ -140,21 +225,56 @@ class CoursesRepository(
         )
     }
 
-    fun getCourseGroupSchedule(
+    fun getCourseGroupWeekSchedule(
         courseId: String,
         groupId: String
     ): DomainResponseSource<*, List<DomainCourseGroupSchedule>> {
         return DomainResponseSource(
             fetch = {
-                argosApi.getCourseGroupSchedule(courseId, groupId)
+                argosApi.getGroupWeekSchedule(courseId, groupId)
             },
             transform = {
-                it.data!!.map { (_, attributes) ->
+                it.data!!.map { (_, attributes, relationships) ->
                     DomainCourseGroupSchedule(
+                        id = buildString {
+                            append(attributes.date)
+                            append(attributes.startTime)
+                            append(attributes.endTime)
+                        },
+                        date = attributes.date,
                         day = attributes.day,
-                        time = "${attributes.startTime} - ${attributes.endTime}",
+                        startTime = attributes.startTime,
+                        fullTime = "${attributes.startTime} - ${attributes.endTime}",
                         room = attributes.locationName,
-                        info = attributes.info.ifBlank { null }
+                        lecturer = relationships.lecturers.data.first().attributes.fullName
+                    )
+                }
+            }
+        )
+    }
+
+    fun getCourseGroupSchedule(
+        courseId: String,
+        groupId: String
+    ): DomainPagedResponsePager<*, DomainCourseGroupSchedule> {
+        return DomainPagedResponsePager(
+            fetch = { page, language ->
+                argosApi.getGroupSchedule(courseId, groupId, page)
+            },
+            transform = {
+                it.data!!.map { (_, attributes, relationships) ->
+                    DomainCourseGroupSchedule(
+                        id = buildString {
+                            append(attributes.date)
+                            append(attributes.startTime)
+                            append(attributes.endTime)
+                        },
+                        date = attributes.date,
+                        day = attributes.day,
+                        startTime = attributes.startTime,
+                        fullTime = "${attributes.startTime} - ${attributes.endTime}",
+                        room = attributes.locationName,
+                        lecturer = relationships.lecturers.data.first().attributes.fullName
                     )
                 }
             }
@@ -180,6 +300,7 @@ class CoursesRepository(
                             "doc", "docx" -> DomainCourseMaterialType.Word
                             "xls", "xlsx" -> DomainCourseMaterialType.Excel
                             "pdf" -> DomainCourseMaterialType.Pdf
+                            "mp4", "mov" -> DomainCourseMaterialType.Video
                             else -> DomainCourseMaterialType.Text
                         }
                     )

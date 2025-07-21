@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ApiAttributesScore(
     val criteria: String,
-    val score: Float
+    val score: Float?
 )

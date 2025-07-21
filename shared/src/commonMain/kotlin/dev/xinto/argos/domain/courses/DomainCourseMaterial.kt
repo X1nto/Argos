@@ -17,5 +17,6 @@ enum class DomainCourseMaterialType {
     Excel,
     Powerpoint,
     Pdf,
+    Video,
     Text
 }
