@@ -102,13 +102,13 @@ fun GroupsPage(
                                     when (schedule) {
                                         is DomainResponse.Success -> {
                                             val date = remember(schedule) {
-                                                schedule.value.map { it.day to it.time }
+                                                schedule.value.map { it.day to it.fullTime }
                                             }
                                             val room = remember(schedule) {
                                                 schedule.value.map { it.room }
                                             }
                                             val info = remember(schedule) {
-                                                schedule.value.mapNotNull { it.info }
+                                                schedule.value.mapNotNull { it.lecturer }
                                             }
                                             Table(
                                                 shape = RectangleShape,

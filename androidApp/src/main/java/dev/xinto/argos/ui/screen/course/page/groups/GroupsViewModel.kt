@@ -58,7 +58,7 @@ class GroupsViewModel(
         viewModelScope.launch {
             _schedules.update {
                 it.toMutableMap().apply {
-                    this[groupId] = coursesRepository.getCourseGroupSchedule(courseId, groupId)()
+                    this[groupId] = coursesRepository.getCourseGroupWeekSchedule(courseId, groupId)()
                 }
             }
         }

@@ -19,9 +19,11 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import dev.xinto.argos.R
+import dev.xinto.argos.domain.messages.DomainMessage
 import dev.xinto.argos.domain.messages.DomainMessagePreview
 import dev.xinto.argos.domain.messages.DomainMessageReceived
 import dev.xinto.argos.domain.messages.DomainMessageSent
+import dev.xinto.argos.domain.messages.DomainMessageSource
 import dev.xinto.argos.ui.component.SecondaryTabPager
 import org.koin.androidx.compose.getViewModel
 
@@ -48,8 +50,8 @@ fun MessagesPage(
 fun MessagesPage(
     tab: MessagesTab,
     onTabChange: (MessagesTab) -> Unit,
-    inbox: LazyPagingItems<DomainMessageReceived>,
-    outbox: LazyPagingItems<DomainMessageSent>,
+    inbox: LazyPagingItems<DomainMessage>,
+    outbox: LazyPagingItems<DomainMessage>,
     onMessageClick: (messageId: String, semesterId: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -78,8 +80,8 @@ fun MessagesPage(
 }
 
 @Composable
-private fun <T : DomainMessagePreview> MessagesList(
-    messages: LazyPagingItems<T>,
+private fun MessagesList(
+    messages: LazyPagingItems<DomainMessage>,
     onMessageClick: (messageId: String, semesterId: String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -113,13 +115,21 @@ private fun <T : DomainMessagePreview> MessagesList(
                                     onMessageClick(message.id, message.semId)
                                 },
                             overlineContent = {
-                                Text(message.date.toString())
+                                Text(message.sentAt.relativeDateTime)
                             },
                             headlineContent = {
                                 Text(message.subject)
                             },
                             supportingContent = {
-                                Text(message.user.fullName)
+                                when (val source = message.source) {
+                                    is DomainMessageSource.Inbox -> {
+                                        Text(source.sender.fullName)
+                                    }
+                                    is DomainMessageSource.Outbox -> {
+                                        Text(source.receiver.fullName)
+                                    }
+                                    is DomainMessageSource.General -> {}
+                                }
                             }
                         )
                     }

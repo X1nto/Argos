@@ -67,7 +67,7 @@ fun NewsPage(
                                 onNewsClick(newsPreview.id)
                             },
                             overlineContent = {
-                                Text(newsPreview.publishDate.toString())
+                                Text(newsPreview.publishDate.fullDateTime)
                             },
                             headlineContent = {
                                 Text(newsPreview.title)

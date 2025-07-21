@@ -116,11 +116,11 @@ fun PrimaryScrollableTabPager(
     tabRow = { pager, tabs ->
         PrimaryScrollableTabRow(
             selectedTabIndex = selectedIndex,
-            indicator = {
-                TabRowDefaults.PrimaryIndicator(
-                    modifier = Modifier.pagerTabIndicatorOffset(pager, it)
-                )
-            },
+//            indicator = {
+//                TabRowDefaults.PrimaryIndicator(
+//                    modifier = Modifier.pagerTabIndicatorOffset(pager, it)
+//                )
+//            },
             tabs = tabs
         )
     },
@@ -168,11 +168,11 @@ fun SecondaryScrollableTabPager(
     tabRow = { pager, tabs ->
         SecondaryScrollableTabRow(
             selectedTabIndex = selectedIndex,
-            indicator = {
-                TabRowDefaults.SecondaryIndicator(
-                    modifier = Modifier.pagerTabIndicatorOffset(pager, it)
-                )
-            },
+//            indicator = {
+//                TabRowDefaults.SecondaryIndicator(
+//                    modifier = Modifier.pagerTabIndicatorOffset(pager, it)
+//                )
+//            },
             tabs = tabs
         )
     },

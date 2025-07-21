@@ -7,7 +7,7 @@ import dev.xinto.argos.domain.news.NewsRepository
 
 class NewsViewModel(private val newsRepository: NewsRepository) : ViewModel() {
 
-    val news = newsRepository.getNews()
+    val news = newsRepository.getAllNews()
         .flow
         .cachedIn(viewModelScope)
 

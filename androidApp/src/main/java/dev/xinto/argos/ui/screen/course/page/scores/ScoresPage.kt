@@ -76,13 +76,13 @@ fun ScoresPage(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     val criteria = remember(state.scores) {
-                        state.scores.scores.map {
-                            it.first
+                        state.scores.criteria.map {
+                            it.name
                         }
                     }
                     val scores = remember(state.scores) {
-                        state.scores.scores.map {
-                            it.second
+                        state.scores.criteria.map {
+                            it.score
                         }
                     }
                     Table(modifier = Modifier.fillMaxWidth()) {

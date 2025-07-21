@@ -96,7 +96,7 @@ fun NotificationsScreen(
                                     onNotificationClick(notification.id)
                                 },
                                 overlineContent = {
-                                    Text(notification.alertDate.toString())
+                                    Text(notification.alertDate.fullDateTime)
                                 },
                                 headlineContent = {
                                     Text(notification.text)
