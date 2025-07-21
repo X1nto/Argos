@@ -12,8 +12,8 @@ import Observation
 
 @Observable
 class CourseViewModel {
-    private var fetchTask: Task<Void, Error>?
-    private var coursesRepository: CoursesRepository {
+    @ObservationIgnored private var fetchTask: Task<Void, Error>?
+    @ObservationIgnored private var coursesRepository: CoursesRepository {
         DiProvider.shared.coursesRepository
     }
     
@@ -22,13 +22,10 @@ class CourseViewModel {
     init(courseId: String) {
         fetchTask = Task {
             for try await courseData in coursesRepository.getCourse(courseId: courseId).flow {
-                switch onEnum(of: courseData) {
-                case .loading:
-                    state = .loading
-                case let .success(course):
-                    state = .success(course.value!)
-                case .error:
-                    state = .failure
+                state = switch onEnum(of: courseData) {
+                case .loading:  .loading
+                case let .success(course): .success(course.value!)
+                case .error: .failure
                 }
             }
         }
@@ -52,21 +49,36 @@ struct CourseScreen: View {
     var body: some View {
         _CourseScreen(
             state: viewModel.state,
-            syllabusPage: SyllabusPage(courseId: courseId),
-            groupsPage: GroupsPage(courseId: courseId),
-            materialsPage: MaterialsPage(courseId: courseId)
+            syllabusPage: {
+                SyllabusPage(courseId: courseId)
+            },
+            groupsPage: {
+                GroupsPage(courseId: courseId)
+            },
+            scoresPage: {
+                ScoresPage(courseId: courseId)
+            },
+            materialsPage: {
+                MaterialsPage(courseId: courseId)
+            },
+            classmatesPage: {
+                ClassmatesPage(courseId: courseId)
+            }
         )
     }
 }
 
-struct _CourseScreen<SyllabusPage: View, GroupsPage: View, MaterialsPage: View>: View {
+struct _CourseScreen<SyllabusPage, GroupsPage, ScoresPage, MaterialsPage, ClassmatesPage>: View
+where SyllabusPage: View, GroupsPage: View, ScoresPage: View, MaterialsPage: View, ClassmatesPage: View {
     
     let state: CourseState
-    let syllabusPage: SyllabusPage
-    let groupsPage: GroupsPage
-    let materialsPage: MaterialsPage
+    @ViewBuilder var syllabusPage: SyllabusPage
+    @ViewBuilder var groupsPage: GroupsPage
+    @ViewBuilder var scoresPage: ScoresPage
+    @ViewBuilder var materialsPage: MaterialsPage
+    @ViewBuilder var classmatesPage: ClassmatesPage
     
-    @State private var selectedIndex = 1 // Show groups by default
+    @State private var selectedPage = CoursePages.groups
     
     private var navTitle: String? {
         if case let .success(course) = state {
@@ -77,25 +89,26 @@ struct _CourseScreen<SyllabusPage: View, GroupsPage: View, MaterialsPage: View>:
     }
     
     var body: some View {
-        TabPager(
-            selectedIndex: $selectedIndex,
-            items: CoursePages.all,
-            tabContent: { page in
-                switch page {
-                case .syllabus:
-                    Text("Syllabus")
-                case .groups:
-                    Text("Groups")
-                case .materials:
-                    Text("Materials")
-                }
-            }
-        ) { page in
-            switch page {
-            case .syllabus: syllabusPage
-            case .groups: groupsPage
-            case .materials: materialsPage
-            }
+        MorphingTabView(selection: $selectedPage) {
+            syllabusPage
+                .morphingTab("Syllabus", systemIcon: "book.pages.fill", color: .red)
+                .tag(CoursePages.syllabus)
+            
+            groupsPage
+                .morphingTab("Groups", systemIcon: "rectangle.3.group.fill", color: .green)
+                .tag(CoursePages.groups)
+            
+            scoresPage
+                .morphingTab("Scores", systemIcon: "list.star", color: .teal)
+                .tag(CoursePages.scores)
+            
+            materialsPage
+                .morphingTab("Materials", systemIcon: "books.vertical.fill", color: .indigo)
+                .tag(CoursePages.materials)
+            
+            classmatesPage
+                .morphingTab("Classmates", systemIcon: "person.3.fill", color: .mint)
+                .tag(CoursePages.classmates)
         }
         .navigationTitleOptional(navTitle)
         .toolbarTitleDisplayMode(.inline)
@@ -121,12 +134,21 @@ enum CourseState {
     case failure
 }
 
-enum CoursePages {
+enum CoursePages: Hashable {
     case syllabus
     case groups
+    case scores
     case materials
-    
-    static var all: [CoursePages] {
-        [.syllabus, .groups, .materials]
-    }
+    case classmates
+}
+
+#Preview {
+//    _CourseScreen(
+//        state: CourseState.success(
+//            
+//        ),
+//        syllabusPage: <#T##SyllabusPage#>,
+//        groupsPage: <#T##GroupsPage#>,
+//        materialsPage: <#T##MaterialsPage#>
+//    )
 }

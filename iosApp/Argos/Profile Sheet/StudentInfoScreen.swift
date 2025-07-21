@@ -78,28 +78,19 @@ struct _PersonalInfoScreen: View {
     
     let state: StudentInfoState
     
-    private let contactInfo: StudentContactInfo
-    @State private var changedContactInfo: StudentContactInfo
+    @Bindable private var contactInfo = StudentContactInfo()
     
     init(state: StudentInfoState) {
         self.state = state
         
-        contactInfo = if case let .success(domainMeUserInfo) = state {
-            StudentContactInfo(
-                currentAddress: domainMeUserInfo.currentAddress,
-                mobile1: domainMeUserInfo.mobileNumber1,
-                mobile2: domainMeUserInfo.mobileNumber2,
-                phone1: domainMeUserInfo.homeNumber
-            )
-        } else {
-            StudentContactInfo(
-                currentAddress: "",
-                mobile1: "",
-                mobile2: "",
-                phone1: ""
+        if case let .success(userInfo) = state {
+            contactInfo = .init(
+                currentAddress: userInfo.currentAddress,
+                mobile1: userInfo.mobileNumber1,
+                mobile2: userInfo.mobileNumber2,
+                phone1: userInfo.homeNumber
             )
         }
-        changedContactInfo = contactInfo
     }
     
     var body: some View {
@@ -140,16 +131,16 @@ struct _PersonalInfoScreen: View {
                         .fontWeight(.medium)
                         .disabled(true)
                         
-                        TextField(text: $changedContactInfo.mobile1) {
+                        TextField(text: $contactInfo.mobile1) {
                             Text("Mobile 1")
                         }
-                        TextField(text: $changedContactInfo.mobile2) {
+                        TextField(text: $contactInfo.mobile2) {
                             Text("Mobile 2")
                         }
-                        TextField(text: $changedContactInfo.phone1) {
+                        TextField(text: $contactInfo.phone1) {
                             Text("Phone 1")
                         }
-                        TextField(text: $changedContactInfo.currentAddress) {
+                        TextField(text: $contactInfo.currentAddress) {
                             Text("Current address")
                         }
                     }
@@ -163,16 +154,31 @@ struct _PersonalInfoScreen: View {
             Button(action: {}) {
                 Text("Save")
             }
-            .disabled(changedContactInfo == contactInfo)
+//            .disabled(changedContactInfo == contactInfo)
         }
     }
 }
 
-struct StudentContactInfo: Equatable {
+@Observable
+class StudentContactInfo {
     var currentAddress: String
     var mobile1: String
     var mobile2: String
     var phone1: String
+    
+    init(currentAddress: String, mobile1: String, mobile2: String, phone1: String) {
+        self.currentAddress = currentAddress
+        self.mobile1 = mobile1
+        self.mobile2 = mobile2
+        self.phone1 = phone1
+    }
+    
+    init() {
+        self.currentAddress = ""
+        self.mobile1 = ""
+        self.mobile2 = ""
+        self.phone1 = ""
+    }
 }
 
 #Preview {

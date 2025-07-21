@@ -13,22 +13,12 @@ import ArgosCore
 class RootViewModel {
     var isLoggedIn = false
     
-    private var loginTask: Task<Void, Error>?
-    
-    private var userRepository: UserRepository {
-        DiProvider.shared.userRepository
-    }
-    
     init() {
-        loginTask = Task { 
-            for try await loggedIn in self.userRepository.observeLoggedIn() {
+        Task {
+            for try await loggedIn in UserRepository.shared.observeLoggedIn() {
                 self.isLoggedIn = loggedIn.boolValue
             }
         }
-    }
-    
-    deinit {
-        loginTask?.cancel()
     }
 }
 

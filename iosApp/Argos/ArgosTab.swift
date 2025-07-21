@@ -8,37 +8,31 @@
 
 import SwiftUI
 import Observation
-import ArgosCore
+@preconcurrency import ArgosCore
 
 @Observable
 class ArgosTabViewModel {
-    
-    private var fetchTask: Task<Void, Error>?
 
     var state: ArgosTabState = .loading
     
     init() {
-        fetchTask = Task {
-            for try await infoAndState in userRepository.meUserInfoAndStateFlow {
-                switch onEnum(of: infoAndState) {
-                case .loading:
-                    state = .loading
-                case .success(let data):
-                    state = .success(
-                        userInfo: data.value!.first!,
-                        userState: data.value!.second!
-                    )
-                case .error:
-                    state = .error
+        Task {
+            for try await response in UserRepository.shared.meUserInfoAndStateFlow {
+                await MainActor.run {
+                    state = switch onEnum(of: response) {
+                    case .loading: .loading
+                    case .success(let data):
+                        .success(
+                            userInfo: data.value!.first!,
+                            userState: data.value!.second!
+                        )
+                    case .error: .error
+                    }
                 }
+                
             }
         }
     }
-    
-    deinit {
-        fetchTask?.cancel()
-    }
-    
 }
 
 struct ArgosTab<Content: View>: View {
@@ -87,7 +81,7 @@ struct _ArgosTab<NotificationScreen: View, UserSheet: View, Content: View> : Vie
     
     private var notificationsUnreadCount: Int {
         if case let .success(_, state) = state {
-            return Int(state.newsUnread)
+            return Int(state.notificationsUnread)
         }
         return 0
     }
@@ -101,7 +95,7 @@ struct _ArgosTab<NotificationScreen: View, UserSheet: View, Content: View> : Vie
                     ToolbarItemGroup {
                         NavigationLink(destination: notificationsScreen) {
                             Image(systemName: "bell")
-                                .badge(notificationsUnreadCount)
+                                .badge(notificationsUnreadCount > 99 ? "99+" : String(notificationsUnreadCount))
                         }
                         
                         Button(action: {

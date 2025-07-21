@@ -51,14 +51,19 @@ struct MainScreen: View {
                     HomeScreen()
                 }
             },
-            messaagesScreen: {
+            messagesScreen: {
                 ArgosTab {
                     MessagesScreen()
                 }
             },
+            courseCatalogScreen: {
+                ArgosTab {
+                    CourseCatalogScreen()
+                }
+            },
             newsScreen: {
                 ArgosTab {
-                    NewsScreen()
+                    NewsListScreen()
                 }
             },
             state: viewModel.state
@@ -102,17 +107,19 @@ struct MainScreenPreview: View {
     var body: some View {
         _MainScreen(
             homeScreen: { HomeScreen() },
-            messaagesScreen: { MessagesScreenPreview() },
+            messagesScreen: { MessagesScreenPreview() },
+            courseCatalogScreen: { EmptyView() },
             newsScreen: { HomeScreen() },
             state: .mockSuccess
         )
     }
 }
 
-private struct _MainScreen<HomeScreen: View, MessagesScreen: View, NewsScreen: View> : View {
+private struct _MainScreen<HomeScreen: View, MessagesScreen: View, CourseCatalogScreen: View, NewsScreen: View> : View {
     
     let homeScreen: () -> HomeScreen
-    let messaagesScreen: () -> MessagesScreen
+    let messagesScreen: () -> MessagesScreen
+    let courseCatalogScreen: () -> CourseCatalogScreen
     let newsScreen: () -> NewsScreen
     
     let state: MainState
@@ -142,12 +149,18 @@ private struct _MainScreen<HomeScreen: View, MessagesScreen: View, NewsScreen: V
                 }
                 .tag("Home")
             
-            messaagesScreen()
+            messagesScreen()
                 .tabItem {
                     Label("Messages", systemImage: "mail")
                 }
                 .tag("Messages")
                 .badge(messagesUnreadCount)
+            
+            courseCatalogScreen()
+                .tabItem {
+                    Label("Courses", systemImage: "graduationcap")
+                }
+                .tag("Courses")
             
             newsScreen()
                 .tabItem {

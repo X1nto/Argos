@@ -64,15 +64,18 @@ struct MessageScreenPreview: View {
                     subject: "Test",
                     body: "Lorem ipsum",
                     semId: "",
-                    date: "",
-                    sender: DomainMessageUser(
-                        fullName: "George Bush",
-                        uid: ""
+                    source: DomainMessageSourceGeneral(
+                        sender: DomainMessageUser(
+                            fullName: "George Bush",
+                            uid: ""
+                        ),
+                        receiver: DomainMessageUser(
+                            fullName: "Donald Trump",
+                            uid: ""
+                        )
                     ),
-                    receiver: DomainMessageUser(
-                        fullName: "Donald Trump",
-                        uid: ""
-                    )
+                    sentAt: FormattedLocalDateTime(instant: Kotlinx_datetimeInstant.companion.DISTANT_FUTURE),
+                    seenAt: nil
                 )
             )
         )
@@ -88,35 +91,58 @@ enum MessageState {
 struct _MessageScreen : View {
     
     let state: MessageState
-    
+    @State private var showTitle = false
+ 
     var body: some View {
-            Group {
-                switch state {
-                case .loading:
-                    ProgressView()
-                case .success(let message):
-                    ScrollView {
-                        HtmlText(message.body).padding(16)
+        Group {
+            switch state {
+            case .loading:
+                ProgressView()
+            case .success(let message):
+                HtmlText2(
+                    """
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                        <h4>\(message.subject)</h4>
+                        \(message.body)
+                    </div>
+                    """
+                )
+                .htmlText2ContentPadding(12)
+                .onHtmlText2ScrollOffsetChange { offset in
+                    withAnimation(.easeInOut(duration: 0.25)) {
+                        showTitle = offset.y > 24
                     }
-                case .error:
-                    Text("Error")
                 }
-            }
-            .toolbar {
-                ToolbarItemGroup {
-                    Spacer()
-                    Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
-                        Label("Reply", systemImage: "arrowshape.turn.up.left")
-                    }
-                    Spacer()
-                    Button(role: .destructive, action: {}) {
-                        Label("Delete", systemImage: "trash")
-                    }
-                    .tint(Color.red)
-                    Spacer()
-                }
+//                .toolbar {
+//                    ToolbarItem(placement: .principal) {
+//                        Text(message.subject)
+//                            .font(.headline)
+//                            .opacity(showTitle ? 1 : 0)
+//                            .transition(.opacity)
+//                            .truncationMode(.tail)
+//                    }
+//                }
+//                .navigationTitle(showTitle ? message.subject : "")
+//                .navigationBarTitleDisplayMode(.inline)
+            case .error:
+                Text("Error")
             }
         }
+        .toolbar {
+            ToolbarItemGroup {
+                Spacer()
+                Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/) {
+                    Label("Reply", systemImage: "arrowshape.turn.up.left")
+                }
+                Spacer()
+                Button(role: .destructive, action: {}) {
+                    Label("Delete", systemImage: "trash")
+                }
+                .tint(Color.red)
+                Spacer()
+            }
+        }
+    }
     
 }
 

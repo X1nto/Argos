@@ -12,51 +12,45 @@ import Observation
 
 @Observable
 class MessagesViewModel {
-    @ObservationIgnored private var semesterTask: Task<Void, Error>?
-    
-    private var messagesRepository: MessagesRepository {
-        DiProvider.shared.messagesRepository
-    }
-    private var semesterRepository: SemesterRepository {
-        DiProvider.shared.semesterRepository
-    }
-    
-    private(set) var receivedMessages: PagingItemsObservable<DomainMessageReceived>?
-    private(set) var sentMessages: PagingItemsObservable<DomainMessageSent>?
+    private(set) var receivedMessages: PagingItemsObservable<DomainMessage>?
+    private(set) var sentMessages: PagingItemsObservable<DomainMessage>?
     private(set) var state: MessagesState = .loading
     
     var activeSemester: DomainSemester? = nil {
         didSet {
             guard let semester = activeSemester else { return }
-            receivedMessages = PagingItemsObservable(messagesRepository.getInboxMessages(semesterId: semester.id))
-            sentMessages = PagingItemsObservable(messagesRepository.getOutboxMessages(semesterId: semester.id))
+            receivedMessages = PagingItemsObservable(MessagesRepository.shared.getInboxMessages(semesterId: semester.id))
+            sentMessages = PagingItemsObservable(MessagesRepository.shared.getOutboxMessages(semesterId: semester.id))
         }
     }
     
     init() {
-        semesterTask = Task {
-            for try await semesterResponse in semesterRepository.semesters.flow {
-                switch onEnum(of: semesterResponse) {
-                case .loading: 
-                    state = .loading
+        Task {
+            for try await response in SemesterRepository.shared.semesters.flow {
+                switch onEnum(of: response) {
+                case .loading:
+                    await MainActor.run {
+                        state = .loading
+                    }
                 case let .success(data):
-                    let semesters = data.value! as! [DomainSemester]
-                    activeSemester = semesters.first { $0.active }
-                    state = .success(semesters: semesters)
+                    await MainActor.run {
+                        let semesters = data.value! as! [DomainSemester]
+                        activeSemester = semesters.first { $0.active }
+                        state = .success(semesters: semesters)
+                    }
                 case .error:
-                    state = .error
+                    await MainActor.run {
+                        state = .error
+                    }
                 }
             }
         }
     }
     
+    //TODO refresh semesters too
     func refresh() {
         receivedMessages?.refresh()
         sentMessages?.refresh()
-    }
-    
-    deinit {
-        semesterTask?.cancel()
     }
 }
 
@@ -71,6 +65,12 @@ struct MessagesScreen: View {
             receivedMessages: viewModel.receivedMessages,
             sentMessages: viewModel.sentMessages
         )
+        .navigationDestination(for: DomainMessage.self) { message in
+            MessageScreen(
+                messageId: message.id,
+                semesterId: message.semId
+            )
+        }
         .refreshable {
             viewModel.refresh()
         }
@@ -87,33 +87,10 @@ enum MessagesState {
 struct MessagesScreenPreview: View {
     
     private let receivedMessages = Paging_commonPagingDataCompanion.shared.from(
-        data: [
-            DomainMessageReceived(
-                id: "",
-                subject: "",
-                semId: "",
-                date: "",
-                sender: DomainMessageUser(
-                    fullName: "",
-                    uid: ""
-                ),
-                seen: true
-            )
-        ]
+        data: []
     )
     private let sentMessages = Paging_commonPagingDataCompanion.shared.from(
-        data: [
-            DomainMessageSent(
-                id: "",
-                subject: "",
-                semId: "",
-                date: "",
-                receiver: DomainMessageUser(
-                    fullName: "",
-                    uid: ""
-                )
-            )
-        ]
+        data: []
     )
     
     var body: some View {
@@ -136,15 +113,15 @@ private struct _MessagesScreen: View {
     @Binding var activeSemester: DomainSemester?
     @State var selectedPage = MessagesPage.received
     let state: MessagesState
-    let receivedMessages: PagingItemsObservable<DomainMessageReceived>?
-    let sentMessages: PagingItemsObservable<DomainMessageSent>?
+    let receivedMessages: PagingItemsObservable<DomainMessage>?
+    let sentMessages: PagingItemsObservable<DomainMessage>?
     
     init(
         activeSemester: Binding<DomainSemester?> = .constant(nil),
         state: MessagesState,
         selectedPage: MessagesPage = MessagesPage.received,
-        receivedMessages: PagingItemsObservable<DomainMessageReceived>? = nil, 
-        sentMessages: PagingItemsObservable<DomainMessageSent>? = nil
+        receivedMessages: PagingItemsObservable<DomainMessage>? = nil,
+        sentMessages: PagingItemsObservable<DomainMessage>? = nil
     ) {
         self._activeSemester = activeSemester
         self.state = state
@@ -159,31 +136,13 @@ private struct _MessagesScreen: View {
             case .received:
                 if let messages = receivedMessages {
                     ForEach(messages) { message in
-                        NavigationLink(
-                            destination: {
-                                MessageScreen(
-                                    messageId: message.id,
-                                    semesterId: message.semId
-                                )
-                            }
-                        ) {
-                            Message(message)
-                        }
+                        MessagePreview(message)
                     }
                 }
             case .sent:
                 if let messages = sentMessages {
                     ForEach(messages) { message in
-                        NavigationLink(
-                            destination: {
-                                MessageScreen(
-                                    messageId: message.id,
-                                    semesterId: message.semId
-                                )
-                            }
-                        ) {
-                            Message(message)
-                        }
+                        MessagePreview(message)
                     }
                 }
             }
@@ -222,20 +181,81 @@ private struct _MessagesScreen: View {
     }
 }
 
-private struct Message : View {
-    let message: DomainMessagePreview
+private struct MessagePreview : View {
+    let message: DomainMessage
     
-    init(_ message: DomainMessagePreview) {
+    init(_ message: DomainMessage) {
         self.message = message
     }
     
+    private var user: DomainMessageUser {
+        switch onEnum(of: message.source) {
+        case let .inbox(inbox):
+            inbox.sender
+        case let .outbox(outbox):
+            outbox.receiver
+        case let .general(general):
+            general.sender
+        }
+    }
+    
+    private var sanitizedBody: String {
+        message.body
+            .replacingOccurrences(of: "<br />", with: "")
+            .replacingOccurrences(of: "\n", with: "")
+    }
+    
     var body: some View {
-        VStack(alignment: .leading) {
-            Text(message.user.fullName)
-                .font(.system(size: 16))
-                .fontWeight(.medium)
-            Text(message.subject)
-                .font(.system(size: 14))
+        HStack(alignment: .top, spacing: 12) {
+            PrettyAvatarView(name: user.fullName)
+            
+            VStack(alignment: .leading) {
+                HStack(spacing: 4) {
+                    Text(user.fullName)
+                        .font(.headline)
+                    Spacer()
+                    Text(message.sentAt.relativeDateTime)
+                        .font(.caption)
+                        .foregroundStyle(Color.secondary)
+                    Image(systemName: "chevron.right")
+                        .font(.caption)
+                        .foregroundStyle(Color.secondary)
+                }
+                Text(message.subject)
+                    .font(.subheadline)
+                    .lineLimit(1)
+                Text(sanitizedBody)
+                    .font(.subheadline)
+                    .lineLimit(2)
+                    .foregroundStyle(Color.secondary)
+            }
+        }
+        .overlay(NavigationLink("", value: message).opacity(0))
+        .contextMenu {
+            if case .outbox = onEnum(of: message.source), message.seenAt != nil {
+                Button(action: {}) {
+                    Text("Seen \(message.seenAt!.fullDateTime)")
+                }
+                .disabled(true)
+                
+                Divider()
+            }
+            
+            Button("Sender profile", systemImage: "person.crop.circle") {
+                
+            }
+            Button("Reply", systemImage: "arrowshape.turn.up.left.fill") {
+                
+            }
+            Button("Delete", systemImage: "trash.fill", role: .destructive) {
+                
+            }
+        } preview: {
+            HtmlText2(message.body)
+                .htmlText2ContentPadding(16)
+        }
+        .alignmentGuide(.listRowSeparatorLeading) { _ in
+            52 // 40 for the avatar icon + 8 for spacing
         }
     }
 }

@@ -17,7 +17,7 @@ class GroupViewModel {
     var state: GroupState = .loading
     
     init(courseId: String, groupId: String) {
-        scheduleResponse = DiProvider.shared.coursesRepository.getCourseGroupSchedule(courseId: courseId, groupId: groupId)
+        scheduleResponse = DiProvider.shared.coursesRepository.getCourseGroupWeekSchedule(courseId: courseId, groupId: groupId)
         fetchTask = Task {
             for try await scheduleData in scheduleResponse.flow {
                 switch onEnum(of: scheduleData) {

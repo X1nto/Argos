@@ -41,46 +41,76 @@ class GroupsViewModel {
 
 struct GroupsPage: View {
     
-    let viewModel: GroupsViewModel
+    private let courseId: String
+    private let viewModel: GroupsViewModel
+    
+    @State private var selectedGroup: DomainCourseGroup?
     
     init(courseId: String) {
+        self.courseId = courseId
         self.viewModel = .init(courseId: courseId)
     }
     
     var body: some View {
         _GroupsPage(
             state: viewModel.state,
-            groupScreen: { group in
-                EmptyView()
+            selected: $selectedGroup,
+            preview: { group in
+                GroupScheduleLiteScreen(courseId: courseId, groupId: group.id)
             }
         )
+//        .navigationDestination(for: DomainCourseGroup.self) { group in
+//            GroupScheduleFullScreen(courseId: courseId, group: group)
+//        }
+        .sheet(item: $selectedGroup) { group in
+            GroupScheduleFullScreen(courseId: courseId, group: group)
+        }
     }
 }
 
-struct _GroupsPage<GroupScreen: View>: View {
+private struct _GroupsPage<GroupPreview: View>: View {
     
     let state: GroupsState
-    let groupScreen: (DomainCourseGroup) -> GroupScreen
-    
-    @State private var selection: String?
+    @Binding var selected: DomainCourseGroup?
+    let preview: (DomainCourseGroup) -> GroupPreview
     
     var body: some View {
         switch state {
         case .loading:
             ProgressView()
         case .success(let groups):
-            List(groups, id: \.id) { group in
-                GroupCard(
-                    group: group,
-                    groupScreen: { groupScreen(group) }
-                )
-                .listRowSeparator(.hidden)
+            List {
+                VStack(alignment: .leading) {
+                    Legend(color: .green, label: "Group can be chosen")
+                    Legend(color: .yellow, label: "Group schedule conflicts with yours")
+                    Legend(color: .red, label: "Group cannot be chosen")
+                }
+                
+                ForEach(groups) { group in
+                    Button {
+                        selected = group
+                    } label: {
+                        GroupCard(group: group)
+                            .contextMenu {
+                                if group.isChosen {
+                                    Button("Rechoose", systemImage: "arrow.trianglehead.2.clockwise") {
+                                        
+                                    }
+                                    Button("Remove", systemImage: "minus", role: .destructive) {
+                                        
+                                    }
+                                } else {
+                                    Button("Choose", systemImage: "plus") {
+                                        
+                                    }
+                                }
+                            } preview: {
+                                preview(group)
+                            }
+                    }
+                }
             }
-            .listStyle(.inset)
-            .scrollIndicators(.visible)
-            .listRowSpacing(12)
-            .contentMargins(12, for: .scrollContent)
-            .scrollContentBackground(.hidden)
+            .listStyle(.plain)
         case .error:
             Text("Error")
         }
@@ -93,50 +123,125 @@ enum GroupsState {
     case error
 }
 
-private struct GroupCard<GroupScreen: View>: View {
+private struct Legend: View {
+    
+    let color: Color
+    let label: LocalizedStringKey
+    
+    var body: some View {
+        HStack(alignment: .center, spacing: 16) {
+            Circle()
+                .fill(color)
+                .frame(width: 8, height: 8)
+            
+            Text(label)
+                .font(.subheadline)
+                .foregroundStyle(Color.secondary)
+                .fontWeight(.medium)
+        }
+    }
+}
+
+private struct GroupCard: View {
     let group: DomainCourseGroup
-    let groupScreen: () -> GroupScreen
     
     private var lecturersString: String {
         group.lecturers.map { $0.fullName }.joined(separator: ", ")
     }
     
-    @State var isTapped: Bool = false
+    private var statusColor: Color {
+        if group.chooseError != nil {
+            return .red
+        }
+        
+        if group.isConflicting {
+            return .yellow
+        }
+        
+        return .green
+    }
     
     var body: some View {
-        NavigationLink(destination: groupScreen) {
+        HStack(spacing: 16) {
+            Circle()
+                .fill(statusColor)
+                .frame(width: 8, height: 8)
+            
             VStack(alignment: .leading) {
-                Text(lecturersString)
                 Text(group.name)
-                HStack {
-                    if (group.isChosen) {
-                        Button(action: {}) {
-                            Text("Rechoose")
-                        }
-                        .tint(Color.orange)
-                        .opacity(group.rechooseError == nil ? 1.0 : 0.7)
-                        
-                        Button(action: {}) {
-                            Text("Remove")
-                        }
-                        .tint(Color.red)
-                        .opacity(group.removeError == nil ? 1.0 : 0.7)
-                    } else {
-                        Button(action: {}) {
-                            Text("Choose")
-                        }
-                        .tint(Color.green)
-                        .opacity(group.chooseError == nil ? 1.0 : 0.7)
-                    }
-                }
-                .buttonStyle(.borderedProminent)
+                Text(lecturersString)
+                    .font(.subheadline)
+                    .foregroundStyle(Color.secondary)
             }
+            
+            Spacer()
+            
+            HStack(spacing: 0) {
+                if group.isChosen {
+                    Button(systemImage: "minus") {
+                        
+                    }
+                    .tint(Color.red)
+                    .disabled(group.removeError != nil)
+                    
+                    Button(systemImage: "arrow.trianglehead.2.clockwise") {
+                        
+                    }
+                    .tint(Color.orange)
+                    .disabled(group.rechooseError != nil)
+                } else {
+                    Button(systemImage: "plus") {
+                        
+                    }
+                    .tint(Color.green)
+                    .disabled(group.chooseError != nil)
+                }
+            }
+            .buttonStyle(SegmentedButtonStyle())
+            .clipShape(RoundedRectangle(cornerRadius: 8))
         }
-        .listRowBackground(
-            EmptyView()
-                .background(.thinMaterial)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .opacity(isTapped ? 0 : 1)
-        )
+//        .background(NavigationLink("", value: group).opacity(0))
     }
+}
+
+private extension Button where Label == Image {
+    
+    init(systemImage: String, action: @escaping () -> Void) {
+        self.init(action: action) {
+            Image(systemName: systemImage)
+        }
+    }
+    
+    init(role: ButtonRole?, systemImage: String, action: @escaping () -> Void) {
+        self.init(role: role, action: action) {
+            Image(systemName: systemImage)
+        }
+    }
+}
+
+private struct SegmentedButtonStyle: ButtonStyle {
+    
+    @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.colorScheme) private var colorScheme
+    
+    private var overlayColor: Color {
+        switch colorScheme {
+        case .dark:
+            Color.black
+        case .light:
+            Color.white
+        }
+    }
+    
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .frame(width: 48, height: 32)
+            .font(.subheadline)
+            .fontWeight(.bold)
+            .foregroundStyle(Color.white)
+            .background(.tint)
+            .overlay(isEnabled ? Color.clear : overlayColor.opacity(0.6))
+            .overlay(configuration.isPressed ? overlayColor : Color.clear)
+    }
+    
 }

@@ -1,14 +1,17 @@
 //
-//  PagingItemsObservable.swift
-//  iosApp
+//  Paging.swift
+//  Argos
 //
-//  Created by Tornike Khintibidze on 30.07.24.
-//  Copyright © 2024 orgName. All rights reserved.
+//  Created by Tornike Khintibidze on 06.07.25.
+//  Copyright © 2025 orgName. All rights reserved.
 //
 
 import SwiftUI
 import ArgosCore
 import Observation
+
+typealias PagingData<T: AnyObject> = Paging_commonPagingData<T>
+typealias PagingCombinedLoadStates = Paging_commonCombinedLoadStates
 
 @Observable
 class PagingItemsObservable<T: AnyObject> {
@@ -72,7 +75,7 @@ class PagingItemsObservable<T: AnyObject> {
 
 extension List where SelectionValue == Never {
     
-    nonisolated init<Data, RowContent: View>(_ pagingData: PagingItemsObservable<Data>, @ViewBuilder rowContent: @escaping (Data) -> RowContent) where Content == ForEach<Range<Int>, Int, RowContent> {
+    init<Data, RowContent: View>(_ pagingData: PagingItemsObservable<Data>, @ViewBuilder rowContent: @escaping (Data) -> RowContent) where Content == ForEach<Range<Int>, Int, RowContent> {
         self.init {
             ForEach(0..<pagingData.count, id: \.self) { index in
                 let item = pagingData[index]
@@ -93,5 +96,4 @@ extension ForEach where Content : View, Data == Range<Int>, ID == Int {
             content(item)
         }
     }
-    
 }

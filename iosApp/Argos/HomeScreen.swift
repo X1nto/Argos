@@ -24,8 +24,8 @@ class HomeViewModel {
         fetchTask = Task {
             for try await lectures in lecturesRepository.observeLectures() {
                 switch onEnum(of: lectures) {
-                case .error:
-                    state = .error
+                case .error(let error):
+                    state = .error(error.error)
                 case .loading:
                     state = .loading
                 case .success(let data):
@@ -44,30 +44,26 @@ struct HomeScreen: View {
     @State var viewModel = HomeViewModel()
     
     var body: some View {
-        _HomeScreen(
-            state: viewModel.state,
-            courseScreen: { courseId in
-                CourseScreen(courseId: courseId)
+        _HomeScreen(state: viewModel.state)
+            .navigationDestination(for: DomainLectureInfo.self) { lecture in
+                CourseScreen(courseId: lecture.id)
             }
-        )
     }
 }
 
 enum HomeScreenState {
     case loading
     case success(selectedDay: Int, lectures: OrderedDictionary<String, [DomainLectureInfo]>)
-    case error
+    case error(_ error: String)
 }
 
-struct _HomeScreen<CourseScreen: View>: View {
+struct _HomeScreen: View {
     let state: HomeScreenState
-    let courseScreen: (String) -> CourseScreen
     
     @State private var selectedDay: Int
     
-    init(state: HomeScreenState, courseScreen: @escaping (String) -> CourseScreen) {
+    init(state: HomeScreenState) {
         self.state = state
-        self.courseScreen = courseScreen
         
         if case let .success(selectedDay, _) = state {
             self.selectedDay = selectedDay
@@ -86,15 +82,19 @@ struct _HomeScreen<CourseScreen: View>: View {
                     ForEach(Array(lecturesByDay.keys), id: \.self) { day in
                         Section {
                             ForEach(lecturesByDay[day]!, id: \.hashValue) { lecture in
-                                NavigationLink(
-                                    destination: {
-                                        courseScreen(lecture.id)
-                                    }
-                                ) {
+                                NavigationLink(value: lecture) {
                                     VStack(alignment: .leading) {
+                                        HStack(spacing: 6) {
+                                            Text(lecture.time)
+                                            Text("•")
+                                            Text(lecture.room)
+                                        }
+                                        .font(.caption)
+                                        .foregroundStyle(Color.secondary)
                                         Text(lecture.name)
                                         Text(lecture.lecturer)
-                                        Text(lecture.time)
+                                            .font(.callout)
+                                            .foregroundStyle(Color.secondary)
                                     }
                                 }
                             }
@@ -104,8 +104,8 @@ struct _HomeScreen<CourseScreen: View>: View {
                         }
                     }
                 }
-            case .error:
-                Text("Error")
+            case .error(let error):
+                Text(error)
             }
         }
         .navigationTitle("Home")

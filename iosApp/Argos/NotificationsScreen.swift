@@ -12,21 +12,15 @@ import Observation
 
 @Observable
 class NotificationsViewModel {
-    @ObservationIgnored private var notificationsTask: Task<Void, Error>?
-    @ObservationIgnored private var notificationsRepository: NotificationsRepository {
-        DiProvider.shared.notificationsRepository
-    }
     
     private(set) var notifications: PagingItemsObservable<DomainNotification>?
     
     init() {
-        notificationsTask = Task {
-            notifications = PagingItemsObservable(notificationsRepository.getNotifications())
-        }
+        refresh()
     }
     
-    deinit {
-        notificationsTask?.cancel()
+    func refresh() {
+        notifications = PagingItemsObservable(NotificationsRepository.shared.getNotifications())
     }
 }
 
@@ -38,6 +32,9 @@ struct NotificationsScreen: View {
         _NotificationsScreen(
             notifications: viewModel.notifications
         )
+        .refreshable {
+            viewModel.refresh()
+        }
     }
 }
 
