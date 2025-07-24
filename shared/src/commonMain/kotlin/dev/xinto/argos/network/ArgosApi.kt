@@ -22,6 +22,7 @@ import io.ktor.client.request.patch
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.http.encodedPath
 import io.ktor.serialization.kotlinx.json.json
@@ -267,6 +268,11 @@ class ArgosApi(private val argosAccountManager: ArgosAccountManager) {
                 request.headers.append("profile-id", argosAccountManager.getProfileId()!!)
             }
         }
+        onResponse {
+            if (it.status == HttpStatusCode.Unauthorized) {
+                argosAccountManager.logout()
+            }
+        }
     }
 
     private val ktorClient = HttpClient(engine) {
@@ -285,6 +291,9 @@ class ArgosApi(private val argosAccountManager: ArgosAccountManager) {
         }
         install(Auth) {
             bearer {
+                sendWithoutRequest {
+                    !it.url.encodedPath.contains("auth/token")
+                }
                 loadTokens {
                     val accessToken = argosAccountManager.getToken()
                     val refreshToken = argosAccountManager.getRefreshToken()
