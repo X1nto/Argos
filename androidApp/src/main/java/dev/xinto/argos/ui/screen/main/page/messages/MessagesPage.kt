@@ -20,9 +20,6 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import dev.xinto.argos.R
 import dev.xinto.argos.domain.messages.DomainMessage
-import dev.xinto.argos.domain.messages.DomainMessagePreview
-import dev.xinto.argos.domain.messages.DomainMessageReceived
-import dev.xinto.argos.domain.messages.DomainMessageSent
 import dev.xinto.argos.domain.messages.DomainMessageSource
 import dev.xinto.argos.ui.component.SecondaryTabPager
 import org.koin.androidx.compose.getViewModel
