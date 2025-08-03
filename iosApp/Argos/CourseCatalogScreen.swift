@@ -180,21 +180,25 @@ struct _CourseCatalogScreen: View {
                     case .loading:
                         ProgressView()
                     case let .success(current, past):
-                        InsetGroupedSection("Current") {
-                            ForEach(current) { myCourse in
+                        if !current.isEmpty {
+                            InsetGroupedSection("Current") {
+                                ForEach(current) { myCourse in
 //                                ListNavigationLink(value: myCourse) {
                                     MyCourseView(course: myCourse)
 //                                }
-                                .separatorVisible(current.last != myCourse)
+                                        .separatorVisible(current.last != myCourse)
+                                }
                             }
                         }
                         
-                        InsetGroupedSection("Past") {
-                            ForEach(past) { myCourse in
+                        if !past.isEmpty {
+                            InsetGroupedSection("Past") {
+                                ForEach(past) { myCourse in
 //                                ListNavigationLink(value: myCourse) {
                                     MyCourseView(course: myCourse)
 //                                }
-                                .separatorVisible(past.last != myCourse)
+                                        .separatorVisible(past.last != myCourse)
+                                }
                             }
                         }
                     case .error:
