@@ -9,6 +9,8 @@ sealed interface HomeState {
     @Immutable
     data object Loading : HomeState
 
+    data object Empty : HomeState
+
     @Immutable
     data class Success(
         val selectedDay: Int,

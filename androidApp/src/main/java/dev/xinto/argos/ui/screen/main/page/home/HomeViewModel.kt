@@ -21,6 +21,10 @@ class HomeViewModel(
             when (lectures) {
                 is DomainResponse.Loading -> HomeState.Loading
                 is DomainResponse.Success -> {
+                    if (lectures.value.isEmpty()) {
+                        return@combine HomeState.Empty
+                    }
+
                     val selectedIndex = if (selectedDay >= lectures.value.size) 0 else selectedDay
                     HomeState.Success(
                         selectedDay = selectedIndex,
