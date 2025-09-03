@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -30,6 +32,23 @@ android {
             isMinifyEnabled = false
         }
     }
+
+    signingConfigs {
+        val keystoreFile = rootProject.file("keystore.properties")
+        if (keystoreFile.exists()) {
+            create("release") {
+                val properties = Properties().apply {
+                    keystoreFile.inputStream().use(this::load)
+                }
+
+                storeFile = file(properties.getProperty("storeFile"))
+                storePassword = properties.getProperty("storePassword")
+                keyAlias = properties.getProperty("keyAlias")
+                keyPassword = properties.getProperty("keyPassword")
+            }
+        }
+    }
+
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
 
