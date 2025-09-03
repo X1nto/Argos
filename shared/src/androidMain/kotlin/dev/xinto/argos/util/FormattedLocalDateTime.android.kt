@@ -16,13 +16,12 @@ actual class FormattedLocalDateTime actual constructor(private val instant: Inst
             }
 
             val isSameYear = dateNow.get(Calendar.YEAR) == date.get(Calendar.YEAR)
-            val isSameWeek = dateNow.get(Calendar.WEEK_OF_YEAR) == date.get(Calendar.WEEK_OF_YEAR)
             val isSameDay = dateNow.get(Calendar.DAY_OF_YEAR) == date.get(Calendar.DAY_OF_YEAR)
 
             val format = when {
-                isSameYear && isSameDay -> relativeDatetimeTodayFormat
-                isSameYear && isSameWeek -> relativeDatetimeThisweekFormat
-                else -> relativeDatetimePastFormat
+                isSameYear && isSameDay -> "HH:mm"
+                isSameYear -> "MMM dd"
+                else -> "dd/MM/YYYY"
             }
 
             return SimpleDateFormat(format, Locale.getDefault()).format(date.time)
