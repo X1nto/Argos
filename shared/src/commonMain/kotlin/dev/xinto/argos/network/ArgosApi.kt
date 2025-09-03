@@ -21,6 +21,7 @@ import io.ktor.client.request.parameter
 import io.ktor.client.request.patch
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.request
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
@@ -269,7 +270,7 @@ class ArgosApi(private val argosAccountManager: ArgosAccountManager) {
             }
         }
         onResponse {
-            if (it.status == HttpStatusCode.Unauthorized) {
+            if (it.status == HttpStatusCode.Unauthorized && it.request.url.encodedPath.contains("auth/token")) {
                 argosAccountManager.logout()
             }
         }
