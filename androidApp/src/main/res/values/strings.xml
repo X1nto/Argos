@@ -63,6 +63,7 @@
     <string name="userprofile_label_lecturer_respprofessor">Professor</string>
 
     <string name="messages_title">Messages</string>
+    <string name="messages_empty">Nothing in Messages</string>
     <string name="messages_tab_inbox">Inbox</string>
     <string name="messages_tab_outbox">Outbox</string>
 

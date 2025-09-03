@@ -2,14 +2,23 @@ package dev.xinto.argos.ui.screen.main.page.messages
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -33,45 +42,123 @@ fun MessagesPage(
     val inbox = viewModel.inboxMessages.collectAsLazyPagingItems()
     val outbox = viewModel.outboxMessages.collectAsLazyPagingItems()
     val tab by viewModel.tab.collectAsStateWithLifecycle()
+
+    val semesters by viewModel.semesters.collectAsStateWithLifecycle()
+    val selectedSemester by viewModel.selectedSemester.collectAsStateWithLifecycle()
+
     MessagesPage(
         modifier = modifier,
         tab = tab,
         onTabChange = viewModel::switchTab,
         inbox = inbox,
         outbox = outbox,
+        semesters = semesters,
+        selectedSemester = selectedSemester,
+        onSemesterSelect = viewModel::selectSemester,
         onMessageClick = onMessageClick
     )
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MessagesPage(
+    modifier: Modifier = Modifier,
     tab: MessagesTab,
     onTabChange: (MessagesTab) -> Unit,
     inbox: LazyPagingItems<DomainMessage>,
     outbox: LazyPagingItems<DomainMessage>,
     onMessageClick: (messageId: String, semesterId: String) -> Unit,
-    modifier: Modifier = Modifier,
+    semesters: List<DomainSemester>,
+    selectedSemester: DomainSemester?,
+    onSemesterSelect: (DomainSemester) -> Unit,
 ) {
-    SecondaryTabPager(
-        modifier = modifier,
-        selectedIndex = MessagesTab.entries.indexOf(tab),
-        onIndexSelect = {
-            onTabChange(MessagesTab.entries[it])
-        }
-    ) {
-        tabPage(tabContent = { Text(stringResource(R.string.messages_tab_inbox)) }) {
-            MessagesList(
-                modifier = Modifier.fillMaxSize(),
-                messages = inbox,
-                onMessageClick = onMessageClick
+    var showSemesterSheet by remember { mutableStateOf(false) }
+    Column(modifier = modifier) {
+        val context = LocalContext.current
+        ButtonGroup(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp),
+            overflowIndicator = {}
+        ) {
+            toggleableItem(
+                checked = tab == MessagesTab.Inbox,
+                onCheckedChange = { onTabChange(MessagesTab.Inbox) },
+                label = context.getString(R.string.messages_tab_inbox),
+                weight = 1f
+            )
+            toggleableItem(
+                checked = tab == MessagesTab.Outbox,
+                onCheckedChange = { onTabChange(MessagesTab.Outbox) },
+                label = context.getString(R.string.messages_tab_outbox),
+                weight = 1f
+            )
+            customItem(
+                buttonGroupContent = {
+                    FilledIconButton(
+                        onClick = { showSemesterSheet = true },
+                        colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+                        enabled = selectedSemester != null
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_calendar_month),
+                            contentDescription = null
+                        )
+                    }
+                },
+                menuContent = {}
             )
         }
-        tabPage(tabContent = { Text(stringResource(R.string.messages_tab_outbox)) }) {
-            MessagesList(
-                modifier = Modifier.fillMaxSize(),
-                messages = outbox,
-                onMessageClick = onMessageClick
-            )
+
+        when (tab) {
+            MessagesTab.Inbox -> {
+                MessagesList(
+                    modifier = Modifier.fillMaxSize(),
+                    messages = inbox,
+                    onMessageClick = onMessageClick
+                )
+            }
+            MessagesTab.Outbox -> {
+                MessagesList(
+                    modifier = Modifier.fillMaxSize(),
+                    messages = outbox,
+                    onMessageClick = onMessageClick
+                )
+            }
+        }
+
+    }
+
+    if (showSemesterSheet) {
+        val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+        ModalBottomSheet(
+            sheetState = sheetState,
+            onDismissRequest = { showSemesterSheet = false }
+        ) {
+            Column(modifier = Modifier.padding(bottom = 16.dp)) {
+                semesters.forEach { semester ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                showSemesterSheet = false
+                                onSemesterSelect(semester)
+                            }
+                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            modifier = Modifier.weight(1f),
+                            text = semester.name,
+                        )
+                        RadioButton(
+                            selected = selectedSemester == semester,
+                            onClick = null
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -135,6 +222,43 @@ private fun MessagesList(
                             is LoadState.Loading -> {
                                 CircularProgressIndicator()
                             }
+                if (messages.itemCount == 0) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(72.dp),
+                            painter = painterResource(R.drawable.ic_mail_off),
+                            contentDescription = null
+                        )
+                        Text(
+                            text = stringResource(R.string.messages_empty),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
+                } else {
+                    LazyColumn(modifier = Modifier.fillMaxSize()) {
+                        item {
+                            if (messages.loadState.prepend is LoadState.Loading) {
+                                CircularProgressIndicator()
+                            }
+                        }
+                        items(
+                            count = messages.itemCount,
+                            key = messages.itemKey { it.id }
+                        ) {
+                            val message = messages[it]!!
+                            if (it != 0) {
+                                HorizontalDivider()
+                            }
+                            )
+                        }
+                        item {
+                            when (val appendState = messages.loadState.append) {
+                                is LoadState.Loading -> {
+                                    CircularProgressIndicator()
+                                }
 
                             is LoadState.Error -> {
                                 Text(appendState.error.stackTraceToString())
