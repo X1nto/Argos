@@ -1,6 +1,6 @@
 package dev.xinto.argos.network.response.attributes
 
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 
 @Serializable

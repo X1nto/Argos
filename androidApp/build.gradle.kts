@@ -7,10 +7,10 @@ plugins {
 
 android {
     namespace = "dev.xinto.argos"
-    compileSdk = 35
+    compileSdk = 36
     defaultConfig {
         applicationId = "dev.xinto.argos"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"

@@ -38,6 +38,7 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.paging.common)
             implementation(libs.skie.annotations)
+            implementation(libs.kotlinx.serialization)
             api(libs.kotlinx.datetime)
         }
         androidMain.dependencies {
@@ -49,12 +50,16 @@ kotlin {
             implementation(libs.ktor.darwin)
         }
     }
+
+    compilerOptions {
+        optIn.add("kotlin.time.ExperimentalTime")
+    }
 }
 
 android {
     namespace = "dev.xinto.argos"
-    compileSdk = 35
+    compileSdk = 36
     defaultConfig {
-        minSdk = 21
+        minSdk = 23
     }
 }

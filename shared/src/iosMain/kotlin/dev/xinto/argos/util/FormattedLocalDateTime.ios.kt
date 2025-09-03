@@ -1,6 +1,6 @@
 package dev.xinto.argos.util
 
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.datetime.toNSDate
 import platform.Foundation.NSCalendar
 import platform.Foundation.NSCalendarUnitWeekOfYear
