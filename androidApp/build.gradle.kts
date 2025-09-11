@@ -38,6 +38,10 @@ android {
                 "proguard-rules.pro"
             )
         }
+        getByName("debug") {
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = " (dev)"
+        }
     }
 
     signingConfigs {
