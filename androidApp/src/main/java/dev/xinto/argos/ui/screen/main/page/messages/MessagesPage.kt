@@ -50,6 +50,7 @@ import dev.xinto.argos.domain.messages.DomainMessage
 import dev.xinto.argos.domain.messages.DomainMessageSource
 import dev.xinto.argos.domain.semester.DomainSemester
 import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 import kotlin.math.absoluteValue
 
 @Composable
@@ -57,7 +58,7 @@ fun MessagesPage(
     modifier: Modifier = Modifier,
     onMessageClick: (messageId: String, semesterId: String) -> Unit
 ) {
-    val viewModel: MessagesViewModel = getViewModel()
+    val viewModel: MessagesViewModel = koinViewModel()
     val inbox = viewModel.inboxMessages.collectAsLazyPagingItems()
     val outbox = viewModel.outboxMessages.collectAsLazyPagingItems()
     val tab by viewModel.tab.collectAsStateWithLifecycle()

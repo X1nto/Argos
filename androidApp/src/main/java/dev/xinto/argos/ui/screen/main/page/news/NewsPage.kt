@@ -20,11 +20,11 @@ import dev.xinto.argos.R
 import dev.xinto.argos.domain.news.DomainNewsPreview
 import dev.xinto.argos.ui.component.SegmentedListItem
 import dev.xinto.argos.ui.component.itemsSegmented
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun NewsPage(modifier: Modifier = Modifier) {
-    val viewModel: NewsViewModel = getViewModel()
+    val viewModel: NewsViewModel = koinViewModel()
     val news = viewModel.news.collectAsLazyPagingItems()
     NewsPage(
         modifier = modifier,

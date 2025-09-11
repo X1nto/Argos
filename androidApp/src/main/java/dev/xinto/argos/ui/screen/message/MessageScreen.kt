@@ -43,6 +43,9 @@ fun MessageScreen(
                 putString(MessageViewModel.KEY_MESSAGE_SEMESTER, semesterId)
             }
         })
+    val instanceKey = remember(messageId, semesterId) { UUID.randomUUID().toString() }
+        parametersOf(messageId, semesterId)
+    }
     val state by viewModel.state.collectAsStateWithLifecycle()
     BackHandler(onBack = onBackClick)
     MessageScreen(

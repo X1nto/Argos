@@ -16,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.core.os.bundleOf
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -25,16 +24,17 @@ import dev.xinto.argos.domain.courses.DomainCourseMaterial
 import dev.xinto.argos.domain.courses.DomainCourseMaterialType
 import dev.xinto.argos.ui.component.SegmentedListItem
 import dev.xinto.argos.ui.component.itemsSegmented
-import org.koin.androidx.compose.getStateViewModel
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun MaterialsPage(
     courseId: String,
     modifier: Modifier = Modifier
 ) {
-    val viewModel: MaterialsViewModel = getStateViewModel(state = {
-        bundleOf(MaterialsViewModel.KEY_COURSE_ID to courseId)
-    })
+    val viewModel: MaterialsViewModel = koinViewModel {
+        parametersOf(MaterialsViewModel.KEY_COURSE_ID to courseId)
+    }
     val items = viewModel.state.collectAsLazyPagingItems()
     MaterialsPage(
         items = items,

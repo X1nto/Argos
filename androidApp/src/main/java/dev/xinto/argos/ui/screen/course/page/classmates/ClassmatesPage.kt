@@ -22,7 +22,8 @@ import dev.xinto.argos.R
 import dev.xinto.argos.ui.component.SegmentedListItem
 import dev.xinto.argos.ui.component.UserImage
 import dev.xinto.argos.ui.component.itemsSegmented
-import org.koin.androidx.compose.getStateViewModel
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ClassmatesPage(
@@ -30,9 +31,9 @@ fun ClassmatesPage(
     onClassmateClick: (String) -> Unit,
     courseId: String
 ) {
-    val viewModel: ClassmatesViewModel = getStateViewModel(state = {
-        bundleOf(ClassmatesViewModel.KEY_COURSE_ID to courseId)
-    })
+    val viewModel: ClassmatesViewModel = koinViewModel {
+        parametersOf(ClassmatesViewModel.KEY_COURSE_ID to courseId)
+    }
     val state by viewModel.state.collectAsStateWithLifecycle()
     ClassmatesPage(
         state = state,

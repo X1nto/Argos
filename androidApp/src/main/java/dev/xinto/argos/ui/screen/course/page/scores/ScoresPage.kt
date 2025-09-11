@@ -36,16 +36,17 @@ import dev.xinto.argos.R
 import dev.xinto.argos.ui.component.ColumnSize
 import dev.xinto.argos.ui.component.Table
 import dev.xinto.argos.ui.theme.ArgosTheme
-import org.koin.androidx.compose.getStateViewModel
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ScoresPage(
     courseId: String,
     modifier: Modifier = Modifier
 ) {
-    val viewModel: ScoresViewModel = getStateViewModel(state = {
-        bundleOf(ScoresViewModel.KEY_COURSE_ID to courseId)
-    })
+    val viewModel: ScoresViewModel = koinViewModel {
+        parametersOf(ScoresViewModel.KEY_COURSE_ID to courseId)
+    }
     val state by viewModel.state.collectAsStateWithLifecycle()
     ScoresPage(
         modifier = modifier,

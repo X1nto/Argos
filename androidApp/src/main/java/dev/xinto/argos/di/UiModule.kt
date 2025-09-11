@@ -1,5 +1,6 @@
 package dev.xinto.argos.di
 
+import androidx.lifecycle.SavedStateHandle
 import dev.xinto.argos.ui.screen.course.page.classmates.ClassmatesViewModel
 import dev.xinto.argos.ui.screen.course.page.groups.GroupsViewModel
 import dev.xinto.argos.ui.screen.course.page.materials.MaterialsViewModel
@@ -15,7 +16,8 @@ import dev.xinto.argos.ui.screen.message.MessageViewModel
 import dev.xinto.argos.ui.screen.notifications.NotificationsViewModel
 import dev.xinto.argos.ui.screen.meuserprofile.MeUserProfileViewModel
 import dev.xinto.argos.ui.screen.userprofile.UserProfileViewModel
-import org.koin.androidx.viewmodel.dsl.viewModelOf
+import org.koin.core.module.dsl.viewModel
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val UiModule = module {
@@ -26,12 +28,36 @@ val UiModule = module {
     viewModelOf(::NewsViewModel)
     viewModelOf(::NotificationsViewModel)
     viewModelOf(::UserInfoViewModel)
-    viewModelOf(::MessageViewModel)
-    viewModelOf(::SyllabusViewModel)
-    viewModelOf(::GroupsViewModel)
-    viewModelOf(::ScoresViewModel)
-    viewModelOf(::MaterialsViewModel)
-    viewModelOf(::ClassmatesViewModel)
+
+    // FIXME Koin is dumb
+    viewModel { (messageId: String, semesterId: String, savedStateHandle: SavedStateHandle) ->
+        savedStateHandle[MessageViewModel.KEY_MESSAGE_ID] = messageId
+        savedStateHandle[MessageViewModel.KEY_MESSAGE_SEMESTER] = semesterId
+        MessageViewModel(savedStateHandle, get())
+    }
+    viewModel { (courseId: String, savedStateHandle: SavedStateHandle) ->
+        savedStateHandle[SyllabusViewModel.KEY_COURSE_ID] = courseId
+        SyllabusViewModel(savedStateHandle, get())
+    }
+    viewModel { (courseId: String, savedStateHandle: SavedStateHandle) ->
+        savedStateHandle[GroupsViewModel.KEY_COURSE_ID] = courseId
+        GroupsViewModel(savedStateHandle, get())
+    }
+    viewModel { (courseId: String, savedStateHandle: SavedStateHandle) ->
+        savedStateHandle[ScoresViewModel.KEY_COURSE_ID] = courseId
+        ScoresViewModel(savedStateHandle, get())
+    }
+    viewModel { (courseId: String, savedStateHandle: SavedStateHandle) ->
+        savedStateHandle[MaterialsViewModel.KEY_COURSE_ID] = courseId
+        MaterialsViewModel(savedStateHandle, get())
+    }
+    viewModel { (courseId: String, savedStateHandle: SavedStateHandle) ->
+        savedStateHandle[ClassmatesViewModel.KEY_COURSE_ID] = courseId
+        ClassmatesViewModel(savedStateHandle, get())
+    }
     viewModelOf(::MeUserProfileViewModel)
-    viewModelOf(::UserProfileViewModel)
+    viewModel { (userId: String, savedStateHandle: SavedStateHandle) ->
+        savedStateHandle[UserProfileViewModel.KEY_USER_ID] = userId
+        UserProfileViewModel(savedStateHandle, get())
+    }
 }

@@ -40,7 +40,7 @@ import dev.xinto.argos.ui.screen.main.page.home.HomeState
 import dev.xinto.argos.ui.screen.main.page.messages.MessagesPage
 import dev.xinto.argos.ui.screen.main.page.news.NewsPage
 import dev.xinto.argos.ui.theme.ArgosTheme
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MainScreen(
@@ -50,7 +50,7 @@ fun MainScreen(
     onCourseClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val viewModel: MainViewModel = getViewModel()
+    val viewModel: MainViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     MainScreen(
         modifier = modifier,

@@ -40,16 +40,17 @@ import dev.xinto.argos.domain.courses.DomainCourseGroupSchedule
 import dev.xinto.argos.ui.component.ExpandableListItem
 import dev.xinto.argos.ui.component.Table
 import dev.xinto.argos.ui.theme.ArgosTheme
-import org.koin.androidx.compose.getStateViewModel
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun GroupsPage(
     courseId: String,
     modifier: Modifier = Modifier,
 ) {
-    val viewModel: GroupsViewModel = getStateViewModel(state = {
-        bundleOf(GroupsViewModel.KEY_COURSE_ID to courseId)
-    })
+    val viewModel: GroupsViewModel = koinViewModel {
+        parametersOf(GroupsViewModel.KEY_COURSE_ID to courseId)
+    }
     val state by viewModel.state.collectAsStateWithLifecycle()
     val expanded by viewModel.expanded.collectAsStateWithLifecycle()
     val schedules by viewModel.schedules.collectAsStateWithLifecycle()

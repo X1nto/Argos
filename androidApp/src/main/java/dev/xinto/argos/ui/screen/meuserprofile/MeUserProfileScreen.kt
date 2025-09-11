@@ -31,14 +31,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.xinto.argos.R
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MeUserProfileScreen(
     onBackNavigate: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val viewModel: MeUserProfileViewModel = getViewModel()
+    val viewModel: MeUserProfileViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     val canSave by viewModel.canSave.collectAsStateWithLifecycle()
     val saving by viewModel.saving.collectAsStateWithLifecycle()
