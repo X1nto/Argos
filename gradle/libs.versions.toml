@@ -24,7 +24,11 @@ compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
 compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose" }
-compose-material3 = { module = "androidx.compose.material3:material3", version = "1.5.0-alpha03" }
+compose-material3 = { module = "androidx.compose.material3:material3", version = "1.5.0-alpha04" }
+compose-material3-adaptive = { module = "androidx.compose.material3:material3-adaptive", version = "1.2.0-beta02" }
+compose-material3-adaptive-layout = { module = "androidx.compose.material3.adaptive:adaptive-layout", version = "1.2.0-beta02" }
+compose-material3-adaptive-navigation = { module = "androidx.compose.material3.adaptive:adaptive-navigation", version = "1.2.0-beta02" }
+compose-material3-adaptive-suite = { module = "androidx.compose.material3:material3-adaptive-navigation-suite", version = "1.5.0-alpha04" }
 
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version = "0.7.1" }

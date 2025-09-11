@@ -1,6 +1,5 @@
 package dev.xinto.argos.ui.screen.message
 
-import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,27 +26,25 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.xinto.argos.R
 import dev.xinto.argos.ui.component.MaterialHtmlText2
-import org.koin.androidx.compose.getStateViewModel
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
+import java.util.UUID
 
 @Composable
 fun MessageScreen(
     messageId: String,
     semesterId: String,
-    onBackClick: () -> Unit,
+    onBackClick: (() -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
-    val viewModel: MessageViewModel = getStateViewModel(
-        state = {
-            Bundle().apply {
-                putString(MessageViewModel.KEY_MESSAGE_ID, messageId)
-                putString(MessageViewModel.KEY_MESSAGE_SEMESTER, semesterId)
-            }
-        })
     val instanceKey = remember(messageId, semesterId) { UUID.randomUUID().toString() }
+    val viewModel: MessageViewModel = koinViewModel(key = instanceKey) {
         parametersOf(messageId, semesterId)
     }
     val state by viewModel.state.collectAsStateWithLifecycle()
-    BackHandler(onBack = onBackClick)
+    if (onBackClick != null) {
+        BackHandler(onBack = onBackClick)
+    }
     MessageScreen(
         modifier = modifier,
         state = state,
@@ -59,25 +56,27 @@ fun MessageScreen(
 @Composable
 fun MessageScreen(
     state: MessageState,
-    onBackClick: () -> Unit,
+    onBackClick: (() -> Unit)?,
     modifier: Modifier = Modifier
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
         modifier = modifier,
         topBar = {
-            TopAppBar(
-                scrollBehavior = scrollBehavior,
-                title = { Text(stringResource(R.string.message_title)) },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_arrow_back),
-                            contentDescription = null
-                        )
+            if (onBackClick != null) {
+                TopAppBar(
+                    scrollBehavior = scrollBehavior,
+                    title = { Text(stringResource(R.string.message_title)) },
+                    navigationIcon = {
+                        IconButton(onClick = onBackClick) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_arrow_back),
+                                contentDescription = null
+                            )
+                        }
                     }
-                }
-            )
+                )
+            }
         }
     ) { padding ->
         Box(
@@ -101,7 +100,7 @@ fun MessageScreen(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .padding(16.dp),
-                            text = remember {
+                            text = remember(state.message) {
                                 """
                                 <div style="display:flex; flex-direction:column; gap:8px;">
                                     <h4>${state.message.subject}</h4>

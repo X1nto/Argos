@@ -6,10 +6,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ButtonGroup
@@ -24,11 +27,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.layout.AnimatedPane
+import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
+import androidx.compose.material3.adaptive.navigation.NavigableListDetailPaneScaffold
+import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
+import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,10 +59,12 @@ import dev.xinto.argos.R
 import dev.xinto.argos.domain.messages.DomainMessage
 import dev.xinto.argos.domain.messages.DomainMessageSource
 import dev.xinto.argos.domain.semester.DomainSemester
-import org.koin.androidx.compose.getViewModel
+import dev.xinto.argos.ui.screen.message.MessageScreen
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import kotlin.math.absoluteValue
 
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun MessagesPage(
     modifier: Modifier = Modifier,
@@ -66,88 +78,137 @@ fun MessagesPage(
     val semesters by viewModel.semesters.collectAsStateWithLifecycle()
     val selectedSemester by viewModel.selectedSemester.collectAsStateWithLifecycle()
 
+    val navigator = rememberListDetailPaneScaffoldNavigator<Array<String>>()
+
     MessagesPage(
         modifier = modifier,
+        navigator = navigator,
         tab = tab,
         onTabChange = viewModel::switchTab,
         inbox = inbox,
         outbox = outbox,
         semesters = semesters,
         selectedSemester = selectedSemester,
-        onSemesterSelect = viewModel::selectSemester,
-        onMessageClick = onMessageClick
-    )
+        onSemesterSelect = viewModel::selectSemester
+    ) { messageId, semesterId ->
+        MessageScreen(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Red)
+                .consumeWindowInsets(WindowInsets.systemBars),
+            messageId = messageId,
+            semesterId = semesterId,
+            onBackClick = null // TODO fix double topbar
+        )
+    }
 }
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
+@OptIn(
+    ExperimentalMaterial3ExpressiveApi::class,
+    ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3AdaptiveApi::class
+)
 @Composable
 fun MessagesPage(
     modifier: Modifier = Modifier,
+    navigator: ThreePaneScaffoldNavigator<Array<String>> = rememberListDetailPaneScaffoldNavigator<Array<String>>(), // [0] is messageId, [1] is semesterId
     tab: MessagesTab,
     onTabChange: (MessagesTab) -> Unit,
     inbox: LazyPagingItems<DomainMessage>,
     outbox: LazyPagingItems<DomainMessage>,
-    onMessageClick: (messageId: String, semesterId: String) -> Unit,
     semesters: List<DomainSemester>,
     selectedSemester: DomainSemester?,
     onSemesterSelect: (DomainSemester) -> Unit,
+    message: @Composable (messageId: String, semesterId: String) -> Unit,
 ) {
+    val scope = rememberCoroutineScope()
     var showSemesterSheet by remember { mutableStateOf(false) }
-    Column(modifier = modifier) {
-        val context = LocalContext.current
-        ButtonGroup(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp),
-            overflowIndicator = {}
-        ) {
-            toggleableItem(
-                checked = tab == MessagesTab.Inbox,
-                onCheckedChange = { onTabChange(MessagesTab.Inbox) },
-                label = context.getString(R.string.messages_tab_inbox),
-                weight = 1f
-            )
-            toggleableItem(
-                checked = tab == MessagesTab.Outbox,
-                onCheckedChange = { onTabChange(MessagesTab.Outbox) },
-                label = context.getString(R.string.messages_tab_outbox),
-                weight = 1f
-            )
-            customItem(
-                buttonGroupContent = {
-                    FilledIconButton(
-                        onClick = { showSemesterSheet = true },
-                        colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
-                        enabled = selectedSemester != null
+    NavigableListDetailPaneScaffold(
+        modifier = modifier,
+        navigator = navigator,
+        listPane = {
+            AnimatedPane {
+                Column(modifier = Modifier.fillMaxSize()) {
+                    val context = LocalContext.current
+                    ButtonGroup(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp),
+                        overflowIndicator = {}
                     ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_calendar_month),
-                            contentDescription = null
+                        toggleableItem(
+                            checked = tab == MessagesTab.Inbox,
+                            onCheckedChange = { onTabChange(MessagesTab.Inbox) },
+                            label = context.getString(R.string.messages_tab_inbox),
+                            weight = 1f
+                        )
+                        toggleableItem(
+                            checked = tab == MessagesTab.Outbox,
+                            onCheckedChange = { onTabChange(MessagesTab.Outbox) },
+                            label = context.getString(R.string.messages_tab_outbox),
+                            weight = 1f
+                        )
+                        customItem(
+                            buttonGroupContent = {
+                                FilledIconButton(
+                                    onClick = { showSemesterSheet = true },
+                                    colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+                                    enabled = selectedSemester != null
+                                ) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.ic_calendar_month),
+                                        contentDescription = null
+                                    )
+                                }
+                            },
+                            menuContent = {}
                         )
                     }
-                },
-                menuContent = {}
-            )
-        }
 
-        when (tab) {
-            MessagesTab.Inbox -> {
-                MessagesList(
-                    modifier = Modifier.fillMaxSize(),
-                    messages = inbox,
-                    onMessageClick = onMessageClick
-                )
+                    when (tab) {
+                        MessagesTab.Inbox -> {
+                            MessagesList(
+                                modifier = Modifier.fillMaxSize(),
+                                messages = inbox,
+                                onMessageClick = { messageId, semesterId ->
+                                    scope.launch {
+                                        navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, arrayOf(messageId, semesterId))
+                                    }
+                                }
+                            )
+                        }
+
+                        MessagesTab.Outbox -> {
+                            MessagesList(
+                                modifier = Modifier.fillMaxSize(),
+                                messages = outbox,
+                                onMessageClick = { messageId, semesterId ->
+                                    scope.launch {
+                                        navigator.navigateTo(ListDetailPaneScaffoldRole.Detail, arrayOf(messageId, semesterId))
+                                    }
+                                }
+                            )
+                        }
+                    }
+                }
             }
-            MessagesTab.Outbox -> {
-                MessagesList(
-                    modifier = Modifier.fillMaxSize(),
-                    messages = outbox,
-                    onMessageClick = onMessageClick
-                )
+        },
+        detailPane = {
+            AnimatedPane {
+                val currentDestination = navigator.currentDestination?.contentKey
+                if (currentDestination != null) {
+                    message(currentDestination[0], currentDestination[1])
+                } else {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("Select a conversation")
+                    }
+                }
             }
         }
-
-    }
+    )
 
     if (showSemesterSheet) {
         val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
