@@ -1,6 +1,6 @@
 package dev.xinto.argos.util
 
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 expect class FormattedLocalDateTime(instant: Instant) {
 

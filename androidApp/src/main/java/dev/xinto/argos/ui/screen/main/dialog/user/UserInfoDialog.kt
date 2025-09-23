@@ -32,7 +32,7 @@ import dev.xinto.argos.ui.component.SegmentedButtonRow
 import dev.xinto.argos.ui.component.UserImage
 import dev.xinto.argos.ui.component.VerticalSegmentedButton
 import dev.xinto.argos.ui.theme.ArgosTheme
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun UserDialog(
@@ -43,7 +43,7 @@ fun UserDialog(
     onSettingsNavigate: () -> Unit,
     onLogoutClick: () -> Unit,
 ) {
-    val viewModel: UserInfoViewModel = getViewModel()
+    val viewModel: UserInfoViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     UserDialog(
         state = state,

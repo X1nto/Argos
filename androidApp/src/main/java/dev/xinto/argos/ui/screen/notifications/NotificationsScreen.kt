@@ -27,14 +27,14 @@ import dev.xinto.argos.R
 import dev.xinto.argos.domain.notifications.DomainNotification
 import dev.xinto.argos.ui.component.SegmentedListItem
 import dev.xinto.argos.ui.component.itemsSegmented
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun NotificationsScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
 ) {
-    val viewModel: NotificationsViewModel = getViewModel()
+    val viewModel: NotificationsViewModel = koinViewModel()
     val notifications = viewModel.notifications.collectAsLazyPagingItems()
     BackHandler(onBack = onBackClick)
     NotificationsScreen(

@@ -23,13 +23,13 @@ import dev.xinto.argos.ui.component.AppAuthRequest
 import dev.xinto.argos.ui.component.AppAuthServiceConfiguration
 import dev.xinto.argos.ui.component.rememberAppAuthRequest
 import dev.xinto.argos.ui.theme.ArgosTheme
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier
 ) {
-    val viewModel: LoginViewModel = getViewModel()
+    val viewModel: LoginViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     val loginRequestHandler = rememberAppAuthRequest(
         request = AppAuthRequest(

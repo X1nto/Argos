@@ -16,8 +16,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 class MessagesViewModel(
@@ -29,12 +31,36 @@ class MessagesViewModel(
     private val _tab = MutableStateFlow(MessagesTab.Inbox)
     val tab = _tab.asStateFlow()
 
-    val activeSemester = semesterRepository.getActiveSemester()
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = DomainResponse.Loading
-        )
+    val semesters = semesterRepository.semesters.flow.map {
+        if (it is DomainResponse.Success) {
+            return@map it.value.reversed()
+        }
+
+        return@map emptyList()
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = emptyList()
+    )
+
+    private val _selectedSemester = MutableStateFlow<DomainSemester?>(null)
+
+    val selectedSemester = combine(_selectedSemester, semesterRepository.semesters.flow) { selected, all ->
+        if (selected != null) return@combine selected
+
+        when (all) {
+            is DomainResponse.Error -> null
+            is DomainResponse.Loading -> null
+            is DomainResponse.Success<*> -> {
+                val semesters = all.value as List<DomainSemester>
+                semesters.firstOrNull { it.active }
+            }
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = null
+    )
 
     val inboxMessages = mapActiveSemesterToPagingData {
         messagesRepository.getInboxMessages(it.id).flow
@@ -48,11 +74,31 @@ class MessagesViewModel(
         _tab.value = tab
     }
 
+    fun selectSemester(semester: DomainSemester) {
+        _selectedSemester.value = semester
+    }
+
     @OptIn(ExperimentalCoroutinesApi::class)
     private inline fun <T : Any> mapActiveSemesterToPagingData(
         crossinline onSuccess: (DomainSemester) -> Flow<PagingData<T>>
     ): Flow<PagingData<T>> {
-        return activeSemester.flatMapLatest {
+        return combine(_selectedSemester, semesterRepository.semesters.flow) { selected, all ->
+            if (selected != null) return@combine DomainResponse.Success(selected)
+
+            when (all) {
+                is DomainResponse.Error -> DomainResponse.Error(all.error)
+                DomainResponse.Loading -> DomainResponse.Loading
+                is DomainResponse.Success<*> -> {
+                    val semesters = all.value as List<DomainSemester>
+                    val activeSemester = semesters.firstOrNull { it.active }
+                    if (activeSemester != null) {
+                        DomainResponse.Success(activeSemester)
+                    } else {
+                        DomainResponse.Error("Active semester not found")
+                    }
+                }
+            }
+        }.flatMapLatest {
             when (it) {
                 is DomainResponse.Error -> {
                     flowOf(

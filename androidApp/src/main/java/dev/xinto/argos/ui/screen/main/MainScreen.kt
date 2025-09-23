@@ -2,6 +2,7 @@ package dev.xinto.argos.ui.screen.main
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,10 +12,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteItem
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.derivedStateOf
@@ -40,7 +41,7 @@ import dev.xinto.argos.ui.screen.main.page.home.HomeState
 import dev.xinto.argos.ui.screen.main.page.messages.MessagesPage
 import dev.xinto.argos.ui.screen.main.page.news.NewsPage
 import dev.xinto.argos.ui.theme.ArgosTheme
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MainScreen(
@@ -50,7 +51,7 @@ fun MainScreen(
     onCourseClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val viewModel: MainViewModel = getViewModel()
+    val viewModel: MainViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     MainScreen(
         modifier = modifier,
@@ -148,76 +149,73 @@ private fun MainScreenScaffold(
     modifier: Modifier = Modifier,
     content: @Composable (PaddingValues) -> Unit
 ) {
-    Scaffold(
+    NavigationSuiteScaffold(
         modifier = modifier,
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(text = stringResource(R.string.app_name))
-                },
-                actions = {
-                    IconButton(onClick = onNotificationsClick) {
+        navigationItems = {
+            MainNavigation.bottomBarItems.forEach {
+                val selected = it == page
+                NavigationSuiteItem(
+                    selected = selected,
+                    onClick = { onNavigate(it) },
+                    icon = {
                         Icon(
-                            painter = painterResource(R.drawable.ic_notifications),
-                            contentDescription = null
+                            painter = when (selected) {
+                                true -> painterResource(it.iconSelected)
+                                false -> painterResource(it.icon)
+                            },
+                            contentDescription = stringResource(it.title)
                         )
-                    }
-                    IconButton(
-                        onClick = onUserClick,
-                        enabled = state is MainState.Success
-                    ) {
-                        when (state) {
-                            is MainState.Loading -> {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .background(MaterialTheme.colorScheme.secondaryContainer)
-                                )
-                            }
+                    },
+                    label = { Text(stringResource(it.title)) },
+                )
+            }
+        },
+        navigationItemVerticalArrangement = Arrangement.Center
+    ) {
+        Scaffold(
+            modifier = Modifier,
+            topBar = {
+                CenterAlignedTopAppBar(
+                    title = { Text(text = stringResource(R.string.app_name)) },
+                    actions = {
+                        IconButton(onClick = onNotificationsClick) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_notifications),
+                                contentDescription = null
+                            )
+                        }
+                        IconButton(
+                            onClick = onUserClick,
+                            enabled = state is MainState.Success
+                        ) {
+                            when (state) {
+                                is MainState.Loading -> {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                                    )
+                                }
 
-                            is MainState.Success -> {
-                                UserImage(url = state.userInfo.photoUrl)
-                            }
+                                is MainState.Success -> {
+                                    UserImage(url = state.userInfo.photoUrl)
+                                }
 
-                            is MainState.Error -> {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .background(MaterialTheme.colorScheme.errorContainer)
-                                )
+                                is MainState.Error -> {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .background(MaterialTheme.colorScheme.errorContainer)
+                                    )
+                                }
                             }
                         }
                     }
-                }
-            )
-        },
-        bottomBar = {
-            NavigationBar {
-                MainNavigation.bottomBarItems.forEach {
-                    val selected = it == page
-                    NavigationBarItem(
-                        selected = selected,
-                        onClick = {
-                            onNavigate(it)
-                        },
-                        icon = {
-                            Icon(
-                                painter = when (selected) {
-                                    true -> painterResource(it.iconSelected)
-                                    false -> painterResource(it.icon)
-                                },
-                                contentDescription = stringResource(it.title)
-                            )
-                        },
-                        label = {
-                            Text(stringResource(it.title))
-                        },
-                    )
-                }
-            }
-        },
-        content = content
-    )
+                )
+            },
+            content = content
+        )
+    }
 }
 
 @Composable

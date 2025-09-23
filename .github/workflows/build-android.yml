@@ -26,14 +26,27 @@ jobs:
           distribution: 'zulu'
           cache: 'gradle'
 
+      - name: Copy Release Keystore
+        env:
+          KEYSTORE: ${{ secrets.KEYSTORE }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          echo $KEYSTORE | base64 -d > keystore
+          echo "storeFile=../keystore" > keystore.properties
+          echo "storePassword=$KEYSTORE_PASSWORD" >> keystore.properties
+          echo "keyAlias=$KEY_ALIAS" >> keystore.properties
+          echo "keyPassword=$KEY_PASSWORD" >> keystore.properties
+
       - name: chmod gradlew
         run: chmod +x gradlew
 
       - name: Build the APK
-        run: ./gradlew assembleDebug
+        run: ./gradlew assembleRelease
 
       - name: Upload the APK
         uses: actions/upload-artifact@v4
         with:
           name: argos
-          path: androidApp/build/outputs/apk/debug/androidApp-debug.apk
+          path: androidApp/build/outputs/apk/release/androidApp-release.apk

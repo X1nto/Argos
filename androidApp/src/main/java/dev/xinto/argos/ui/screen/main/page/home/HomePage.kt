@@ -31,14 +31,14 @@ import dev.xinto.argos.ui.component.SecondaryScrollableTabPager
 import dev.xinto.argos.ui.component.SegmentedListItem
 import dev.xinto.argos.ui.component.itemsSegmented
 import dev.xinto.argos.ui.theme.ArgosTheme
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomePage(
     modifier: Modifier = Modifier,
     onCourseClick: (String) -> Unit,
 ) {
-    val viewModel: HomeViewModel = getViewModel()
+    val viewModel: HomeViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     HomePage(
         modifier = modifier,

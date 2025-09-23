@@ -35,7 +35,8 @@ import dev.xinto.argos.domain.user.DomainStudentDegree
 import dev.xinto.argos.domain.user.DomainStudentProfile
 import dev.xinto.argos.domain.user.DomainUserProfile
 import dev.xinto.argos.ui.component.UserImage
-import org.koin.androidx.compose.getStateViewModel
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun UserProfileScreen(
@@ -43,9 +44,9 @@ fun UserProfileScreen(
     onBackNavigate: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val viewModel: UserProfileViewModel = getStateViewModel(state = {
-        bundleOf(UserProfileViewModel.KEY_USER_ID to userId)
-    })
+    val viewModel: UserProfileViewModel = koinViewModel {
+        parametersOf(UserProfileViewModel.KEY_USER_ID to userId)
+    }
     val state by viewModel.state.collectAsStateWithLifecycle()
     BackHandler(onBack = onBackNavigate)
     UserProfileScreen(

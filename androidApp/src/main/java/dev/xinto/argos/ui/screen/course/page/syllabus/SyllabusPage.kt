@@ -17,16 +17,17 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.xinto.argos.R
 import dev.xinto.argos.ui.component.MaterialHtmlText2
-import org.koin.androidx.compose.getStateViewModel
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun SyllabusPage(
     courseId: String,
     modifier: Modifier = Modifier
 ) {
-    val viewModel: SyllabusViewModel = getStateViewModel(state = {
-        bundleOf(SyllabusViewModel.KEY_COURSE_ID to courseId)
-    })
+    val viewModel: SyllabusViewModel = koinViewModel {
+        parametersOf(SyllabusViewModel.KEY_COURSE_ID to courseId)
+    }
     val state by viewModel.state.collectAsStateWithLifecycle()
     SyllabusPage(
         state = state,
